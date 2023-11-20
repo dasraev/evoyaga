@@ -354,3 +354,13 @@ class Juvenile_Markaz(models.Model):
         markaz = info_db.Markaz.objects.get(pk=self.markaz_id)
         return f"{ p_info.first_name } { p_info.last_name } | { markaz.name }"
 
+
+
+
+#### my  new code #####
+class DistributionToWhom(models.Model):
+    distribution_info = models.ForeignKey(JuvenileDistributedInfo, on_delete=models.SET_NULL,null=True)
+    first_name = models.CharField(max_length=255,null=True,blank=True)
+    last_name = models.CharField(max_length=255,null=True,blank=True)
+    father_name = models.CharField(max_length=255,null=True,blank=True)
+    pinfl = models.CharField(max_length=14,null=True, blank=True)

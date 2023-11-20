@@ -3,6 +3,8 @@ from rest_framework import routers
 from juvenile.juvenile_parent import views as parent_views
 from . import views
 from juvenile.statistics import views as statistics_veiws
+from .new_statistics_view import LastAcceptedJuvenilesView
+
 router = routers.DefaultRouter()
 
 router.register('juveniles', viewset=views.JuvenileViewset, basename='juveniles')
@@ -67,5 +69,11 @@ urlpatterns = [
          statistics_veiws.ApparatDownloadStatisticsAPIView.as_view()),
 
     #current_markaz qo'shish
-    path('add_current_markaz/', views.AddCurrentMarkaz.as_view())
+    path('add_current_markaz/', views.AddCurrentMarkaz.as_view()),
+
+
+    # created_at yesterday juveniles
+    path('last_accepted_juveniles/', LastAcceptedJuvenilesView.as_view()),
+    # path('juveniles_without_education/', JuvenilesWithoutEducationView.as_view()),
+    # path('juveniles_without_education2/', JuvenilesWithoutEducationView2.as_view())
 ]
