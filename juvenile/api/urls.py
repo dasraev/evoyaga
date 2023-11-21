@@ -3,7 +3,7 @@ from rest_framework import routers
 from juvenile.juvenile_parent import views as parent_views
 from . import views
 from juvenile.statistics import views as statistics_veiws
-from .new_statistics_view import LastAcceptedJuvenilesView
+from .new_statistics_view import LastAcceptedJuvenilesView,JuvenileNoEducationListView
 
 router = routers.DefaultRouter()
 
@@ -74,6 +74,5 @@ urlpatterns = [
 
     # created_at yesterday juveniles
     path('last_accepted_juveniles/', LastAcceptedJuvenilesView.as_view()),
-    # path('juveniles_without_education/', JuvenilesWithoutEducationView.as_view()),
-    # path('juveniles_without_education2/', JuvenilesWithoutEducationView2.as_view())
+    path('juveniles_no_education/', JuvenileNoEducationListView.as_view()),
 ]

@@ -3,7 +3,7 @@ from juvenile import models
 from django.utils import timezone
 from juvenile import models
 from rest_framework import serializers
-
+from info.enums import PASSPORT_TYPE_CHOICE
 
 
 class JuvenileMarkazSerializer(serializers.ModelSerializer):
@@ -84,3 +84,38 @@ class JuvenileMarkazSerializer(serializers.ModelSerializer):
             return None
 
 
+
+class JuvenileNoEducationListSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(source='juvenile.id')
+    birth_district = serializers.CharField(source='birth_district.name', read_only=True)  # Change 'name' to the actual field you want to display
+    foreign_country = serializers.SerializerMethodField()
+    passport_type = serializers.SerializerMethodField()
+    class Meta:
+        model = models.PersonalInfoJuvenile
+        exclude = ('juvenile','created_at','updated_at','created_by','updated_by')  # Exclude fields you don't want in the CSV
+
+
+    def get_passport_type(self,instance):
+        if instance.passport_type == '1':
+            return 'Biometrik pasport'
+        if instance.passport_type == '2':
+            return 'ID-karta'
+        if instance.passport_type == '3':
+            return "Tug'ilganlik haqida guvohnoma"
+        if instance.passport_type == '4':
+            return "Kinder pasport"
+        if instance.passport_type == '5':
+            return "Horijiy davlat hujjatlari"
+        if instance.passport_type == '6':
+            return "Boshqalar"
+
+    def get_foreign_country(self, instance):
+        # Check if foreign_country is not None before accessing its name attribute
+        return instance.foreign_country.name if instance.foreign_country else None
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if instance.photo:
+            data['photo'] = self.context['request'].build_absolute_uri(instance.photo.url)
+        if instance.reference_type:
+            data['reference_type'] = self.context['request'].build_absolute_uri(instance.reference_type.url)
+        return data

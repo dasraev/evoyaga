@@ -8,7 +8,8 @@ from django.db.models import Q
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .new_statistics_serializers import *
-
+import csv
+from django.http import HttpResponse
 
 
 
@@ -30,3 +31,36 @@ class LastAcceptedJuvenilesView(generics.ListAPIView):
         return juvenile_markazs
 
 
+
+
+class JuvenileNoEducationListView(generics.ListAPIView):
+    # permission_classes = [AllowAny]  # Allow any permission for testing
+
+    serializer_class = new_statistics_serializers.JuvenileNoEducationListSerializer
+
+    def get_queryset(self):
+        juveniles_no_education = models.PersonalInfoJuvenile.objects.filter(juvenile__educationinfojuvenile__school_type__in=['9','10'])
+        return juveniles_no_education
+
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        # Create a response object with CSV content
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="juvenile_no_education.csv"'
+
+        # Create a CSV writer
+        csv_writer = csv.writer(response)
+
+        # Write header
+        header = JuvenileNoEducationListSerializer().fields.keys()
+        csv_writer.writerow(header)
+
+        # Write data
+        for juvenile in queryset:
+            serializer = JuvenileNoEducationListSerializer(juvenile,context={'request': request})
+            row = [serializer.data[field] for field in header]
+            csv_writer.writerow(row)
+
+        return response
