@@ -38,19 +38,19 @@ class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
         if date_from and date_to:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=user_markaz).filter(created_at__range=[date_from, date_to]).count()
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(created_at__range=[date_from, date_to]).count()
-            juvenile_markaz += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(created_at__range=[date_from, date_to]).count()
+            # juvenile_markaz += unidentified_juvenile
 
         else:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=user_markaz).filter(created_at__year=last_year).count()
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(created_at__year=last_year).count()
-            juvenile_markaz += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(created_at__year=last_year).count()
+            # juvenile_markaz += unidentified_juvenile
 
         return juvenile_markaz
-        
+
     def get_boys(self, obj):
         request = self.context.get('request')
         user_markaz = request.user.markaz
@@ -64,21 +64,21 @@ class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=user_markaz).filter(created_at__range=[date_from, date_to])
 
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(gender='M').filter(created_at__range=[date_from, date_to]).count()
-            result += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(gender='M').filter(created_at__range=[date_from, date_to]).count()
+            # result += unidentified_juvenile
         else:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=user_markaz).filter(created_at__year=last_year)
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(gender='M').filter(created_at__year=last_year).count()
-            result += unidentified_juvenile
-        
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(gender='M').filter(created_at__year=last_year).count()
+            # result += unidentified_juvenile
+
         for item in juvenile_markaz:
             boy = models.PersonalInfoJuvenile.objects.filter(juvenile=item.juvenile).filter(gender='M').count()
             result += boy
 
-        return result     
+        return result
 
     def get_girls(self, obj):
         request = self.context.get('request')
@@ -92,15 +92,15 @@ class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
         if date_from and date_to:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=user_markaz).filter(created_at__range=[date_from, date_to])
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(gender='F').filter(created_at__range=[date_from, date_to]).count()
-            result += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(gender='F').filter(created_at__range=[date_from, date_to]).count()
+            # result += unidentified_juvenile
         else:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=user_markaz).filter(created_at__year=last_year)
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(gender='F').filter(created_at__year=last_year).count()
-            result += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(gender='F').filter(created_at__year=last_year).count()
+            # result += unidentified_juvenile
 
         for item in juvenile_markaz:
             girl = models.PersonalInfoJuvenile.objects.filter(
@@ -164,14 +164,12 @@ class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
         else:
             unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
                 markaz=user_markaz).filter(created_at__year=last_year).count()
-        
+
         return unidentified_juvenile
 
 
 # Dashboard Reason for bringing statistics
 # Markazga olib kelish sababi
-
-
 
 
 class ReasonBringingStatisticsSerializer(serializers.ModelSerializer):
@@ -264,13 +262,13 @@ class ReasonBringingStatisticsSerializer(serializers.ModelSerializer):
                     pk=accept_center_info).filter(sub_reason_bringing_child__parent=3).count()
                 result += needs_state_public_support
         return result
-        
+
     def get_dangerous_social_situation(self, obj):
         request = self.context.get('request')
         user_markaz = request.user.markaz
         result = 0
         last_year = int(format(datetime.now(), '%Y'))
-        
+
         date_from = request.GET.get('date_from')
         date_to = request.GET.get('date_to')
 
@@ -335,6 +333,7 @@ class ReasonBringingStatisticsSerializer(serializers.ModelSerializer):
                     pk=accept_center_info).filter(sub_reason_bringing_child__parent=5).count()
                 result += difficult_upbringing
         return result
+
 
 # Dashboard Educational institution for children admitted to the center statistics
 # Markazga qabul qilingan bolalarning o‘qish muasassasi statistikasi
@@ -649,7 +648,7 @@ class DistributionTypeStatisticsSerializer(serializers.ModelSerializer):
             "to_other_center",
             "to_other_country"
         ]
-    
+
     def get_to_parents(self, obj):
         request = self.context.get('request')
 
@@ -660,7 +659,7 @@ class DistributionTypeStatisticsSerializer(serializers.ModelSerializer):
         to_others = get_distribution_type_statistics(request, date_from, date_to, 'distribution_type', 8)
 
         return to_parents + to_others
-    
+
     def get_to_rotm(self, obj):
         request = self.context.get('request')
 
@@ -684,7 +683,7 @@ class DistributionTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         return get_distribution_type_statistics(request, date_from, date_to, 'type_guardianship', 6)
-    
+
     def get_to_sos(self, obj):
         request = self.context.get('request')
 
@@ -711,7 +710,7 @@ class DistributionTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         return get_distribution_type_statistics(request, date_from, date_to, 'distribution_type', 5)
-    
+
     def get_to_other_center(self, obj):
         request = self.context.get('request')
 
@@ -729,7 +728,7 @@ class DistributionTypeStatisticsSerializer(serializers.ModelSerializer):
         return get_distribution_type_statistics(request, date_from, date_to, 'distribution_type', 7)
 
 
-#apparat distribution type statistics function
+# apparat distribution type statistics function
 def get_apparat_distribution_type_statistics(markaz_id, date_from, date_to, field_type, field_value):
     result = 0
     last_year = int(format(datetime.now(), '%Y'))
@@ -771,6 +770,7 @@ def get_apparat_distribution_type_statistics(markaz_id, date_from, date_to, fiel
                     type_guardianship=field_value).count()
             result += statistic_num
     return result
+
 
 # Apparat Kimlarga topshirildi statistikasi
 # Apparat Distribution type statistikasi
@@ -847,7 +847,6 @@ class ApparatDistributionTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
         markaz_id = request.GET.get('markaz_id')
 
-
         return get_apparat_distribution_type_statistics(markaz_id, date_from, date_to, 'type_guardianship', 7)
 
     def get_to_guardianship(self, obj):
@@ -890,7 +889,7 @@ class ApparatDistributionTypeStatisticsSerializer(serializers.ModelSerializer):
         markaz_id = request.GET.get('markaz_id')
 
         return get_apparat_distribution_type_statistics(markaz_id, date_from, date_to, 'distribution_type', 7)
-    
+
 
 class ComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
     all_juveniles = serializers.SerializerMethodField()
@@ -941,14 +940,16 @@ class ComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
 
         date_from = request.GET.get('date_from')
         date_to = request.GET.get('date_to')
-            
+
         if date_from and date_to:
             juvenile_ids = []
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(created_at__range=[date_from, date_to])
+            juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(
+                created_at__range=[date_from, date_to])
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
-                gender='M').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
+                gender='M').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
         else:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
@@ -956,10 +957,10 @@ class ComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
-                gender='M').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
-        
-        return boys
+                gender='M').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
 
+        return boys
 
     def get_girls(self, obj):
         request = self.context.get('request')
@@ -977,7 +978,8 @@ class ComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
-                gender='F').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
+                gender='F').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
         else:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
@@ -985,7 +987,8 @@ class ComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
-                gender='F').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
+                gender='F').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
 
         return girls
 
@@ -1014,25 +1017,29 @@ class InCenterNowStatisticsSerializer(serializers.ModelSerializer):
 
         if date_from and date_to:
             juvenile_ids = []
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(status__lte=2).filter(created_at__range=[date_from, date_to])
+            juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(status__in=['1','2']).filter(
+                created_at__range=[date_from, date_to])
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             juveniles = models.Juvenile.objects.filter(id__in=juvenile_ids).count()
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(created_at__range=[date_from, date_to]).count()
-
-            all_juveniles = juveniles + unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(created_at__range=[date_from, date_to]).count()
+            #
+            # all_juveniles = juveniles + unidentified_juvenile
+            all_juveniles = juveniles
         else:
             juvenile_ids = []
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(status__lte=2).filter(created_at__year=last_year)
+            juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(status__in=['1','2']).filter(
+                created_at__year=last_year)
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             juveniles = models.Juvenile.objects.filter(id__in=juvenile_ids).count()
 
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(created_at__year=last_year).count()
-                
-            all_juveniles = juveniles + unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(created_at__year=last_year).count()
+
+            # all_juveniles = juveniles + unidentified_juvenile
+            all_juveniles = juveniles
 
         return all_juveniles
 
@@ -1048,32 +1055,35 @@ class InCenterNowStatisticsSerializer(serializers.ModelSerializer):
         if date_from and date_to:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(
-                status__lte=2).filter(created_at__range=[date_from, date_to])
+                status__in=['1','2']).filter(created_at__range=[date_from, date_to])
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
                 gender='M').filter(juvenile__id__in=juvenile_ids).count()
-            
-            unidentified_boys = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(
-                gender='M').filter(
-                created_at__range=[date_from, date_to]).count()
 
-            all_boys = boys + unidentified_boys
+            # unidentified_boys = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(
+            #     gender='M').filter(
+            #     created_at__range=[date_from, date_to]).count()
+
+            # all_boys = boys + unidentified_boys
+            all_boys = boys
         else:
             juvenile_ids = []
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(status__lte=2).filter(created_at__year=last_year)
+            juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(status__in=['1','2']).filter(
+                created_at__year=last_year)
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
                 gender='M').filter(juvenile__id__in=juvenile_ids).count()
-            
-            unidentified_boys = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(
-                gender='M').filter(
-                created_at__year=last_year).count()
 
-            all_boys = boys + unidentified_boys
+            # unidentified_boys = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(
+            #     gender='M').filter(
+            #     created_at__year=last_year).count()
+
+            # all_boys = boys + unidentified_boys
+            all_boys = boys
         return all_boys
 
     def get_girls(self, obj):
@@ -1088,36 +1098,36 @@ class InCenterNowStatisticsSerializer(serializers.ModelSerializer):
         if date_from and date_to:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(
-                status__lte=2).filter(created_at__range=[date_from, date_to])
+                status__in=['1','2']).filter(created_at__range=[date_from, date_to])
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
                 gender='F').filter(juvenile__id__in=juvenile_ids).count()
 
-            unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(
-                gender='F').filter(
-                created_at__range=[date_from, date_to]).count()
+            # unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(
+            #     gender='F').filter(
+            #     created_at__range=[date_from, date_to]).count()
 
-            all_girls = girls + unidentified_girls
+            # all_girls = girls + unidentified_girls
+            all_girls = girls
         else:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz).filter(status__lte=2).filter(created_at__year=last_year)
+                markaz=user_markaz).filter(status__in=['1','2']).filter(created_at__year=last_year)
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
                 gender='F').filter(juvenile__id__in=juvenile_ids).count()
 
-            unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
-                markaz=user_markaz).filter(
-                gender='F').filter(
-                created_at__year=last_year).count()
+            # unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=user_markaz).filter(
+            #     gender='F').filter(
+            #     created_at__year=last_year).count()
 
-            all_girls = girls + unidentified_girls
+            # all_girls = girls + unidentified_girls
+            all_girls = girls
         return all_girls
-
-
 
 
 # Apparat Dashboard card statistics
@@ -1161,25 +1171,26 @@ class ApparatDashboardCardStatisticsSerializer(serializers.ModelSerializer):
         if date_from and date_to and markaz_id:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=markaz_id).filter(created_at__range=[date_from, date_to]).count()
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=markaz_id).filter(created_at__range=[date_from, date_to]).count()
-            juvenile_markaz += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=markaz_id).filter(created_at__range=[date_from, date_to]).count()
+            # juvenile_markaz += unidentified_juvenile
         elif date_from and date_to:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(created_at__range=[date_from, date_to]).count()
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(created_at__range=[date_from, date_to]).count()
-            juvenile_markaz += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     created_at__range=[date_from, date_to]).count()
+            # juvenile_markaz += unidentified_juvenile
         elif markaz_id:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=markaz_id).filter(created_at__year=last_year).count()
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=markaz_id).filter(created_at__year=last_year).count()
-            juvenile_markaz += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=markaz_id).filter(created_at__year=last_year).count()
+            # juvenile_markaz += unidentified_juvenile
         else:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(created_at__year=last_year).count()
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(created_at__year=last_year).count()
-            juvenile_markaz += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(created_at__year=last_year).count()
+            # juvenile_markaz += unidentified_juvenile
         return juvenile_markaz
-        
+
     def get_boys(self, obj):
         request = self.context.get('request')
         result = 0
@@ -1188,43 +1199,45 @@ class ApparatDashboardCardStatisticsSerializer(serializers.ModelSerializer):
         date_from = request.GET.get('date_from')
         date_to = request.GET.get('date_to')
         markaz_id = request.GET.get('markaz_id')
-        
+
         if markaz_id == '':
             markaz_id = None
-            
+
         if markaz_id:
             try:
                 info_db.Markaz.objects.get(pk=markaz_id)
             except:
                 raise serializers.ValidationError(
                     {'message': 'markaz_id is not valid!'})
-        
+
         if date_from and date_to and markaz_id:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=markaz_id).filter(created_at__range=[date_from, date_to])
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=markaz_id).filter(gender='M').filter(created_at__range=[date_from, date_to]).count()
-            result += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=markaz_id).filter(gender='M').filter(created_at__range=[date_from, date_to]).count()
+            # result += unidentified_juvenile
         elif date_from and date_to:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(created_at__range=[date_from, date_to])
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(gender='M').filter(created_at__range=[date_from, date_to]).count()
-            result += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(gender='M').filter(
+            #     created_at__range=[date_from, date_to]).count()
+            # result += unidentified_juvenile
         elif markaz_id:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=markaz_id).filter(created_at__year=last_year)
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=markaz_id).filter(gender='M').filter(created_at__year=last_year).count()
-            result += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=markaz_id).filter(gender='M').filter(created_at__year=last_year).count()
+            # result += unidentified_juvenile
         else:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(created_at__year=last_year)
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(gender='M').filter(created_at__year=last_year).count()
-            result += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(gender='M').filter(
+            #     created_at__year=last_year).count()
+            # result += unidentified_juvenile
 
         for item in juvenile_markaz:
             boy = models.PersonalInfoJuvenile.objects.filter(juvenile=item.juvenile).filter(gender='M').count()
             result += boy
 
-        return result     
+        return result
 
     def get_girls(self, obj):
         request = self.context.get('request')
@@ -1248,26 +1261,28 @@ class ApparatDashboardCardStatisticsSerializer(serializers.ModelSerializer):
         if date_from and date_to and markaz_id:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=markaz_id).filter(created_at__range=[date_from, date_to])
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=markaz_id).filter(gender='F').filter(created_at__range=[date_from, date_to]).count()
-            result += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=markaz_id).filter(gender='F').filter(created_at__range=[date_from, date_to]).count()
+            # result += unidentified_juvenile
         elif date_from and date_to:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 created_at__range=[date_from, date_to])
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(gender='F').filter(created_at__range=[date_from, date_to]).count()
-            result += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(gender='F').filter(
+            #     created_at__range=[date_from, date_to]).count()
+            # result += unidentified_juvenile
         elif markaz_id:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=markaz_id).filter(
                 created_at__year=last_year)
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz=markaz_id).filter(gender='F').filter(created_at__year=last_year).count()
-            result += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz=markaz_id).filter(gender='F').filter(created_at__year=last_year).count()
+            # result += unidentified_juvenile
         else:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 created_at__year=last_year)
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(gender='F').filter(created_at__year=last_year).count()
-            result += unidentified_juvenile
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(gender='F').filter(
+            #     created_at__year=last_year).count()
+            # result += unidentified_juvenile
         for item in juvenile_markaz:
             girl = models.PersonalInfoJuvenile.objects.filter(
                 juvenile=item.juvenile).filter(gender='F').count()
@@ -1294,7 +1309,8 @@ class ApparatDashboardCardStatisticsSerializer(serializers.ModelSerializer):
                 monitoring_info__monitoring_status=2).count()
         elif markaz_id:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=markaz_id).filter(created_at__year=last_year).filter(monitoring_info__monitoring_status=2).count()
+                markaz=markaz_id).filter(created_at__year=last_year).filter(
+                monitoring_info__monitoring_status=2).count()
         else:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(created_at__year=last_year).filter(
                 monitoring_info__monitoring_status=2).count()
@@ -1326,7 +1342,7 @@ class ApparatDashboardCardStatisticsSerializer(serializers.ModelSerializer):
                 if item.employment_info.employment_file:
                     result += 1
         return result
-        
+
     def get_not_identified(self, obj):
         request = self.context.get('request')
         last_year = int(format(datetime.now(), '%Y'))
@@ -1334,7 +1350,7 @@ class ApparatDashboardCardStatisticsSerializer(serializers.ModelSerializer):
         date_from = request.GET.get('date_from')
         date_to = request.GET.get('date_to')
         markaz_id = request.GET.get('markaz_id')
-        
+
         if markaz_id == '':
             markaz_id = None
 
@@ -1348,14 +1364,15 @@ class ApparatDashboardCardStatisticsSerializer(serializers.ModelSerializer):
             unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
                 markaz=markaz_id).filter(created_at__range=[date_from, date_to]).count()
         elif date_from and date_to:
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(created_at__range=[date_from, date_to]).count()
+            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+                created_at__range=[date_from, date_to]).count()
 
         elif markaz_id:
             unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
                 markaz=markaz_id).filter(created_at__year=last_year).count()
         else:
             unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(created_at__year=last_year).count()
-        
+
         return unidentified_juvenile
 
 
@@ -1470,7 +1487,7 @@ class ApparatReasonBringingStatisticsSerializer(serializers.ModelSerializer):
             except:
                 raise serializers.ValidationError(
                     {'message': 'markaz_id is not valid!'})
-                    
+
         if date_from and date_to and markaz_id:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 markaz=markaz_id).filter(created_at__range=[date_from, date_to])
@@ -1487,7 +1504,6 @@ class ApparatReasonBringingStatisticsSerializer(serializers.ModelSerializer):
         else:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 created_at__year=last_year)
-
 
         for item in juvenile_markaz:
             if item.accept_center_info:
@@ -1638,7 +1654,7 @@ class ApparatReasonBringingStatisticsSerializer(serializers.ModelSerializer):
 
         if markaz_id == '':
             markaz_id = None
-            
+
         if markaz_id:
             try:
                 info_db.Markaz.objects.get(pk=markaz_id)
@@ -1749,49 +1765,56 @@ class ApparatInCenterNowStatisticsSerializer(serializers.ModelSerializer):
         if date_from and date_to and markaz_id:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=markaz_id).filter(
-                status__lte=2).filter(created_at__range=[date_from, date_to])
+                status__in=['1','2']).filter(created_at__range=[date_from, date_to])
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             juveniles = models.Juvenile.objects.filter(id__in=juvenile_ids).count()
 
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz_id=markaz_id).filter(created_at__range=[date_from, date_to]).count()
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz_id=markaz_id).filter(created_at__range=[date_from, date_to]).count()
 
-            all_juveniles = juveniles + unidentified_juvenile
+            # all_juveniles = juveniles + unidentified_juvenile
+            all_juveniles = juveniles
 
         elif date_from and date_to:
             juvenile_ids = []
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(status__lte=2).filter(created_at__range=[date_from, date_to])
+            juvenile_markaz = models.Juvenile_Markaz.objects.filter(status__in=['1','2']).filter(
+                created_at__range=[date_from, date_to])
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             juveniles = models.Juvenile.objects.filter(
                 id__in=juvenile_ids).count()
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(created_at__range=[date_from, date_to]).count()
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     created_at__range=[date_from, date_to]).count()
 
-            all_juveniles = juveniles + unidentified_juvenile
+            # all_juveniles = juveniles + unidentified_juvenile
+            all_juveniles = juveniles
 
         elif markaz_id:
             juvenile_ids = []
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=markaz_id).filter(status__lte=2).filter(created_at__year=last_year)
+            juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=markaz_id).filter(status__in=['1','2']).filter(
+                created_at__year=last_year)
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             juveniles = models.Juvenile.objects.filter(id__in=juvenile_ids).count()
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz_id=markaz_id).filter(created_at__year=last_year).count()
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz_id=markaz_id).filter(created_at__year=last_year).count()
 
-            all_juveniles = juveniles + unidentified_juvenile
+            # all_juveniles = juveniles + unidentified_juvenile
+            all_juveniles = juveniles
 
         else:
             juvenile_ids = []
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(status__lte=2).filter(created_at__year=last_year)
+            juvenile_markaz = models.Juvenile_Markaz.objects.filter(status__in=['1','2']).filter(created_at__year=last_year)
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             juveniles = models.Juvenile.objects.filter(id__in=juvenile_ids).count()
-            unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
-                markaz_id=markaz_id).filter(created_at__year=last_year).count()
+            # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz_id=markaz_id).filter(created_at__year=last_year).count()
 
-            all_juveniles = juveniles + unidentified_juvenile
-            
+            # all_juveniles = juveniles + unidentified_juvenile
+            all_juveniles = juveniles
+
         return all_juveniles
 
     def get_boys(self, obj):
@@ -1815,61 +1838,66 @@ class ApparatInCenterNowStatisticsSerializer(serializers.ModelSerializer):
         if date_from and date_to and markaz_id:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=markaz_id).filter(status__lte=2).filter(created_at__range=[date_from, date_to])
+                markaz=markaz_id).filter(status__in=['1','2']).filter(created_at__range=[date_from, date_to])
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
                 gender='M').filter(juvenile__id__in=juvenile_ids).count()
 
-            unidentified_boys = models.UnidentifiedJuvenile.objects.filter(
-                markaz_id=markaz_id).filter(
-                gender='M').filter(
-                created_at__range=[date_from, date_to]).count()
+            # unidentified_boys = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz_id=markaz_id).filter(
+            #     gender='M').filter(
+            #     created_at__range=[date_from, date_to]).count()
 
-            all_boys = boys + unidentified_boys
+            # all_boys = boys + unidentified_boys
+            all_boys = boys
 
         elif date_from and date_to:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                status__lte=2).filter(created_at__range=[date_from, date_to])
+                status__in=['1','2']).filter(created_at__range=[date_from, date_to])
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
                 gender='M').filter(juvenile__id__in=juvenile_ids).count()
 
-            unidentified_boys = models.UnidentifiedJuvenile.objects.filter(gender='M').filter(created_at__range=[date_from, date_to]).count()
+            # unidentified_boys = models.UnidentifiedJuvenile.objects.filter(gender='M').filter(
+            #     created_at__range=[date_from, date_to]).count()
 
-            all_boys = boys + unidentified_boys
+            # all_boys = boys + unidentified_boys
+            all_boys = boys
 
         elif markaz_id:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=markaz_id).filter(status__lte=2).filter(created_at__year=last_year)
+                markaz=markaz_id).filter(status__in=['1','2']).filter(created_at__year=last_year)
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
                 gender='M').filter(juvenile__id__in=juvenile_ids).count()
 
-            unidentified_boys = models.UnidentifiedJuvenile.objects.filter(
-                markaz_id=markaz_id).filter(
-                gender='M').filter(
-                created_at__year=last_year).count()
+            # unidentified_boys = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz_id=markaz_id).filter(
+            #     gender='M').filter(
+            #     created_at__year=last_year).count()
 
-            all_boys = boys + unidentified_boys
+            # all_boys = boys + unidentified_boys
+            all_boys = boys
 
         else:
             juvenile_ids = []
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(status__lte=2).filter(created_at__year=last_year)
+            juvenile_markaz = models.Juvenile_Markaz.objects.filter(status__in=['1','2']).filter(created_at__year=last_year)
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
                 gender='M').filter(juvenile__id__in=juvenile_ids).count()
 
-            unidentified_boys = models.UnidentifiedJuvenile.objects.filter(
-                gender='M').filter(
-                created_at__year=last_year).count()
+            # unidentified_boys = models.UnidentifiedJuvenile.objects.filter(
+            #     gender='M').filter(
+            #     created_at__year=last_year).count()
 
-            all_boys = boys + unidentified_boys
+            # all_boys = boys + unidentified_boys
+            all_boys = boys
 
         return all_boys
 
@@ -1894,68 +1922,72 @@ class ApparatInCenterNowStatisticsSerializer(serializers.ModelSerializer):
         if date_from and date_to and markaz_id:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=markaz_id).filter(status__lte=2).filter(created_at__range=[date_from, date_to])
+                markaz=markaz_id).filter(status__in=['1','2']).filter(created_at__range=[date_from, date_to])
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
                 gender='F').filter(juvenile__id__in=juvenile_ids).count()
 
-            unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
-                markaz_id=markaz_id).filter(
-                gender='F').filter(
-                created_at__range=[date_from, date_to]).count()
+            # unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz_id=markaz_id).filter(
+            #     gender='F').filter(
+            #     created_at__range=[date_from, date_to]).count()
 
-            all_girls = girls + unidentified_girls
+            # all_girls = girls + unidentified_girls
+            all_girls = girls
 
         elif date_from and date_to:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                status__lte=2).filter(created_at__range=[date_from, date_to])
+                status__in=['1','2']).filter(created_at__range=[date_from, date_to])
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
                 gender='F').filter(juvenile__id__in=juvenile_ids).count()
 
-            unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
-                gender='F').filter(created_at__range=[date_from, date_to]).count()
+            # unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
+            #     gender='F').filter(created_at__range=[date_from, date_to]).count()
 
-            all_girls = girls + unidentified_girls
+            # all_girls = girls + unidentified_girls
+            all_girls = girls
 
         elif markaz_id:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=markaz_id).filter(status__lte=2).filter(created_at__year=last_year)
+                markaz=markaz_id).filter(status__in=['1','2']).filter(created_at__year=last_year)
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
                 gender='F').filter(juvenile__id__in=juvenile_ids).count()
 
-            unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
-                markaz_id=markaz_id).filter(
-                gender='F').filter(
-                created_at__year=last_year).count()
+            # unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
+            #     markaz_id=markaz_id).filter(
+            #     gender='F').filter(
+            #     created_at__year=last_year).count()
 
-            all_girls = girls + unidentified_girls
+            # all_girls = girls + unidentified_girls
+            all_girls = girls
 
         else:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                status__lte=2).filter(created_at__year=last_year)
+                status__in=['1','2']).filter(created_at__year=last_year)
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
                 gender='F').filter(juvenile__id__in=juvenile_ids).count()
 
-            unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
-                gender='F').filter(
-                created_at__year=last_year).count()
+            # unidentified_girls = models.UnidentifiedJuvenile.objects.filter(
+            #     gender='F').filter(
+            #     created_at__year=last_year).count()
 
-            all_girls = girls + unidentified_girls
+            # all_girls = girls + unidentified_girls
+            all_girls = girls
 
         return all_girls
 
 
-#Apparat come more 2 times statistics 
+# Apparat come more 2 times statistics
 class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
     all_juveniles = serializers.SerializerMethodField()
     boys = serializers.SerializerMethodField()
@@ -2028,7 +2060,7 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
 
         last_year = int(format(datetime.now(), '%Y'))
-        
+
         date_from = request.GET.get('date_from')
         date_to = request.GET.get('date_to')
         markaz_id = request.GET.get('markaz_id')
@@ -2051,7 +2083,8 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
-                gender='M').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
+                gender='M').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
 
         elif date_from and date_to:
             juvenile_ids = []
@@ -2060,7 +2093,8 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
-                gender='M').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
+                gender='M').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
 
         elif markaz_id:
             juvenile_ids = []
@@ -2069,14 +2103,16 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
-                gender='M').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
+                gender='M').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
         else:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(created_at__year=last_year)
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             boys = models.PersonalInfoJuvenile.objects.filter(
-                gender='M').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
+                gender='M').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
 
         return boys
 
@@ -2087,7 +2123,6 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
 
         date_from = request.GET.get('date_from')
         date_to = request.GET.get('date_to')
-
 
         markaz_id = request.GET.get('markaz_id')
 
@@ -2100,7 +2135,6 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             except:
                 raise serializers.ValidationError({'message': 'markaz_id is not valid!'})
 
-
         if date_from and date_to and markaz_id:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
@@ -2109,7 +2143,8 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
-                gender='F').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
+                gender='F').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
 
         elif date_from and date_to:
             juvenile_ids = []
@@ -2118,7 +2153,8 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
-                gender='F').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
+                gender='F').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
 
         elif markaz_id:
             juvenile_ids = []
@@ -2127,7 +2163,8 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
-                gender='F').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
+                gender='F').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
         else:
             juvenile_ids = []
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
@@ -2135,9 +2172,11 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
             girls = models.PersonalInfoJuvenile.objects.filter(
-                gender='F').filter(juvenile__id__in=juvenile_ids).filter(juvenile__accepted_center_number__gte=2).count()
+                gender='F').filter(juvenile__id__in=juvenile_ids).filter(
+                juvenile__accepted_center_number__gte=2).count()
 
         return girls
+
 
 # Apparat Dashboard Educational institution for children admitted to the center statistics
 # Apparat Markazga qabul qilingan bolalarning o‘qish muasassasi statistikasi
@@ -2154,8 +2193,8 @@ class ApparatReasonBringingStatisticsSerializer2(serializers.ModelSerializer):
 
     class Meta:
         model = models.Juvenile
-        fields = ['unsupervised_child',"neglected_child","needs_state_public_support",
-                  "dangerous_social_situation","missing_and_wanted","difficult_upbringing"]
+        fields = ['unsupervised_child', "neglected_child", "needs_state_public_support",
+                  "dangerous_social_situation", "missing_and_wanted", "difficult_upbringing"]
 
     def get_field_count(self, obj, field_name, request):
         result = 0
@@ -2219,7 +2258,6 @@ class ApparatReasonBringingStatisticsSerializer2(serializers.ModelSerializer):
         return self.get_field_count(obj, "difficult_upbringing", self.context.get('request'))
 
 
-
 class ApparatEducationTypeStatisticsSerializer(serializers.ModelSerializer):
     kindergarten = serializers.SerializerMethodField()
     school = serializers.SerializerMethodField()
@@ -2249,7 +2287,7 @@ class ApparatEducationTypeStatisticsSerializer(serializers.ModelSerializer):
 
     def get_kindergarten(self, obj):
         request = self.context.get('request')
-        
+
         result = 0
         last_year = int(format(datetime.now(), '%Y'))
 
@@ -2555,13 +2593,12 @@ class ApparatEducationTypeStatisticsSerializer(serializers.ModelSerializer):
 
         if markaz_id == '':
             markaz_id = None
-            
+
         if markaz_id:
             try:
                 info_db.Markaz.objects.get(pk=markaz_id)
             except:
                 raise serializers.ValidationError({'message': 'markaz_id is not valid!'})
-
 
         if date_from and date_to and markaz_id:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
@@ -2604,7 +2641,6 @@ class ApparatEducationTypeStatisticsSerializer(serializers.ModelSerializer):
                 info_db.Markaz.objects.get(pk=markaz_id)
             except:
                 raise serializers.ValidationError({'message': 'markaz_id is not valid!'})
-
 
         if date_from and date_to and markaz_id:
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(

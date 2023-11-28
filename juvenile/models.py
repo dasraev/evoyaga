@@ -359,7 +359,7 @@ class Juvenile_Markaz(models.Model):
 
 #### my  new code #####
 class DistributionToWhom(models.Model):
-    distribution_info = models.ForeignKey(JuvenileDistributedInfo, on_delete=models.SET_NULL,null=True)
+    distribution_info = models.ForeignKey(JuvenileDistributedInfo, on_delete=models.SET_NULL,null=True,related_name='distributes')
     first_name = models.CharField(max_length=255,null=True,blank=True)
     last_name = models.CharField(max_length=255,null=True,blank=True)
     father_name = models.CharField(max_length=255,null=True,blank=True)

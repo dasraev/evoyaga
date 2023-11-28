@@ -16,6 +16,10 @@ from . import filters as filter
 from . import serializers
 from .paginations import JuvenilePagination
 from notification.api.views import send_notification_other_center
+from django.utils import timezone
+from rest_framework.permissions import AllowAny
+import csv
+from django.http import HttpResponse
 
 
 # Bola 2 marta bo'lib qolmaslik uchun tekshirish
@@ -123,7 +127,7 @@ class JuvenileViewset(ModelViewSet):
         return serializer_class
 
     def create(self, request, *args, **kwargs):
-        print(9001,request.data.get('is_in_identified_list'))
+        print(9001,request.data)
         user = request.user
         try:
             is_in_identified_list = request.data['is_in_identified_list']
@@ -275,6 +279,7 @@ class JuvenileViewset(ModelViewSet):
 
         serializer = serializers.EducationInfoJuvenileCreateSerializer(data=request.data)
         if serializer.is_valid():
+            print('valid1')
             education_info = models.EducationInfoJuvenile.objects.create(**serializer.validated_data, juvenile=juvenile)
             education_info.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -543,12 +548,17 @@ class JuvenileViewset(ModelViewSet):
                 serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST)
 
-    def distribute(self, juvenile_markaz, distributed_info, juvenile_status, message):
+    def distribute(self, juvenile_markaz, distributed_info, juvenile_status, message,first_name=None,last_name=None,father_name=None,pinfl=None):
         juvenile_markaz.distributed_info = distributed_info
         juvenile_markaz.status = juvenile_status
         juvenile_markaz.time_departure_center = distributed_info.created_at
         distributed_info.save()
         juvenile_markaz.save()
+        distribution_to_whom = models.DistributionToWhom.objects.create(distribution_info=distributed_info,
+                                                                        first_name=first_name,
+                                                                        last_name=last_name,
+                                                                        father_name=father_name,
+                                                                        pinfl=pinfl)
 
 
 
@@ -573,20 +583,17 @@ class JuvenileViewset(ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST)
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 juvenile=juvenile).order_by('-created_at').first()
-
+            print('MYG',juvenile_markaz.id,juvenile_markaz.distributed_info)
             if juvenile_markaz.distributed_info is None:
                 distributed_info = models.JuvenileDistributedInfo.objects.create(**serializer.validated_data)
                 juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                     juvenile=juvenile).order_by('-created_at').first()
+
                 first_name = request.data.get('first_name')
                 last_name = request.data.get('last_name')
                 father_name = request.data.get('father_name')
                 pinfl = request.data.get('pinfl')
-                distribution_to_whom = models.DistributionToWhom.objects.create(distribution_info=distributed_info,
-                                                                                first_name=first_name,
-                                                                                last_name=last_name,
-                                                                                father_name=father_name,
-                                                                                pinfl=pinfl)
+
                 if distribution_type == 6:
                     if receiver_center == None:
                         return Response({'message': f"Yubormoqchi bo'lgan markazni tanlamadingiz!"},
@@ -608,7 +615,7 @@ class JuvenileViewset(ModelViewSet):
                     juvenile_markaz.monitoring_markaz_tuman_id = monitoring_markaz_tuman
                     juvenile_markaz.save()
                 message = f'Bola taqsimlandi!'
-                return self.distribute(juvenile_markaz, distributed_info, 3, message)
+                return self.distribute(juvenile_markaz, distributed_info, 23, message)
             else:
                 return Response({"message": "Bu bola allaqachon taqsimlangan!"}, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -1315,3 +1322,62 @@ class AddCurrentMarkaz(APIView):
             juvenile.current_markaz = user_markaz
             juvenile.save()
         return Response({'message': 'Added current_markaz'})
+
+
+class LastAcceptedJuvenilesView(generics.ListAPIView):
+    serializer_class = serializers.JuvenileMarkazSerializer
+    # permission_classes = [AllowAny]  # Allow any permission for testing
+
+    def get_queryset(self):
+        now = timezone.now()
+        start_datetime = timezone.datetime(now.year, now.month, now.day - 2 , 19, 0, 0)
+        # start_datetime = timezone.datetime(now.year, now.month, now.day - 10 , 19, 0, 0)
+        end_datetime = timezone.datetime(now.year, now.month, now.day - 1, 19, 0, 0)
+        # end_datetime = timezone.datetime(now.year, now.month, now.day, 19, 0, 0)
+        juvenile_markazs = models.Juvenile_Markaz.objects.filter(
+            Q(status__in=['2','3','4','5','6','7','8','9','10', '11','12','13'])
+            & Q(accept_center_info__created_at__range=[start_datetime, end_datetime])
+        ).order_by('-created_at')
+        return juvenile_markazs
+
+
+
+class JuvenileNoEducationListView(generics.ListAPIView):
+    permission_classes = [AllowAny]  # Allow any permission for testing
+
+    serializer_class = serializers.JuvenileNoEducationListSerializer
+
+    def get_queryset(self):
+        juveniles_no_education = models.PersonalInfoJuvenile.objects.filter(juvenile__educationinfojuvenile__isnull=True)
+        return juveniles_no_education
+
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        # Create a response object with CSV content
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="juvenile_no_education.csv"'
+
+        # Create a CSV writer
+        csv_writer = csv.writer(response)
+
+        # Write header
+        header = serializers.JuvenileNoEducationListSerializer().fields.keys()
+        csv_writer.writerow(header)
+
+        # Write data
+        for juvenile in queryset:
+            serializer = serializers.JuvenileNoEducationListSerializer(juvenile,context={'request': request})
+            row = [serializer.data[field] for field in header]
+            csv_writer.writerow(row)
+
+        return response
+
+
+class test(generics.GenericAPIView):
+    permission_classes = [AllowAny]  # Allow any permission for testing
+
+    def post(self,request):
+        print("ABBA",request.data)
+        return HttpResponse('ba')

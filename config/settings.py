@@ -74,6 +74,8 @@ INSTALLED_APPS = [
     'juvenile',
     'notification',
     'donation',
+    'celery',
+
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
@@ -315,4 +317,28 @@ STATICFILES_DIRS = [
     os.path.join(FRONTEND_DIR, 'dist/static'),
 ]
 
+
+
+
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# myproject/settings.py
+
+# Celery Configuration Options
+CELERY_TIMEZONE = 'UTC'
+from celery.schedules import crontab
+
+# Celery Beat Configuration Options
+CELERY_BEAT_SCHEDULE = {
+    'get_users_daily': {
+        'task': 'juvenile.tasks.get_last_juveniles',  # Path to your Celery task
+        'schedule': crontab(hour=15-5, minute=36),  # Run the task every day at 8 am
+    },
+}
 
