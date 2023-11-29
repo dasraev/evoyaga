@@ -184,15 +184,29 @@ class JuvenileViewset(ModelViewSet):
                 print('just checking')
                 return Response({message}, status=status.HTTP_400_BAD_REQUEST)
             if personal_info:
-                print('111111')
-                juvenile = models.Juvenile.objects.get(id=personal_info.juvenile_id)
-                juvenile.updated_by = user
-                juvenile.current_markaz = user.markaz
-                juvenile.save()
+                ######
+                # print('111111')
+                # juvenile = models.Juvenile.objects.get(id=personal_info.juvenile_id)
+                # juvenile.updated_by = user
+                # juvenile.current_markaz = user.markaz
+                # juvenile.save()
+                #
+                # juvenile_markaz = models.Juvenile_Markaz.objects.get(juvenile_id=juvenile.id)
+                # juvenile_markaz.status = 1
+                # juvenile_markaz.save()
+                # return Response({
+                #     "message": "Bola aniqlanganlar ro'yxatiga qo'shildi!",
+                #     "juvenile_id": juvenile.id
+                # }, status=status.HTTP_201_CREATED)
+                user = request.user
+                juvenile = personal_info.juvenile
 
-                juvenile_markaz = models.Juvenile_Markaz.objects.get(juvenile_id=juvenile.id)
-                juvenile_markaz.status = 1
-                juvenile_markaz.save()
+                juvenile_markaz = models.Juvenile_Markaz.objects.filter(juvenile=juvenile).order_by(
+                    '-created_at').first()
+                if int(juvenile_markaz.status) < 3 or int(juvenile_markaz.status) == 10:
+                    return Response({"Bu bola hali taqsimlanmagan!"}, status=status.HTTP_400_BAD_REQUEST)
+                models.Juvenile_Markaz.objects.create(juvenile=juvenile, markaz=user.markaz, status=1)
+                juvenile.current_markaz = user.markaz
                 return Response({
                     "message": "Bola aniqlanganlar ro'yxatiga qo'shildi!",
                     "juvenile_id": juvenile.id
@@ -241,6 +255,9 @@ class JuvenileViewset(ModelViewSet):
         models.Juvenile_Markaz.objects.create(juvenile_id=juvenile_id, markaz=user.markaz, status=1)
         juvenile.current_markaz = user.markaz
         return Response({"Bola markazga muvaffaqqiyatli qabul qilindi!"})
+
+
+
 
     @action(detail=True, methods=['put'])
     def juvenile_personalinfo_update(self, request, pk=None):
@@ -615,7 +632,7 @@ class JuvenileViewset(ModelViewSet):
                     juvenile_markaz.monitoring_markaz_tuman_id = monitoring_markaz_tuman
                     juvenile_markaz.save()
                 message = f'Bola taqsimlandi!'
-                return self.distribute(juvenile_markaz, distributed_info, 23, message)
+                return self.distribute(juvenile_markaz, distributed_info, 3, message)
             else:
                 return Response({"message": "Bu bola allaqachon taqsimlangan!"}, status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -650,7 +667,7 @@ class JuvenileViewset(ModelViewSet):
                 elif monitoring_status == 4:
                     juvenile_markaz.status = 12
                 elif monitoring_status == 5:
-                    juvenile_markaz.status = 133
+                    juvenile_markaz.status = 13
 
                 juvenile_markaz.save()
 

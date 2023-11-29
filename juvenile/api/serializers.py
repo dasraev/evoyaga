@@ -1006,7 +1006,6 @@ class JuvenileMarkazListSerializer(serializers.ModelSerializer):
             "text": status[1]
         }
         return data
-
     def get_time_arrival_center(self, obj):
         return obj.time_arrival_center.date()
 
