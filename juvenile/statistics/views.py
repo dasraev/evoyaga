@@ -571,3 +571,10 @@ class ApparatDownloadStatisticsAPIView(generics.ListAPIView):
 #             'request': request
 #         })
 #         return Response(serializer.data)
+
+
+###### new code ######
+class MyStatisticsView(generics.GenericAPIView):
+    def get(self,request):
+        user = request.user
+

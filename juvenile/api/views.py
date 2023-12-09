@@ -51,12 +51,17 @@ def check_is_exist_in_center(juvenile_info):
             # models.PersonalInfoJuvenile.objects.get(pinfl=juvenile_info['pinfl'])
             # personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=juvenile_info['pinfl'])
             print('ffr')
-            is_in_markaz = models.Juvenile_Markaz.objects.get(juvenile__juvenile__pinfl=juvenile_info['pinfl'])
+            # is_in_markaz = models.Juvenile_Markaz.objects.get(juvenile__juvenile__pinfl=juvenile_info['pinfl'])
+            is_in_markaz = models.Juvenile_Markaz.objects.filter(juvenile__juvenile__pinfl=juvenile_info['pinfl']).order_by('-created_at').first()
             print('ggr')
-            if is_in_markaz.status == "3":
+            # # if is_in_markaz.status == "3":
+            #     return not_available
+            #
+            # return available
+            if is_in_markaz.status == '1':
+                return available
+            else:
                 return not_available
-
-            return available
 
         except:
             return not_available
@@ -207,6 +212,8 @@ class JuvenileViewset(ModelViewSet):
                     return Response({"Bu bola hali taqsimlanmagan!"}, status=status.HTTP_400_BAD_REQUEST)
                 models.Juvenile_Markaz.objects.create(juvenile=juvenile, markaz=user.markaz, status=1)
                 juvenile.current_markaz = user.markaz
+                juvenile.accepted_center_number += 1
+                juvenile.save()
                 return Response({
                     "message": "Bola aniqlanganlar ro'yxatiga qo'shildi!",
                     "juvenile_id": juvenile.id
@@ -254,6 +261,7 @@ class JuvenileViewset(ModelViewSet):
             return Response({"Bu bola hali taqsimlanmagan!"}, status=status.HTTP_400_BAD_REQUEST)
         models.Juvenile_Markaz.objects.create(juvenile_id=juvenile_id, markaz=user.markaz, status=1)
         juvenile.current_markaz = user.markaz
+        juvenile.save()
         return Response({"Bola markazga muvaffaqqiyatli qabul qilindi!"})
 
 
@@ -546,7 +554,7 @@ class JuvenileViewset(ModelViewSet):
                 print('JJJ',juvenile_markaz)
                 juvenile_markaz.accept_center_info = accept_info
                 juvenile_markaz.status = 2
-                juvenile.accepted_center_number += 1
+                # juvenile.accepted_center_number += 1
                 juvenile.current_markaz = juvenile_markaz.markaz
                 juvenile_markaz.save()
                 accept_info.save()
@@ -1341,21 +1349,21 @@ class AddCurrentMarkaz(APIView):
         return Response({'message': 'Added current_markaz'})
 
 
-class LastAcceptedJuvenilesView(generics.ListAPIView):
-    serializer_class = serializers.JuvenileMarkazSerializer
-    # permission_classes = [AllowAny]  # Allow any permission for testing
-
-    def get_queryset(self):
-        now = timezone.now()
-        start_datetime = timezone.datetime(now.year, now.month, now.day - 2 , 19, 0, 0)
-        # start_datetime = timezone.datetime(now.year, now.month, now.day - 10 , 19, 0, 0)
-        end_datetime = timezone.datetime(now.year, now.month, now.day - 1, 19, 0, 0)
-        # end_datetime = timezone.datetime(now.year, now.month, now.day, 19, 0, 0)
-        juvenile_markazs = models.Juvenile_Markaz.objects.filter(
-            Q(status__in=['2','3','4','5','6','7','8','9','10', '11','12','13'])
-            & Q(accept_center_info__created_at__range=[start_datetime, end_datetime])
-        ).order_by('-created_at')
-        return juvenile_markazs
+# class LastAcceptedJuvenilesView(generics.ListAPIView):
+#     serializer_class = serializers.JuvenileMarkazSerializer
+#     # permission_classes = [AllowAny]  # Allow any permission for testing
+#
+#     def get_queryset(self):
+#         now = timezone.now()
+#         start_datetime = timezone.datetime(now.year, now.month, now.day - 2 , 19, 0, 0)
+#         # start_datetime = timezone.datetime(now.year, now.month, now.day - 10 , 19, 0, 0)
+#         end_datetime = timezone.datetime(now.year, now.month, now.day - 1, 19, 0, 0)
+#         # end_datetime = timezone.datetime(now.year, now.month, now.day, 19, 0, 0)
+#         juvenile_markazs = models.Juvenile_Markaz.objects.filter(
+#             Q(status__in=['2','3','4','5','6','7','8','9','10', '11','12','13'])
+#             & Q(accept_center_info__created_at__range=[start_datetime, end_datetime])
+#         ).order_by('-created_at')
+#         return juvenile_markazs
 
 
 
@@ -1392,9 +1400,9 @@ class JuvenileNoEducationListView(generics.ListAPIView):
         return response
 
 
-class test(generics.GenericAPIView):
-    permission_classes = [AllowAny]  # Allow any permission for testing
-
-    def post(self,request):
-        print("ABBA",request.data)
-        return HttpResponse('ba')
+# class test(generics.GenericAPIView):
+#     permission_classes = [AllowAny]  # Allow any permission for testing
+#
+#     def post(self,request):
+#         print("ABBA",request.data)
+#         return HttpResponse('ba')

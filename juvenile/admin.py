@@ -19,7 +19,8 @@ class JuvinileModelAdmin(admin.ModelAdmin):
     #     obj = models.PersonalInfoJuvenile.objects.get(juvenile_id=instance.id)
     #     return obj.first_name
 
-
+class PersonalInfoJuvenileModelAdmin(admin.ModelAdmin):
+    search_fields = ('first_name','last_name','father_name')
 
 
 
