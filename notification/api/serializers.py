@@ -92,9 +92,12 @@ class NotificationDetailSerializer(ModelSerializer):
             "gender": personal_info.gender,
             "birth_date": personal_info.birth_date,
             "birth_region": personal_info.birth_district.region_id.name,
-            "address": address_info.address,
+            # "address": address_info.address,
             "center_opinion_file": center_opinion_file,
         }
+        print('lok',address_info)
+        if address_info:
+            data['address'] = address_info.address
         return data
 
     def get_sender_center(self, obj):

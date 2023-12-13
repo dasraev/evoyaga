@@ -212,6 +212,8 @@ class Juvenile(BaseModel):
 
     def __str__(self):
         p_info = PersonalInfoJuvenile.objects.get(juvenile_id=self.id)
+        # p_info = self.juvenile.first()
+        # if p_
         return f"{self.id}  |{ p_info.first_name } {p_info.last_name}"
 
 

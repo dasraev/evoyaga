@@ -42,7 +42,7 @@ def check_is_exist_in_center(juvenile_info):
     if int(juvenile_info['passport_type']) == 4 or int(juvenile_info['passport_type']) == 5:
 
         try:
-            models.Juvenile.objects.filter(first_name=first_name, last_name=last_name, birth_date=birth_date)
+            models.PersonalInfoJuvenile.objects.filter(first_name=first_name, last_name=last_name, birth_date=birth_date)
             return available
         except:
             return not_available
@@ -58,7 +58,7 @@ def check_is_exist_in_center(juvenile_info):
             #     return not_available
             #
             # return available
-            if is_in_markaz.status == '1':
+            if int(is_in_markaz.status) < 3 or int(is_in_markaz.status) == 10:
                 return available
             else:
                 return not_available
@@ -175,19 +175,38 @@ class JuvenileViewset(ModelViewSet):
                                     status=status.HTTP_404_NOT_FOUND)
             personal_info_serializer = serializers.PersonalInfoJuvenileCreateSerializer(data=request.data)
             try:
-                personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=request.data.get("pinfl"))
+                passport_type = request.data.get('passport_type')
+                print(998,passport_type)
+                if int(passport_type) == 5 or int(passport_type) == 6:
+                    print('UYH')
+                    first_name = request.data.get('first_name')
+                    last_name = request.data.get('last_name')
+                    father_name = request.data.get('father_name')
+                    birth_date = request.data.get('birth_date')
+                    personal_info = models.PersonalInfoJuvenile.objects.get(first_name=first_name,last_name=last_name,
+                                                                            father_name=father_name,birth_date=birth_date)
+
+                else:
+                    print('bgh')
+                    personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=request.data.get("pinfl"))
             except models.PersonalInfoJuvenile.DoesNotExist:
                 personal_info = None
 
-            is_available = check_is_exist_in_center(request.data)
-
-            if is_available['status']:
-                print('AVAILABLE')
-                personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=request.data.get('pinfl'))
-                juvenile_markaz = models.Juvenile_Markaz.objects.filter(juvenile_id=personal_info.juvenile_id).order_by('-created_at').first()
-                message = f"{personal_info.first_name} {personal_info.last_name} {personal_info.father_name} {juvenile_markaz.markaz.name} ga qabul qilingan!"
-                print('just checking')
-                return Response({message}, status=status.HTTP_400_BAD_REQUEST)
+            # is_available = check_is_exist_in_center(request.data)
+            #
+            # if is_available['status']:
+            #     print('AVAILABLE')
+            #     passport_type = request.data.get('passport_type')
+            #     if passport_type == 4 or passport_type == 5:
+            #         personal_info = models.PersonalInfoJuvenile.objects.get()
+            #     personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=request.data.get('pinfl'))
+            #     juvenile_markaz = models.Juvenile_Markaz.objects.filter(juvenile_id=personal_info.juvenile_id).order_by('-created_at').first()
+            #     if juvenile_markaz.status == '1':
+            #         message = f"{personal_info.first_name} {personal_info.last_name} {personal_info.father_name} {juvenile_markaz.markaz.name} ga qabul qilingan!"
+            #     else:
+            #         message = f"{personal_info.first_name} {personal_info.last_name} {personal_info.father_name} {juvenile_markaz.markaz.name} ga qabul qilingan!. Lekin taqsimlanmagan"
+            #         print('just checking')
+            #     return Response({message}, status=status.HTTP_400_BAD_REQUEST)
             if personal_info:
                 ######
                 # print('111111')
@@ -203,13 +222,16 @@ class JuvenileViewset(ModelViewSet):
                 #     "message": "Bola aniqlanganlar ro'yxatiga qo'shildi!",
                 #     "juvenile_id": juvenile.id
                 # }, status=status.HTTP_201_CREATED)
+
                 user = request.user
                 juvenile = personal_info.juvenile
 
                 juvenile_markaz = models.Juvenile_Markaz.objects.filter(juvenile=juvenile).order_by(
                     '-created_at').first()
-                if int(juvenile_markaz.status) < 3 or int(juvenile_markaz.status) == 10:
-                    return Response({"Bu bola hali taqsimlanmagan!"}, status=status.HTTP_400_BAD_REQUEST)
+                if int(juvenile_markaz.status) == 1:
+                    return Response({f"{personal_info.first_name} {personal_info.last_name} {personal_info.father_name} {juvenile_markaz.markaz.name} ga qabul qilingan"}, status=status.HTTP_400_BAD_REQUEST)
+                if int(juvenile_markaz.status) == 2 or int(juvenile_markaz.status) == 10:
+                    return Response({f"{personal_info.first_name} {personal_info.last_name} {personal_info.father_name} {juvenile_markaz.markaz.name} ga qabul qilingan, lekin taqsimlanmagan!"}, status=status.HTTP_400_BAD_REQUEST)
                 models.Juvenile_Markaz.objects.create(juvenile=juvenile, markaz=user.markaz, status=1)
                 juvenile.current_markaz = user.markaz
                 juvenile.accepted_center_number += 1
@@ -251,18 +273,55 @@ class JuvenileViewset(ModelViewSet):
     def create_available_juvenile(self, request):
         user = request.user
         juvenile_id = self.request.GET.get('juvenile_id', None)
+
         try:
             juvenile = models.Juvenile.objects.get(pk=juvenile_id)
+
         except:
             return Response({"message": "Bola mavjud emas!"}, status=status.HTTP_404_NOT_FOUND)
+        personal_info = models.PersonalInfoJuvenile.objects.get(juvenile=juvenile)
 
-        juvenile_markaz = models.Juvenile_Markaz.objects.filter(juvenile=juvenile).order_by('-created_at').first()
-        if int(juvenile_markaz.status) < 3 or int(juvenile_markaz.status) == 10:
-            return Response({"Bu bola hali taqsimlanmagan!"}, status=status.HTTP_400_BAD_REQUEST)
-        models.Juvenile_Markaz.objects.create(juvenile_id=juvenile_id, markaz=user.markaz, status=1)
+        juvenile_markaz = models.Juvenile_Markaz.objects.filter(juvenile=juvenile).order_by(
+            '-created_at').first()
+        if int(juvenile_markaz.status) == 1:
+            return Response({
+                                f"{personal_info.first_name} {personal_info.last_name} {personal_info.father_name} {juvenile_markaz.markaz.name} ga qabul qilingan"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        if int(juvenile_markaz.status) == 2 or int(juvenile_markaz.status) == 10:
+            return Response({
+                                f"{personal_info.first_name} {personal_info.last_name} {personal_info.father_name} {juvenile_markaz.markaz.name} ga qabul qilingan, lekin taqsimlanmagan!"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        models.Juvenile_Markaz.objects.create(juvenile=juvenile, markaz=user.markaz, status=1)
         juvenile.current_markaz = user.markaz
+        juvenile.accepted_center_number += 1
         juvenile.save()
-        return Response({"Bola markazga muvaffaqqiyatli qabul qilindi!"})
+        return Response({
+            "message": "Bola aniqlanganlar ro'yxatiga qo'shildi!",
+            "juvenile_id": juvenile.id
+        }, status=status.HTTP_201_CREATED)
+
+
+
+
+
+        # user = request.user
+        # juvenile_id = self.request.GET.get('juvenile_id', None)
+        # try:
+        #     juvenile = models.Juvenile.objects.get(pk=juvenile_id)
+        # except:
+        #     return Response({"message": "Bola mavjud emas!"}, status=status.HTTP_404_NOT_FOUND)
+        #
+        # juvenile_markaz = models.Juvenile_Markaz.objects.filter(juvenile=juvenile).order_by('-created_at').first()
+        #
+        # # if juvenile_markaz.status == '1':
+        # #     return Response({"Bu bola hali taqsimlanmagan!"}, status=status.HTTP_400_BAD_REQUEST)
+        #
+        # if int(juvenile_markaz.status) < 3 or int(juvenile_markaz.status) == 10:
+        #     return Response({"Bu bola hali taqsimlanmagan!"}, status=status.HTTP_400_BAD_REQUEST)
+        # models.Juvenile_Markaz.objects.create(juvenile_id=juvenile_id, markaz=user.markaz, status=1)
+        # juvenile.current_markaz = user.markaz
+        # juvenile.save()
+        # return Response({"Bola markazga muvaffaqqiyatli qabul qilindi!"})
 
 
 
@@ -287,26 +346,37 @@ class JuvenileViewset(ModelViewSet):
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = serializers.AddressInfoJuvenileCreateSerializer(data=request.data)
+        try:
+            address_info = models.AddressInfoJuvenile.objects.get(juvenile=juvenile)
+            serializer = serializers.AddressInfoJuvenileCreateSerializer(address_info, data=request.data)
+            # juvenile_markaz = models.Juvenile_Markaz.objects.filter(juvenile=juvenile).order_by('-created_at').first()
+            # if juvenile_markaz.markaz != request.user.markaz:
+            #     return Response("Malumotlarni o'zgartira olmaysiz,bola boshqa markaz tomonidan qo'shilgan", status=status.HTTP_401_UNAUTHORIZED)
+        except ObjectDoesNotExist:
+            serializer = serializers.AddressInfoJuvenileCreateSerializer(data=request.data)
 
         if serializer.is_valid():
-            address_info = models.AddressInfoJuvenile.objects.create(**serializer.validated_data, juvenile=juvenile)
-            address_info.save()
+            serializer.save(juvenile=juvenile)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post','put'])
     def juvenile_educationinfo_create_or_update(self, request, pk=None):
         try:
             juvenile = models.Juvenile.objects.get(pk=pk)
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        try:
+            education_info = models.EducationInfoJuvenile.objects.get(juvenile = juvenile)
+            serializer = serializers.EducationInfoJuvenileCreateSerializer(education_info,data = request.data)
+            # juvenile_markaz = models.Juvenile_Markaz.objects.filter(juvenile = juvenile).order_by('-created_at').first()
+            # if juvenile_markaz.markaz != request.user.markaz:
+            #     return Response("Malumotlarni o'zgartira olmaysiz,bola boshqa markaz tomonidan qo'shilgan", status=status.HTTP_401_UNAUTHORIZED)
 
-        serializer = serializers.EducationInfoJuvenileCreateSerializer(data=request.data)
+        except ObjectDoesNotExist:
+            serializer = serializers.EducationInfoJuvenileCreateSerializer(data = request.data)
         if serializer.is_valid():
-            print('valid1')
-            education_info = models.EducationInfoJuvenile.objects.create(**serializer.validated_data, juvenile=juvenile)
-            education_info.save()
+            serializer.save(juvenile=juvenile)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -317,12 +387,19 @@ class JuvenileViewset(ModelViewSet):
         except ObjectDoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = serializers.ParentInfoJuvenileCreateSerializer(data=request.data)
+        # serializer = serializers.ParentInfoJuvenileCreateSerializer(data=request.data)
+        try:
+            parent_info = models.ParentInfoJuvenile.objects.get(juvenile=juvenile)
+            serializer = serializers.ParentInfoJuvenileCreateSerializer(parent_info, data=request.data)
+        except ObjectDoesNotExist:
+            serializer = serializers.ParentInfoJuvenileCreateSerializer(data = request.data)
 
         if serializer.is_valid():
-            parent_info = models.ParentInfoJuvenile.objects.create(**serializer.validated_data, juvenile=juvenile)
-            parent_info.save()
+            # parent_info = models.ParentInfoJuvenile.objects.create(**serializer.validated_data, juvenile=juvenile)
+            # parent_info.save()
+            parent_info = serializer.save(juvenile=juvenile)
             return Response({"id": parent_info.id, "data": serializer.data}, status=status.HTTP_201_CREATED)
+            # return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # Aniqlanmangan bolalar ro'yxati
@@ -1373,7 +1450,7 @@ class JuvenileNoEducationListView(generics.ListAPIView):
     serializer_class = serializers.JuvenileNoEducationListSerializer
 
     def get_queryset(self):
-        juveniles_no_education = models.PersonalInfoJuvenile.objects.filter(juvenile__educationinfojuvenile__isnull=True)
+        juveniles_no_education = models.PersonalInfoJuvenile.objects.filter(juvenile__educationinfojuvenile__isnull=True,juvenile__isnull=False).distinct()
         return juveniles_no_education
 
 

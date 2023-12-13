@@ -18,7 +18,7 @@ def get_last_juveniles():
     juvenile_markazs = models.Juvenile_Markaz.objects.filter(
         Q(status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'])
         & Q(accept_center_info__created_at__range=[start_datetime, end_datetime])
-    ).order_by('-created_at')
+    ).distinct().order_by('-created_at')
     serializer = serializers.JuvenileMarkazSerializer(juvenile_markazs, many=True)
     serialized_data = serializer.data
     for item in serialized_data:

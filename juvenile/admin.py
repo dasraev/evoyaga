@@ -14,6 +14,7 @@ from . import models
 
 class JuvinileModelAdmin(admin.ModelAdmin):
     search_fields = ('id','created_at')
+    ordering =['-created_at']
 
     # def get_first_name(self, instance):
     #     obj = models.PersonalInfoJuvenile.objects.get(juvenile_id=instance.id)
@@ -21,6 +22,7 @@ class JuvinileModelAdmin(admin.ModelAdmin):
 
 class PersonalInfoJuvenileModelAdmin(admin.ModelAdmin):
     search_fields = ('first_name','last_name','father_name')
+    ordering =['-created_at']
 
 
 
@@ -35,7 +37,7 @@ admin.site.register( models.JuvenileMedicalList)
 admin.site.register( models.Juvenile, JuvinileModelAdmin)
 admin.site.register( models.Juvenile_Markaz)
 admin.site.register( models.UnidentifiedJuvenile)
-admin.site.register( models.PersonalInfoJuvenile)
+admin.site.register( models.PersonalInfoJuvenile,PersonalInfoJuvenileModelAdmin)
 admin.site.register( models.AddressInfoJuvenile)
 admin.site.register( models.EducationInfoJuvenile)
 admin.site.register( models.ParentInfoJuvenile)
