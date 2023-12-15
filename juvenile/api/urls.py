@@ -3,6 +3,7 @@ from rest_framework import routers
 from juvenile.juvenile_parent import views as parent_views
 from . import views
 from juvenile.statistics import views as statistics_veiws
+
 router = routers.DefaultRouter()
 
 router.register('juveniles', viewset=views.JuvenileViewset, basename='juveniles')
@@ -54,18 +55,24 @@ urlpatterns = [
     path('apparat/dashboard_card_statistics/',
          statistics_veiws.ApparatDashboarCardStatisticsAPIView.as_view()),
     path('apparat/reason_bringing_statistics/',
-         statistics_veiws.ApparatReasonBringingStatisticsAPIView.as_view()),
+         statistics_veiws.ApparatReasonBringingStatisticsAPIView2.as_view()),
     path('apparat/in_center_now_statistics/',
          statistics_veiws.ApparatInCenterNowStatisticsAPIView.as_view()),
     path('apparat/distribution_type_statistics/',
-         statistics_veiws.ApparatDistributionTypeStatisticsAPIView.as_view()),
+         statistics_veiws.ApparatDistributionTypeStatisticsAPIView2.as_view()),
     path('apparat/come_more_2_times_statistics/',
          statistics_veiws.ApparatComeMore2TimesStatisticsAPIView.as_view()),
     path('apparat/dashboard_education_type_statistics/',
-         statistics_veiws.ApparatEducationTypeStatisticsAPIView.as_view()),
+         statistics_veiws.ApparatEducationTypeStatisticsAPIView2.as_view()),
     path('apparat/download_statistics/',
          statistics_veiws.ApparatDownloadStatisticsAPIView.as_view()),
 
     #current_markaz qo'shish
-    path('add_current_markaz/', views.AddCurrentMarkaz.as_view())
+    path('add_current_markaz/', views.AddCurrentMarkaz.as_view()),
+
+
+    # created_at yesterday juveniles
+    # path('last_accepted_juveniles/', views.LastAcceptedJuvenilesView.as_view()),
+    path('juveniles_no_education/', views.JuvenileNoEducationListView.as_view()),
+    # path('test',views.test.as_view())
 ]
