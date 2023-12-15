@@ -8,12 +8,11 @@ media/
 .vscode/
 
 venv/
-<<<<<<< HEAD
 venv
-=======
+
 venv
 db.sqlite3
 
 
 
->>>>>>> f7fd4b20521d0312c38de13435be97a4ca2cc846
+

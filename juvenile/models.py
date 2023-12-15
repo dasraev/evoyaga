@@ -366,3 +366,8 @@ class DistributionToWhom(models.Model):
     last_name = models.CharField(max_length=255,null=True,blank=True)
     father_name = models.CharField(max_length=255,null=True,blank=True)
     pinfl = models.CharField(max_length=14,null=True, blank=True)
+
+    class Meta:
+        db_table = "distribution_to_whom"
+        verbose_name = "Kimga topshirilgani"
+        verbose_name_plural = "Kimga topshirilgani"
