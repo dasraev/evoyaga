@@ -2809,11 +2809,6 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
             # juvenile_markaz = models.Juvenile_Markaz.objects.filter(created_at__year=last_year)
             juvenile_markaz = get_juvenile_markaz()
             juvenile_markaz = juvenile_markaz.filter(juvenile__juvenile__gender='M')
-
-            for item in juvenile_markaz:
-                juvenile_ids.append(item.juvenile_id)
-
-
             come_more_times_juveniles = 0
             for item in juvenile_markaz:
                 juvenile_ids.append(item.juvenile_id)
