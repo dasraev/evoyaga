@@ -668,7 +668,7 @@ class ApparatDownloadStatisticsApiView1(generics.GenericAPIView):
 
         })
 
-class ApparatDownloadStatisticsApiView2(APIView):
+class ApparatDownloadStatisticsApiView2(generics.GenericAPIView):
     # permission_classes =  [permissions.AllowAny]
     def get_queryset(self):
         return models.Juvenile.objects.all()
@@ -685,7 +685,7 @@ class ApparatDownloadStatisticsApiView2(APIView):
             # 'file4': file_path4,
 
         })
-class ApparatDownloadStatisticsApiView3(APIView):
+class ApparatDownloadStatisticsApiView3(generics.GenericAPIView):
     # permission_classes =  [permissions.AllowAny]
     def get_queryset(self):
         return models.Juvenile.objects.all()
@@ -702,7 +702,7 @@ class ApparatDownloadStatisticsApiView3(APIView):
             # 'file4': file_path4,
 
         })
-class ApparatDownloadStatisticsApiView4(APIView):
+class ApparatDownloadStatisticsApiView4(generics.GenericAPIView):
     # permission_classes =  [permissions.AllowAny]
     def get_queryset(self):
         return models.Juvenile.objects.all()
