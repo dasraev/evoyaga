@@ -5,7 +5,7 @@ import info.models
 from juvenile import models
 from info import models as info_db
 from rest_framework.response import Response
-from django.db.models import Q
+from django.db.models import Q,Count,Sum
 from collections import Counter
 
 
@@ -13,24 +13,15 @@ def get_juvenile_markaz(date_from = None, date_to = None, markaz_id = None):
     last_year = int(format(datetime.now(), '%Y'))
 
     juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-        juvenile__educationinfojuvenile__isnull=False,
-        juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-        juvenile__parentinfojuvenile__isnull=False).distinct()
-    juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(juvenile__juvenile__passport_type='5').distinct()
+        status__in=['2','3','4','5','6','7','8','9','10','11','12','13'] )
     if date_from and date_to:
         juvenile_markaz = juvenile_markaz.filter(created_at__range=[date_from, date_to])
-        juvenile_markaz_foreign = juvenile_markaz_foreign.filter(created_at__range=[date_from, date_to])
     if date_from == None and date_to == None:
         juvenile_markaz = juvenile_markaz.filter(created_at__year=last_year)
-        juvenile_markaz_foreign = juvenile_markaz_foreign.filter(created_at__year=last_year)
     if markaz_id:
         juvenile_markaz = juvenile_markaz.filter(markaz=markaz_id)
-        juvenile_markaz_foreign = juvenile_markaz_foreign.filter(markaz=markaz_id)
-    # else:
-    #     juvenile_markaz = juvenile_markaz.filter(created_at__year=last_year)
-    #     juvenile_markaz_foreign = juvenile_markaz_foreign.filter(created_at__year=last_year)
+    return juvenile_markaz
 
-    return juvenile_markaz | juvenile_markaz_foreign
 # Dashboard card statistics
 class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
     accepted_center_childs = serializers.SerializerMethodField()
@@ -62,12 +53,13 @@ class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = (models.Juvenile_Markaz.objects.filter(markaz=user_markaz).
-                                            filter(juvenile__educationinfojuvenile__isnull=False,juvenile__addressinfojuvenile__isnull=False,
-                                            juvenile__juvenile__isnull=False,juvenile__parentinfojuvenile__isnull=False).
-                                            filter(created_at__range=[date_from, date_to]).distinct().count())
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__range=[date_from, date_to]).distinct().count()
-            juvenile_markaz += juvenile_markaz_foreign
+            juvenile_markaz = get_juvenile_markaz(date_from,date_to,markaz_id=user_markaz).count()
+            # juvenile_markaz = (models.Juvenile_Markaz.objects.filter(markaz=user_markaz).
+            #                                 filter(juvenile__educationinfojuvenile__isnull=False,juvenile__addressinfojuvenile__isnull=False,
+            #                                 juvenile__juvenile__isnull=False,juvenile__parentinfojuvenile__isnull=False).
+            #                                 filter(created_at__range=[date_from, date_to]).distinct().count())
+            # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__range=[date_from, date_to]).distinct().count()
+            # juvenile_markaz += juvenile_markaz_foreign
             # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
             #     markaz=user_markaz,).filter(created_at__range=[date_from, date_to]).count()
             # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
@@ -75,15 +67,16 @@ class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
             # juvenile_markaz += unidentified_juvenile
 
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz).filter(juvenile__educationinfojuvenile__isnull=False,
-                                           juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
-                                           juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct().count()
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__year = last_year).distinct().count()
-            print(121,juvenile_markaz)
-            print(221,juvenile_markaz_foreign)
-            juvenile_markaz += juvenile_markaz_foreign
-            print(109,juvenile_markaz)
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz).count()
+            # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
+            #     markaz=user_markaz).filter(juvenile__educationinfojuvenile__isnull=False,
+            #                                juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
+            #                                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct().count()
+            # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__year = last_year).distinct().count()
+            # print(121,juvenile_markaz)
+            # print(221,juvenile_markaz_foreign)
+            # juvenile_markaz += juvenile_markaz_foreign
+            # print(109,juvenile_markaz)
             # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
             #     markaz=user_markaz).filter(created_at__year=last_year).count()
             # juvenile_markaz += unidentified_juvenile
@@ -100,31 +93,36 @@ class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
-                                           juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
-                                           juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__range=[date_from, date_to]).distinct()
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
+            juvenile_markaz = get_juvenile_markaz(date_from,date_to,markaz_id=user_markaz)
+            # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
+            #     markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
+            #                                juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
+            #                                juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__range=[date_from, date_to]).distinct()
+            # juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
             # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
             #     markaz=user_markaz).filter(gender='M').filter(created_at__range=[date_from, date_to]).count()
             # result += unidentified_juvenile
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
-                                           juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
-                                           juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__year = last_year).distinct()
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
+
+            # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
+            #     markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
+            #                                juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
+            #                                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__year = last_year).distinct()
+            # juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
             # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
             #     markaz=user_markaz).filter(gender='M').filter(created_at__year=last_year).count()
             # result += unidentified_juvenile
+        # juvenile_ids = juvenile_markaz.values_list('juvenile',flat=True)
+        boys = juvenile_markaz.filter(juvenile__juvenile__gender='M').count()
+        # boys = models.PersonalInfoJuvenile.objects.filter(Q(juvenile__id__in=juvenile_ids) & Q(gender = 'M')).count()
+        # for item in juvenile_markaz:
+        #     boy = models.PersonalInfoJuvenile.objects.filter(juvenile=item.juvenile).filter(gender='M').count()
+        #     result += boy
 
-        for item in juvenile_markaz:
-            boy = models.PersonalInfoJuvenile.objects.filter(juvenile=item.juvenile).filter(gender='M').count()
-            result += boy
-
-        return result
+        return boys
 
     def get_girls(self, obj):
         request = self.context.get('request')
@@ -136,31 +134,34 @@ class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
-                                           juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
-                                           juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__range=[date_from, date_to]).distinct()
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
+            juvenile_markaz = get_juvenile_markaz(date_from,date_to,markaz_id=user_markaz)
+            # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
+            #     markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
+            #                                juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
+            #                                juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__range=[date_from, date_to]).distinct()
+            # juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
             # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
             #     markaz=user_markaz).filter(gender='M').filter(created_at__range=[date_from, date_to]).count()
             # result += unidentified_juvenile
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
-                                           juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
-                                           juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__year = last_year).distinct()
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
+            # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
+            #     markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
+            #                                juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
+            #                                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__year = last_year).distinct()
+            # juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
             # unidentified_juvenile = models.UnidentifiedJuvenile.objects.filter(
             #     markaz=user_markaz).filter(gender='M').filter(created_at__year=last_year).count()
             # result += unidentified_juvenile
+        # juvenile_ids = juvenile_markaz.values_list('juvenile', flat=True)
+        girls = juvenile_markaz.filter(juvenile__juvenile__gender='F').count()
+        # for item in juvenile_markaz:
+        #     girl = models.PersonalInfoJuvenile.objects.filter(juvenile=item.juvenile).filter(gender='F').count()
+        #     result += girl
 
-        for item in juvenile_markaz:
-            girl = models.PersonalInfoJuvenile.objects.filter(juvenile=item.juvenile).filter(gender='F').count()
-            result += girl
-
-        return result
+        return girls
 
     def get_graduated_itm(self, obj):
         request = self.context.get('request')
@@ -171,19 +172,22 @@ class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(created_at__range=[date_from, date_to]).filter(
-                monitoring_info__monitoring_status=2).filter(markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
-                                           juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
-                                           juvenile__parentinfojuvenile__isnull=False).distinct().count()
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5',monitoring_info__monitoring_status=2).filter(created_at__range = [date_from,date_to]).distinct().count()
-            juvenile_markaz +=juvenile_markaz_foreign
+            juvenile_markaz = get_juvenile_markaz(date_from,date_to,markaz_id=user_markaz).filter(monitoring_info__monitoring_status=2).count()
+
+            # juvenile_markaz = models.Juvenile_Markaz.objects.filter(created_at__range=[date_from, date_to]).filter(
+            #     monitoring_info__monitoring_status=2).filter(markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
+            #                                juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
+            #                                juvenile__parentinfojuvenile__isnull=False).distinct().count()
+            # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5',monitoring_info__monitoring_status=2).filter(created_at__range = [date_from,date_to]).distinct().count()
+            # juvenile_markaz +=juvenile_markaz_foreign
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(created_at__year=last_year).filter(
-                monitoring_info__monitoring_status=2).filter(markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
-                                           juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
-                                           juvenile__parentinfojuvenile__isnull=False).distinct().count()
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5',monitoring_info__monitoring_status=2).filter(created_at__year = last_year).distinct().count()
-            juvenile_markaz += juvenile_markaz_foreign
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz).filter(monitoring_info__monitoring_status=2).count()
+            # juvenile_markaz = models.Juvenile_Markaz.objects.filter(created_at__year=last_year).filter(
+            #     monitoring_info__monitoring_status=2).filter(markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
+            #                                juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
+            #                                juvenile__parentinfojuvenile__isnull=False).distinct().count()
+            # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5',monitoring_info__monitoring_status=2).filter(created_at__year = last_year).distinct().count()
+            # juvenile_markaz += juvenile_markaz_foreign
 
 
         return juvenile_markaz
@@ -197,27 +201,31 @@ class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
         date_from = request.GET.get('date_from')
         date_to = request.GET.get('date_to')
 
+
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
-                                           juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
-                                           juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__range = [date_from,date_to]).distinct()
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
+            juvenile_markaz = get_juvenile_markaz(date_from,date_to,markaz_id=user_markaz)
+            # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
+                # markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
+                #                            juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
+                #                            juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__range = [date_from,date_to]).distinct()
+            # juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
-                                           juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
-                                           juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__year = last_year).distinct()
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-        for item in juvenile_markaz:
-            if item.employment_info:
-                if item.employment_info.employment_file:
-                    result += 1
+            # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
+            #     markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,
+            #                                juvenile__addressinfojuvenile__isnull=False,juvenile__juvenile__isnull=False,
+            #                                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type = '5').filter(created_at__year = last_year).distinct()
+            # juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
 
-        return result
+        # for item in juvenile_markaz:
+        #     if item.employment_info:
+        #         if item.employment_info.employment_file:
+        #             result += 1
+
+        return juvenile_markaz.filter(status='6').count()
 
     def get_not_identified(self, obj):
         request = self.context.get('request')
@@ -517,30 +525,14 @@ class EducationTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            juvenile_markaz = get_juvenile_markaz(date_from,date_to,markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__range=[date_from, date_to]).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__year=last_year).distinct()
 
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
-        juvenile_ids = []
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile.id)
-        kindergarten = models.EducationInfoJuvenile.objects.filter(
-                juvenile__id__in=juvenile_ids,school_type=1).count()
+        kindergarten = juvenile_markaz.filter(juvenile__educationinfojuvenile__school_type=1).count()
+
 
 
         return kindergarten
@@ -554,30 +546,12 @@ class EducationTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            juvenile_markaz = get_juvenile_markaz(date_from, date_to, markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__range=[date_from, date_to]).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__year=last_year).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
-        juvenile_ids = []
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile.id)
-        school = models.EducationInfoJuvenile.objects.filter(
-            juvenile__id__in=juvenile_ids).filter(school_type=2).count()
+        school = juvenile_markaz.filter(juvenile__educationinfojuvenile__school_type=2).count()
 
         return school
 
@@ -591,31 +565,12 @@ class EducationTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            juvenile_markaz = get_juvenile_markaz(date_from, date_to, markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__range=[date_from, date_to]).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__year=last_year).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
-
-        juvenile_ids = []
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile.id)
-        vocational_school = models.EducationInfoJuvenile.objects.filter(
-            juvenile__id__in = juvenile_ids).filter(school_type=3).count()
+        vocational_school = juvenile_markaz.filter(juvenile__educationinfojuvenile__school_type=3).count()
 
         return vocational_school
 
@@ -629,32 +584,12 @@ class EducationTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            juvenile_markaz = get_juvenile_markaz(date_from, date_to, markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__range=[date_from, date_to]).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__year=last_year).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
-
-        juvenile_ids = []
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile.id)
-        vocational_college = models.EducationInfoJuvenile.objects.filter(
-            juvenile__id__in = juvenile_ids).filter(school_type=4).count()
-
+        vocational_college = juvenile_markaz.filter(juvenile__educationinfojuvenile__school_type=4).count()
 
         return vocational_college
 
@@ -668,32 +603,12 @@ class EducationTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            juvenile_markaz = get_juvenile_markaz(date_from, date_to, markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__range=[date_from, date_to]).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__year=last_year).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
-
-        juvenile_ids = []
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile.id)
-        litsey = models.EducationInfoJuvenile.objects.filter(
-            juvenile__id__in=juvenile_ids).filter(school_type=5).count()
-
+        litsey = juvenile_markaz.filter(juvenile__educationinfojuvenile__school_type=5).count()
 
         return litsey
 
@@ -707,31 +622,12 @@ class EducationTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            juvenile_markaz = get_juvenile_markaz(date_from, date_to, markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__range=[date_from, date_to]).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__year=last_year).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
-
-        juvenile_ids = []
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile.id)
-        texnikum = models.EducationInfoJuvenile.objects.filter(
-            juvenile__id__in=juvenile_ids).filter(school_type=6).count()
+        texnikum = juvenile_markaz.filter(juvenile__educationinfojuvenile__school_type=6).count()
 
 
         return texnikum
@@ -746,32 +642,12 @@ class EducationTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            juvenile_markaz = get_juvenile_markaz(date_from, date_to, markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__year=last_year).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__range=[date_from, date_to]).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
-        print('Pod',juvenile_markaz)
-        juvenile_ids = []
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile.id)
-        special_education = models.EducationInfoJuvenile.objects.filter(
-            juvenile__id__in=juvenile_ids).filter(school_type=7).count()
-
+        special_education = juvenile_markaz.filter(juvenile__educationinfojuvenile__school_type=7).count()
 
         return special_education
 
@@ -785,32 +661,12 @@ class EducationTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            juvenile_markaz = get_juvenile_markaz(date_from, date_to, markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__range=[date_from, date_to]).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__year=last_year).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
-        print(9008,juvenile_markaz)
-        juvenile_ids = []
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile.id)
-        otm = models.EducationInfoJuvenile.objects.filter(
-            juvenile__id__in=juvenile_ids).filter(school_type=8).count()
-
+        otm = juvenile_markaz.filter(juvenile__educationinfojuvenile__school_type=8).count()
 
         return otm
 
@@ -825,31 +681,12 @@ class EducationTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            juvenile_markaz = get_juvenile_markaz(date_from, date_to, markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__range=[date_from, date_to]).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__year=last_year).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
-
-        juvenile_ids = []
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile.id)
-        working = models.EducationInfoJuvenile.objects.filter(
-            juvenile__id__in = juvenile_ids).filter(school_type=10).count()
+        working = juvenile_markaz.filter(juvenile__educationinfojuvenile__school_type=10).count()
 
 
         return working
@@ -864,31 +701,12 @@ class EducationTypeStatisticsSerializer(serializers.ModelSerializer):
         date_to = request.GET.get('date_to')
 
         if date_from and date_to:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+            juvenile_markaz = get_juvenile_markaz(date_from, date_to, markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__range=[date_from, date_to]).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
         else:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-                markaz=user_markaz, juvenile__educationinfojuvenile__isnull=False,
-                juvenile__addressinfojuvenile__isnull=False, juvenile__juvenile__isnull=False,
-                juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+            juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-            juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,
-                juvenile__juvenile__passport_type='5').filter(created_at__year=last_year).distinct()
-
-            juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
-
-        juvenile_ids = []
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile.id)
-        not_study_not_working = models.EducationInfoJuvenile.objects.filter(
-            juvenile__id__in = juvenile_ids).filter(school_type=9).count()
+        not_study_not_working = juvenile_markaz.filter(juvenile__educationinfojuvenile__school_type=9).count()
 
 
         return not_study_not_working
@@ -900,35 +718,44 @@ def get_distribution_type_statistics(request, date_from, date_to, field_type, fi
     last_year = int(format(datetime.now(), '%Y'))
 
     if date_from and date_to:
-        juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-            markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,juvenile__addressinfojuvenile__isnull=False,
-                                            juvenile__juvenile__isnull=False,juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
-        juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type='5').filter(
-            created_at__range=[date_from, date_to]).distinct()
-        juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
+        juvenile_markaz = models.Juvenile_Markaz.objects.filter(status__in=['3','4','5','6','7','8','9','11','12','13']).filter(markaz=user_markaz,created_at__range=[date_from,date_to])
+        # juvenile_markaz = get_juvenile_markaz(date_from,date_to,markaz_id=user_markaz)
+        # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
+        #     markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,juvenile__addressinfojuvenile__isnull=False,
+        #                                     juvenile__juvenile__isnull=False,juvenile__parentinfojuvenile__isnull=False).filter(created_at__range=[date_from, date_to]).distinct()
+        # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type='5').filter(
+        #     created_at__range=[date_from, date_to]).distinct()
+        # juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
     else:
-        juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-            markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,juvenile__addressinfojuvenile__isnull=False,
-                                            juvenile__juvenile__isnull=False,juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
-        juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type='5').filter(
-            created_at__year = last_year).distinct()
-        juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
+        juvenile_markaz = models.Juvenile_Markaz.objects.filter(status__in=['3','4','5','6','7','8','9','11','12','13']).filter(markaz=user_markaz,created_at__year=last_year)
 
 
-    for item in juvenile_markaz:
-        if item.distributed_info:
-            distributed_info = item.distributed_info.id
-            if field_type == 'distribution_type':
-                statistic_num = models.JuvenileDistributedInfo.objects.filter(
-                    pk=distributed_info).filter(
-                    distribution_type=field_value).count()
-                print('WER',statistic_num)
-            elif field_type == 'type_guardianship':
-                statistic_num = models.JuvenileDistributedInfo.objects.filter(
-                    pk=distributed_info).filter(
-                    type_guardianship=field_value).count()
-            result += statistic_num
-    return result
+        # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
+        #     markaz=user_markaz,juvenile__educationinfojuvenile__isnull=False,juvenile__addressinfojuvenile__isnull=False,
+        #                                     juvenile__juvenile__isnull=False,juvenile__parentinfojuvenile__isnull=False).filter(created_at__year=last_year).distinct()
+        # juvenile_markaz_foreign = models.Juvenile_Markaz.objects.filter(markaz=user_markaz,juvenile__juvenile__passport_type='5').filter(
+        #     created_at__year = last_year).distinct()
+        # juvenile_markaz = juvenile_markaz.union(juvenile_markaz_foreign)
+
+    if field_type == 'distribution_type':
+        distribution_stat_num = juvenile_markaz.filter(distributed_info__distribution_type=field_value).distinct().count()
+    elif field_type == 'type_guardianship':
+        distribution_stat_num = juvenile_markaz.filter(distributed_info__type_guardianship=field_value).distinct().count()
+    return distribution_stat_num
+    # for item in juvenile_markaz:
+    #     if item.distributed_info:
+    #         distributed_info = item.distributed_info.id
+    #         if field_type == 'distribution_type':
+    #             statistic_num = models.JuvenileDistributedInfo.objects.filter(
+    #                 pk=distributed_info).filter(
+    #                 distribution_type=field_value).count()
+    #             print('WER',statistic_num)
+    #         elif field_type == 'type_guardianship':
+    #             statistic_num = models.JuvenileDistributedInfo.objects.filter(
+    #                 pk=distributed_info).filter(
+    #                 type_guardianship=field_value).count()
+    #         result += statistic_num
+    # return result
 
 
 # Kimlarga topshirildi statistikasi
@@ -2691,6 +2518,7 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({'message': 'markaz_id is not valid!'})
 
         if date_from and date_to and markaz_id:
+
             juvenile_ids = []
             juvenile_markaz = get_juvenile_markaz(date_from,date_to,markaz_id)
 
@@ -2703,6 +2531,8 @@ class ApparatComeMore2TimesStatisticsSerializer(serializers.ModelSerializer):
                     come_more_times_juveniles += 1
 
         elif date_from and date_to:
+
+            print('ALL juv')
             juvenile_ids = []
             juvenile_markaz = get_juvenile_markaz(date_from,date_to)
             # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
@@ -3025,6 +2855,12 @@ class ApparatEducationTypeStatisticsSerializer(serializers.ModelSerializer):
                     {'message': 'markaz_id is not valid!'})
         juvenile_ids = []
         if date_from and date_to and markaz_id:
+            kindergarten = (
+                models.EducationInfoJuvenile.objects
+                .filter(juvenile__id__in=models.Juvenile_Markaz.objects.values_list('juvenile__id', flat=True))
+                .filter(school_type=1)
+                .aggregate(count=Count('id'))
+            )['count']
             juvenile_markaz = get_juvenile_markaz(date_from,date_to,markaz_id)
             # juvenile_markaz = models.Juvenile_Markaz.objects.filter(
             #     markaz=markaz_id).filter(created_at__range=[date_from, date_to])

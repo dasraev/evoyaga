@@ -9,11 +9,16 @@ from django.db import connection
 from datetime import datetime
 from juvenile import models
 from juvenile.statistics import serializers
-import xlsxwriter
 import pytz
 
 from rest_framework.views import APIView
 from config.settings import env
+
+from django.http import HttpResponse
+
+from . import reports
+from rest_framework import permissions
+import xlsxwriter
 
 class DashboarCardStatisticsAPIView(generics.ListAPIView):
     queryset = models.Juvenile.objects.all()
@@ -574,7 +579,137 @@ class ApparatDownloadStatisticsAPIView(generics.ListAPIView):
 
 
 ###### new code ######
-class MyStatisticsView(generics.GenericAPIView):
-    def get(self,request):
-        user = request.user
 
+
+class ApparatDownloadStatisticsAPIView10(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        file_path = reports.apparat_to_excel_10()
+        return Response({'file':file_path})
+
+class CenterDownloadStatisticsApiView1(APIView):
+    permission_classes =  [permissions.AllowAny]
+
+    def get(self,request):
+        file_path1 = reports.center_to_excel_9(request)
+        # file_path2 = reports.center_to_excel_8_1(request)
+        # file_path3 = reports.center_to_excel_8_1(request)
+        # file_path4 = reports.center_to_excel_8_1(request)
+        return Response({
+            'file':file_path1,
+            # 'file2': file_path2,
+            # 'file3': file_path3,
+            # 'file4': file_path4,
+        #
+        })
+class CenterDownloadStatisticsApiView2(APIView):
+    # permission_classes =  [permissions.AllowAny]
+
+    def get(self,request):
+        file_path2 = reports.center_to_excel_8_1(request)
+        # file_path2 = reports.center_to_excel_8_1(request)
+        # file_path3 = reports.center_to_excel_8_1(request)
+        # file_path4 = reports.center_to_excel_8_1(request)
+        return Response({
+            'file':file_path2,
+            # 'file2': file_path2,
+            # 'file3': file_path3,
+            # 'file4': file_path4,
+
+        })
+class CenterDownloadStatisticsApiView3(APIView):
+    # permission_classes =  [permissions.AllowAny]
+
+    def get(self,request):
+        # file_path1 = reports.center_to_excel_9(request)
+        file_path3 = reports.center_to_excel_8_2(request)
+        # file_path3 = reports.center_to_excel_8_1(request)
+        # file_path4 = reports.center_to_excel_8_1(request)
+        return Response({
+            # 'file':file_path1,
+            'file': file_path3,
+            # 'file3': file_path3,
+            # 'file4': file_path4,
+
+        })
+class CenterDownloadStatisticsApiView4(APIView):
+    # permission_classes =  [permissions.AllowAny]
+
+    def get(self,request):
+        file_path3 = reports.center_to_excel_8_3(request)
+        # file_path4 = reports.center_to_excel_8_3(request)
+        return Response({
+            # 'file':file_path1,
+            # 'file2': file_path2,
+            'file': file_path3,
+            # 'file4': file_path4,
+
+        })
+
+
+class ApparatDownloadStatisticsApiView1(APIView):
+    # permission_classes =  [permissions.AllowAny]
+
+    def get(self,request):
+        print('CDF',request.user)
+        file_path1 = reports.apparat_to_excel_10(request)
+        # file_path2 = reports.apparat_to_excel_7_1(request)
+        # file_path3 = reports.apparat_to_excel_7_2(request)
+        # file_path4 = reports.apparat_to_excel_7_3(request)
+        return Response({
+            'file':file_path1,
+            # 'file2': file_path2,
+            # 'file3': file_path3,
+            # 'file4': file_path4,
+
+        })
+
+class ApparatDownloadStatisticsApiView2(APIView):
+    # permission_classes =  [permissions.AllowAny]
+
+    def get(self,request):
+        print('CDF',request.user)
+        # file_path1 = reports.apparat_to_excel_10(request)
+        file_path2 = reports.apparat_to_excel_7_1(request)
+        # file_path3 = reports.apparat_to_excel_7_2(request)
+        # file_path4 = reports.apparat_to_excel_7_3(request)
+        return Response({
+            'file':file_path2,
+            # 'file2': file_path2,
+            # 'file3': file_path3,
+            # 'file4': file_path4,
+
+        })
+class ApparatDownloadStatisticsApiView3(APIView):
+    # permission_classes =  [permissions.AllowAny]
+
+    def get(self,request):
+        print('CDF',request.user)
+        # file_path1 = reports.apparat_to_excel_10(request)
+        # file_path2 = reports.apparat_to_excel_7_1(request)
+        file_path3 = reports.apparat_to_excel_7_2(request)
+        # file_path4 = reports.apparat_to_excel_7_3(request)
+        return Response({
+            'file':file_path3,
+            # 'file2': file_path2,
+            # 'file3': file_path3,
+            # 'file4': file_path4,
+
+        })
+class ApparatDownloadStatisticsApiView4(APIView):
+    # permission_classes =  [permissions.AllowAny]
+
+    def get(self,request):
+        print('CDF',request.user)
+        # file_path1 = reports.apparat_to_excel_10(request)
+        # file_path2 = reports.apparat_to_excel_7_1(request)
+        # file_path3 = reports.apparat_to_excel_7_2(request)
+        file_path4 = reports.apparat_to_excel_7_3(request)
+        return Response({
+            'file':file_path4,
+            # 'file2': file_path2,
+            # 'file3': file_path3,
+            # 'file4': file_path4,
+
+        })

@@ -48,12 +48,19 @@ urlpatterns = [
          statistics_veiws.ComeMore2TimesStatisticsAPIView.as_view()),
     path('dashboard_education_type_statistics/',
          statistics_veiws.EducationTypeStatisticsAPIView.as_view()),
-    path('download_statistics/',
-          statistics_veiws.DownloadStatisticsAPIView.as_view()),
+
+    path('download_statistics-1/',
+          statistics_veiws.CenterDownloadStatisticsApiView1.as_view()),
+    path('download_statistics-2/',
+         statistics_veiws.CenterDownloadStatisticsApiView2.as_view()),
+    path('download_statistics-3/',
+         statistics_veiws.CenterDownloadStatisticsApiView3.as_view()),
+    path('download_statistics-4/',
+         statistics_veiws.CenterDownloadStatisticsApiView4.as_view()),
 
     #apparat statistics
-    path('apparat/dashboard_card_statistics/',
-         statistics_veiws.ApparatDashboarCardStatisticsAPIView.as_view()),
+    # path('apparat/dashboard_card_statistics/',
+    #      statistics_veiws.ApparatDashboarCardStatisticsAPIView.as_view()),
     path('apparat/reason_bringing_statistics/',
          statistics_veiws.ApparatReasonBringingStatisticsAPIView2.as_view()),
     path('apparat/in_center_now_statistics/',
@@ -64,8 +71,19 @@ urlpatterns = [
          statistics_veiws.ApparatComeMore2TimesStatisticsAPIView.as_view()),
     path('apparat/dashboard_education_type_statistics/',
          statistics_veiws.ApparatEducationTypeStatisticsAPIView2.as_view()),
-    path('apparat/download_statistics/',
-         statistics_veiws.ApparatDownloadStatisticsAPIView.as_view()),
+    # path('apparat/download_statistics/',
+    #      statistics_veiws.ApparatDownloadStatisticsAPIView.as_view()),
+
+    path('apparat/download_statistics-1/',
+         statistics_veiws.ApparatDownloadStatisticsApiView1.as_view()),
+    path('apparat/download_statistics-2/',
+             statistics_veiws.ApparatDownloadStatisticsApiView2.as_view()),
+    path('apparat/download_statistics-3/',
+             statistics_veiws.ApparatDownloadStatisticsApiView3.as_view()),
+    path('apparat/download_statistics-4/',
+             statistics_veiws.ApparatDownloadStatisticsApiView3.as_view()),
+    # path('test/',
+    #          statistics_veiws.CenterDownloadStatisticsApiView9.as_view()),
 
     #current_markaz qo'shish
     path('add_current_markaz/', views.AddCurrentMarkaz.as_view()),
@@ -74,5 +92,6 @@ urlpatterns = [
     # created_at yesterday juveniles
     # path('last_accepted_juveniles/', views.LastAcceptedJuvenilesView.as_view()),
     path('juveniles_no_education/', views.JuvenileNoEducationListView.as_view()),
-    # path('test',views.test.as_view())
+
+    # path('apparat/download_statistics7_1/',statistics_veiws.ApparatDownloadStatisticsApiView7_1.as_view())
 ]
