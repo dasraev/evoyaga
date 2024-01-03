@@ -588,9 +588,9 @@ class ApparatDownloadStatisticsAPIView10(APIView):
         file_path = reports.apparat_to_excel_10()
         return Response({'file':file_path})
 
-class CenterDownloadStatisticsApiView1(APIView):
-    permission_classes =  [permissions.AllowAny]
-
+class CenterDownloadStatisticsApiView1(generics.GenericAPIView):
+    def get_queryset(self):
+        return models.Juvenile.objects.all()
     def get(self,request):
         file_path1 = reports.center_to_excel_9(request)
         # file_path2 = reports.center_to_excel_8_1(request)
@@ -603,9 +603,9 @@ class CenterDownloadStatisticsApiView1(APIView):
             # 'file4': file_path4,
         #
         })
-class CenterDownloadStatisticsApiView2(APIView):
-    # permission_classes =  [permissions.AllowAny]
-
+class CenterDownloadStatisticsApiView2(generics.GenericAPIView):
+    def get_queryset(self):
+        return models.Juvenile.objects.all()
     def get(self,request):
         file_path2 = reports.center_to_excel_8_1(request)
         # file_path2 = reports.center_to_excel_8_1(request)
@@ -618,8 +618,9 @@ class CenterDownloadStatisticsApiView2(APIView):
             # 'file4': file_path4,
 
         })
-class CenterDownloadStatisticsApiView3(APIView):
-    # permission_classes =  [permissions.AllowAny]
+class CenterDownloadStatisticsApiView3(generics.GenericAPIView):
+    def get_queryset(self):
+        return models.Juvenile.objects.all()
 
     def get(self,request):
         # file_path1 = reports.center_to_excel_9(request)
@@ -633,8 +634,9 @@ class CenterDownloadStatisticsApiView3(APIView):
             # 'file4': file_path4,
 
         })
-class CenterDownloadStatisticsApiView4(APIView):
-    # permission_classes =  [permissions.AllowAny]
+class CenterDownloadStatisticsApiView4(generics.GenericAPIView):
+    def get_queryset(self):
+        return models.Juvenile.objects.all()
 
     def get(self,request):
         file_path3 = reports.center_to_excel_8_3(request)
@@ -648,9 +650,10 @@ class CenterDownloadStatisticsApiView4(APIView):
         })
 
 
-class ApparatDownloadStatisticsApiView1(APIView):
+class ApparatDownloadStatisticsApiView1(generics.GenericAPIView):
     # permission_classes =  [permissions.AllowAny]
-
+    def get_queryset(self):
+        return models.Juvenile.objects.all()
     def get(self,request):
         print('CDF',request.user)
         file_path1 = reports.apparat_to_excel_10(request)
@@ -667,7 +670,8 @@ class ApparatDownloadStatisticsApiView1(APIView):
 
 class ApparatDownloadStatisticsApiView2(APIView):
     # permission_classes =  [permissions.AllowAny]
-
+    def get_queryset(self):
+        return models.Juvenile.objects.all()
     def get(self,request):
         print('CDF',request.user)
         # file_path1 = reports.apparat_to_excel_10(request)
@@ -683,7 +687,8 @@ class ApparatDownloadStatisticsApiView2(APIView):
         })
 class ApparatDownloadStatisticsApiView3(APIView):
     # permission_classes =  [permissions.AllowAny]
-
+    def get_queryset(self):
+        return models.Juvenile.objects.all()
     def get(self,request):
         print('CDF',request.user)
         # file_path1 = reports.apparat_to_excel_10(request)
@@ -699,7 +704,8 @@ class ApparatDownloadStatisticsApiView3(APIView):
         })
 class ApparatDownloadStatisticsApiView4(APIView):
     # permission_classes =  [permissions.AllowAny]
-
+    def get_queryset(self):
+        return models.Juvenile.objects.all()
     def get(self,request):
         print('CDF',request.user)
         # file_path1 = reports.apparat_to_excel_10(request)
