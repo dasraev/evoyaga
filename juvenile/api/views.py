@@ -187,9 +187,12 @@ class JuvenileViewset(ModelViewSet):
                                                                             father_name=father_name,birth_date=birth_date)
 
                 else:
-                    print('bgh')
-                    personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=request.data.get("pinfl"))
-            except models.PersonalInfoJuvenile.DoesNotExist:
+                    try:
+                        personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=request.data.get("pinfl"))
+                    except:
+                        personal_info = models.PersonalInfoJuvenile.objects.get(passport_seria=request.data.get('passport_seria'))
+            # except models.PersonalInfoJuvenile.DoesNotExist:
+            except:
                 personal_info = None
 
             # is_available = check_is_exist_in_center(request.data)
@@ -234,7 +237,7 @@ class JuvenileViewset(ModelViewSet):
                     return Response({f"{personal_info.first_name} {personal_info.last_name} {personal_info.father_name} {juvenile_markaz.markaz.name} ga qabul qilingan, lekin taqsimlanmagan!"}, status=status.HTTP_400_BAD_REQUEST)
                 models.Juvenile_Markaz.objects.create(juvenile=juvenile, markaz=user.markaz, status=1)
                 juvenile.current_markaz = user.markaz
-                juvenile.accepted_center_number += 1
+                # juvenile.accepted_center_number += 1
                 juvenile.save()
                 return Response({
                     "message": "Bola aniqlanganlar ro'yxatiga qo'shildi!",
@@ -250,13 +253,17 @@ class JuvenileViewset(ModelViewSet):
                                                                            juvenile=juvenile)
                 juvenile.created_by = user
                 juvenile.current_markaz = user.markaz
+                # juvenile.accepted_center_number += 1
+                print('098aa')
                 juvenile.save()
+                print('765')
                 personal_info.save()
                 models.Juvenile_Markaz.objects.create(juvenile=juvenile, markaz=user.markaz, status=1)
                 return Response({
                     "message": "Bola aniqlanganlar ro'yxatiga qo'shildi!",
                     "juvenile_id": juvenile.id
                 }, status=status.HTTP_201_CREATED)
+            print('GHT')
             return Response(personal_info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
@@ -293,7 +300,7 @@ class JuvenileViewset(ModelViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
         models.Juvenile_Markaz.objects.create(juvenile=juvenile, markaz=user.markaz, status=1)
         juvenile.current_markaz = user.markaz
-        juvenile.accepted_center_number += 1
+        # juvenile.accepted_center_number += 1
         juvenile.save()
         return Response({
             "message": "Bola aniqlanganlar ro'yxatiga qo'shildi!",
@@ -438,6 +445,8 @@ class JuvenileViewset(ModelViewSet):
         full_name = request.GET.get('full_name')
         user = request.user
         juveniles = models.Juvenile.objects.filter(juvenile_markaz__markaz=user.markaz)
+        print(12098,juveniles)
+
         if full_name:
             qs = models.PersonalInfoJuvenile.objects.all()
             juveniles_id = []
@@ -470,20 +479,22 @@ class JuvenileViewset(ModelViewSet):
             if not parent_info:
                 if juvenile not in incomplete_juveniles:
                     incomplete_juveniles.append(juvenile)
-
+        print(8762,incomplete_juveniles)
         for incomplete_juvenile in incomplete_juveniles:
             personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile_id=incomplete_juvenile.id).order_by(
                 '-created_at').first()
 
             if personal_info:
                 if personal_info.passport_type == '5':
+                    print('9905',incomplete_juveniles)
                     incomplete_juveniles.remove(incomplete_juvenile)
+                    print('2nd',incomplete_juvenile)
 
         page = self.paginate_queryset(incomplete_juveniles)
         if page is not None:
             serializer = serializers.JuvenileListPersonalInfoSerializer(page, many=True, context={"request": request})
             return self.get_paginated_response(serializer.data)
-
+        print('SS juv',incomplete_juveniles)
         serializer = serializers.JuvenileListPersonalInfoSerializer(incomplete_juveniles, many=True,
                                                                     context={"request": request})
         return Response(serializer.data)
@@ -631,7 +642,7 @@ class JuvenileViewset(ModelViewSet):
                 print('JJJ',juvenile_markaz)
                 juvenile_markaz.accept_center_info = accept_info
                 juvenile_markaz.status = 2
-                # juvenile.accepted_center_number += 1
+                juvenile.accepted_center_number += 1
                 juvenile.current_markaz = juvenile_markaz.markaz
                 juvenile_markaz.save()
                 accept_info.save()

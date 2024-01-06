@@ -392,7 +392,10 @@ def apparat_to_excel_10(requset):
         worksheet.write(i+5,28, base_query_2024.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='10').distinct().count(),header_merge_format )
         worksheet.write(i+6,28, base_query_2023.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='10').distinct().count(),header_merge_format )
 
+        more_parent_juveniles = (models.Juvenile_Markaz.objects.filter(status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'],markaz__region = regions[j])
+         .annotate(parent_count = Count('juvenile__parentinfojuvenile')).filter(parent_count__gt=1))
 
+        more_parent_juveniles
         #oilaviy ahvoli ParentInfoJuvenile
         worksheet.write(i+5,29, base_query_2024.filter(markaz__region = regions[j]).filter(juvenile__parentinfojuvenile__marital_status='1').distinct().count(),header_merge_format )
         worksheet.write(i+6,29, base_query_2023.filter(markaz__region = regions[j]).filter(juvenile__parentinfojuvenile__marital_status='1').distinct().count(),header_merge_format )
@@ -1020,8 +1023,10 @@ def apparat_to_excel_10(requset):
 def apparat_to_excel_7_1(request):
     date_from = request.GET.get('date_from')
     date_to = request.GET.get('date_to')
-    last_year = int(format(datetime.now(), '%Y'))
+    time_date_to = datetime.strptime(date_to,'%Y-%m-%d').date()
+    date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
 
+    last_year = int(format(datetime.now(), '%Y'))
     if date_from and date_to:
         base_query = models.Juvenile_Markaz.objects.filter(
         status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], created_at__range=[date_from,date_to])
@@ -1413,6 +1418,8 @@ def apparat_to_excel_7_1(request):
 def apparat_to_excel_7_2(request):
     date_from = request.GET.get('date_from')
     date_to = request.GET.get('date_to')
+    time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+    date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
     last_year = int(format(datetime.now(), '%Y'))
 
     if date_from and date_to:
@@ -1735,6 +1742,9 @@ def apparat_to_excel_7_2(request):
 def apparat_to_excel_7_3(request):
     date_from = request.GET.get('date_from')
     date_to = request.GET.get('date_to')
+    time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+    date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
+
     last_year = int(format(datetime.now(), '%Y'))
 
     if date_from and date_to:
@@ -2461,6 +2471,7 @@ def center_to_excel_9(request):
 
 
         #oilaviy ahvoli ParentInfoJuvenile
+
         worksheet.write(i+5,29, base_query_2024.filter(markaz = markaz).filter(juvenile__parentinfojuvenile__marital_status='1').distinct().count(),header_merge_format )
         worksheet.write(i+6,29, base_query_2023.filter(markaz = markaz).filter(juvenile__parentinfojuvenile__marital_status='1').distinct().count(),header_merge_format )
 
@@ -2617,6 +2628,8 @@ def center_to_excel_9(request):
 def center_to_excel_8_1(request):
     date_from = request.GET.get('date_from')
     date_to = request.GET.get('date_to')
+    time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+    date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
     markaz_id = request.GET.get('markaz_id')
     last_year = int(format(datetime.now(), '%Y'))
     print('YYY',request.user)
@@ -2896,6 +2909,8 @@ def center_to_excel_8_1(request):
 def center_to_excel_8_2(request):
     date_from = request.GET.get('date_from')
     date_to = request.GET.get('date_to')
+    time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+    date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
     markaz_id = request.GET.get('markaz_id')
 
     if markaz_id:
@@ -3135,6 +3150,8 @@ def center_to_excel_8_2(request):
 def center_to_excel_8_3(request):
     date_from = request.GET.get('date_from')
     date_to = request.GET.get('date_to')
+    time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+    date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
     markaz_id = request.GET.get('markaz_id')
 
     if markaz_id:

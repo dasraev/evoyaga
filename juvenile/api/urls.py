@@ -59,8 +59,8 @@ urlpatterns = [
          statistics_veiws.CenterDownloadStatisticsApiView4.as_view()),
 
     #apparat statistics
-    # path('apparat/dashboard_card_statistics/',
-    #      statistics_veiws.ApparatDashboarCardStatisticsAPIView.as_view()),
+    path('apparat/dashboard_card_statistics/',
+         statistics_veiws.ApparatDashboarCardStatisticsAPIView.as_view()),
     path('apparat/reason_bringing_statistics/',
          statistics_veiws.ApparatReasonBringingStatisticsAPIView2.as_view()),
     path('apparat/in_center_now_statistics/',
