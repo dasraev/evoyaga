@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0e95df"],{"8cdb":function(e,n,t){"use strict";t.r(n);var c=t("7a23");function o(e,n,t,o,r,a){return Object(c["openBlock"])(),Object(c["createElementBlock"])(c["Fragment"],null,[Object(c["createTextVNode"])(" 404 Error page go back "),Object(c["createElementVNode"])("button",{class:"base_input",onClick:n[0]||(n[0]=n=>e.$router.back())}," GO BACK ")],64)}var r={name:"404"},a=t("d959"),b=t.n(a);const u=b()(r,[["render",o]]);n["default"]=u}}]);
-//# sourceMappingURL=chunk-2d0e95df.e9585e06.js.map

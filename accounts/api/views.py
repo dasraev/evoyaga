@@ -18,6 +18,8 @@ from accounts.models import CustomUser
 from . import serializers
 from .paginations import UserPagination
 from .filters import UserFilter
+from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -182,6 +184,10 @@ class UserUpdateForApparatAPIView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({"message": "Joriy foydalanuvchi Apparat emas!"}, status=status.HTTP_401_UNAUTHORIZED)
 
+# class UserUpdateForApparatView(APIView):
+#     def put(self,request,pk,format=None):
+#         instance = get_object_or_404(CustomUser,pk=pk)
+#         serializers.UserUpdateForApparatSerializer
 
 class UserCreateForDirektorAPIView(generics.CreateAPIView):
     model = CustomUser
@@ -246,6 +252,7 @@ class GroupListAPIView(generics.ListAPIView):
 
 
 class UserListAPIView(generics.ListAPIView):
+
     def get_queryset(self,):
         position = self.request.query_params.get('position')
         markaz = self.request.query_params.get('markaz')
@@ -255,14 +262,15 @@ class UserListAPIView(generics.ListAPIView):
         user_code = list(group_codes)[0]
 
         if user_code == 1:
-            print('hello world')
             if markaz_tuman and position:
-                return CustomUser.objects.all().filter(groups__code=position).filter(markaz_tuman_id=markaz_tuman).filter(groups__code__gte=2)
+                print('OOkj')
+                return CustomUser.objects.all().filter(groups__code=position).filter(markaz_tuman_id=markaz_tuman).filter(groups__code__gte=2).filter(is_active=True)
             if markaz and position:
-                return CustomUser.objects.all().filter(groups__code=position).filter(markaz_id=markaz).filter(groups__code__gte=2)
-            return CustomUser.objects.all().filter(groups__code=position).filter(groups__code__gte=2)
-
-        return CustomUser.objects.filter(markaz=user_markaz).filter(groups__code__gte=3)
+                return CustomUser.objects.all().filter(groups__code=position).filter(markaz_id=markaz).filter(groups__code__gte=2).filter(is_active=True)
+            return CustomUser.objects.all().filter(groups__code=position).filter(groups__code__gte=2).filter(is_active=True)
+        # if user_code == 2:
+        #     return CustomUser.objects.filter(Q(markaz=user_markaz) | markaz_tuman = self.request.user).filter(groups__code__gte=3).filter(is_active=True)
+        return CustomUser.objects.filter(markaz=user_markaz).filter(groups__code__gte=3).filter(is_active=True)
     pagination_class = UserPagination
     serializer_class = serializers.UserListSerializer
 
@@ -272,6 +280,10 @@ class UserDeleteAPIView(GenericAPIView):
     queryset = CustomUser.objects.all()
 
     def delete(self, request, *args, **kwargs):
+        user = request.user
         instance = self.get_object()
-        instance.delete()
+
+        instance.is_active = False
+        instance.save()
+        # instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
