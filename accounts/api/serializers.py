@@ -75,36 +75,36 @@ class UserUpdateForApparatSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ('id','first_name', 'last_name', 'father_name',
                   'markaz', 'markaz_tuman', 'groups', 'photo', 'birth_date', "email", 'password', 'login')
-    def to_internal_value(self, data):
-        groups_data = data.get('groups', [])
-        if groups_data:
-            data['groups'] = [Group.objects.get(code = groups_data[0]).id]
-        return super().to_internal_value(data)
+    # def to_internal_value(self, data):
+    #     groups_data = data.get('groups', [])
+    #     if groups_data:
+    #         data['groups'] = [Group.objects.get(code = groups_data[0]).id]
+    #     return super().to_internal_value(data)
 
 
     def update(self, instance, validated_data):
-        print('1100000',validated_data)
-        groups = validated_data.pop('groups')
+        # print('1100000',validated_data)
+        # groups = validated_data.pop('groups')
 
-        user_role = Group.objects.get(code=groups[0].code)
-        role_id = user_role.id
+        # user_role = Group.objects.get(code=groups[0].code)
+        # role_id = user_role.id
         # user.groups.set([role_id])
 
-        user_role = Group.objects.get(code=groups[0].code)
-        role_id = user_role.id
-        instance.groups.set([role_id])
+        # user_role = Group.objects.get(code=groups[0].code)
+        # role_id = user_role.id
+        # instance.groups.set([role_id])
 
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.father_name = validated_data.get('father_name', instance.father_name)
-        instance.markaz = validated_data.get('markaz', instance.markaz)
-        instance.markaz_tuman = validated_data.get('markaz_tuman', instance.markaz_tuman)
+        # instance.markaz = validated_data.get('markaz', instance.markaz)
+        # instance.markaz_tuman = validated_data.get('markaz_tuman', instance.markaz_tuman)
         instance.birth_date = validated_data.get('birth_date', instance.birth_date)
         instance.email = validated_data.get('email', instance.email)
         instance.login = validated_data.get('login', instance.login)
         instance.photo = validated_data.get('photo', instance.photo)
-        if validated_data.get('markaz_tuman'):
-            instance.markaz = None
+        # if validated_data.get('markaz_tuman'):
+        #     instance.markaz = None
         instance.save()
         return instance
 

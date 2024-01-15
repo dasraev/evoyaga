@@ -168,16 +168,16 @@ class UserUpdateForApparatAPIView(generics.RetrieveUpdateAPIView):
         markaz_id = request.data.get('markaz',request.user.markaz_id)
 
         if request_code == 1:
-            if markaz_id and group_code:
-                users = CustomUser.objects.all().filter(markaz=markaz_id)
-                for user in users:
-                    try:
-                        user_instance_code = user.groups.all()[0].code
-                    except:
-                        user_instance_code = None
-                    if user_instance_code:
-                        if user_instance_code == 2 and group_code[0] == 2:
-                            return Response({"Bu viloyatga direktor allaqachon qo'shilgan!"})
+            # if markaz_id and g//roup_code:
+            #     users = CustomUser.objects.all().filter(markaz=markaz_id)
+            #     for user in users:
+            #         try:
+            #             user_instance_code = user.groups.all()[0].code
+            #         except:
+            #             user_instance_code = None
+            #         if user_instance_code:
+            #             if user_instance_code == 2 and group_code[0] == 2:
+            #                 return Response({"Bu viloyatga direktor allaqachon qo'shilgan!"})
             serializer = serializers.UserUpdateForApparatSerializer(instance, data=request.data,partial=True)
             if serializer.is_valid():
                 instance.set_password(serializer.validated_data.get("password"))
@@ -188,8 +188,8 @@ class UserUpdateForApparatAPIView(generics.RetrieveUpdateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         elif request_code == 2:
-            if group_code[0] == 2:
-                return Response({"Direktor faqat Apparat tomonidan qo'shiladi"},status = status.HTTP_400_BAD_REQUEST)
+            # if group_code[0] == 2:
+            #     return Response({"Direktor faqat Apparat tomonidan qo'shiladi"},status = status.HTTP_400_BAD_REQUEST)
             serializer = serializers.UserUpdateForApparatSerializer(instance, data=request.data,partial=True)
             if serializer.is_valid():
                 instance.set_password(serializer.validated_data.get("password"))
