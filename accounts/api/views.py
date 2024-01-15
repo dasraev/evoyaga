@@ -159,30 +159,46 @@ class UserCreateForApparatAPIView(generics.CreateAPIView):
 class UserUpdateForApparatAPIView(APIView):
     queryset = CustomUser.objects.all()
 
+
     def put(self, request, pk, format=None):
         instance = CustomUser.objects.get(pk=pk)
         request_code = request.user.groups.all()[0].code
-        group_code = request.data['groups']
-        markaz_id = request.data['markaz']
+        group_code = request.data.get('groups')
+        markaz_id = request.data.get('markaz',request.user.markaz_id)
 
         if request_code == 1:
-            users = CustomUser.objects.all().filter(markaz=markaz_id)
-            for user in users:
-                try:
-                    user_instance_code = user.groups.all()[0].code
-                except:
-                    user_instance_code = None
-                if user_instance_code:
-                    if user_instance_code == 2 and group_code == '2':
-                        return Response({"Bu viloyatga direktor allaqachon qo'shilgan!"})
-            serializer = serializers.UserUpdateForApparatSerializer(instance, data=request.data)
+            if markaz_id and group_code:
+                users = CustomUser.objects.all().filter(markaz=markaz_id)
+                for user in users:
+                    try:
+                        user_instance_code = user.groups.all()[0].code
+                    except:
+                        user_instance_code = None
+                    if user_instance_code:
+                        if user_instance_code == 2 and group_code[0] == 2:
+                            return Response({"Bu viloyatga direktor allaqachon qo'shilgan!"})
+            serializer = serializers.UserUpdateForApparatSerializer(instance, data=request.data,partial=True)
             if serializer.is_valid():
                 instance.set_password(serializer.validated_data.get("password"))
+
                 instance.save()
                 serializer.save()
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"message": "Joriy foydalanuvchi Apparat emas!"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        elif request_code == 2:
+            if group_code[0] == 2:
+                return Response({"Direktor faqat Apparat tomonidan qo'shiladi"},status = status.HTTP_400_BAD_REQUEST)
+            serializer = serializers.UserUpdateForApparatSerializer(instance, data=request.data,partial=True)
+            if serializer.is_valid():
+                instance.set_password(serializer.validated_data.get("password"))
+
+                instance.save()
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": "Joriy foydalanuvchi Apparat ham Direktor ham emas!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 # class UserUpdateForApparatView(APIView):
 #     def put(self,request,pk,format=None):
@@ -267,10 +283,15 @@ class UserListAPIView(generics.ListAPIView):
                 return CustomUser.objects.all().filter(groups__code=position).filter(markaz_tuman_id=markaz_tuman).filter(groups__code__gte=2).filter(is_active=True)
             if markaz and position:
                 return CustomUser.objects.all().filter(groups__code=position).filter(markaz_id=markaz).filter(groups__code__gte=2).filter(is_active=True)
+            print('CHECK shit')
             return CustomUser.objects.all().filter(groups__code=position).filter(groups__code__gte=2).filter(is_active=True)
         # if user_code == 2:
         #     return CustomUser.objects.filter(Q(markaz=user_markaz) | markaz_tuman = self.request.user).filter(groups__code__gte=3).filter(is_active=True)
-        return CustomUser.objects.filter(markaz=user_markaz).filter(groups__code__gte=3).filter(is_active=True)
+        if position == '3':
+            return CustomUser.objects.filter(markaz=user_markaz).filter(groups__code=3).filter(is_active=True)
+
+        if position == '4':
+            return CustomUser.objects.filter(markaz=user_markaz).filter(groups__code=4).filter(is_active=True)
     pagination_class = UserPagination
     serializer_class = serializers.UserListSerializer
 
