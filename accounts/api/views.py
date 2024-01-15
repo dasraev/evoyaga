@@ -156,8 +156,9 @@ class UserCreateForApparatAPIView(generics.CreateAPIView):
         return Response({"message": "joriy foydalanuvchi apparat emas!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-class UserUpdateForApparatAPIView(APIView):
+class UserUpdateForApparatAPIView(generics.RetrieveUpdateAPIView):
     queryset = CustomUser.objects.all()
+    serializer_class = serializers.UserUpdateForApparatSerializer
 
 
     def put(self, request, pk, format=None):
