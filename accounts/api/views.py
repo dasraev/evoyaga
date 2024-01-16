@@ -156,7 +156,7 @@ class UserCreateForApparatAPIView(generics.CreateAPIView):
         return Response({"message": "joriy foydalanuvchi apparat emas!"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-class UserUpdateForApparatAPIView(generics.RetrieveUpdateAPIView):
+class UserUpdateForApparatAPIView(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = serializers.UserUpdateForApparatSerializer
 
@@ -270,7 +270,7 @@ class GroupListAPIView(generics.ListAPIView):
 
 class UserListAPIView(generics.ListAPIView):
 
-    def get_queryset(self,):
+    def get_queryset(self):
         position = self.request.query_params.get('position')
         markaz = self.request.query_params.get('markaz')
         markaz_tuman = self.request.query_params.get('markaz_tuman')
@@ -279,25 +279,32 @@ class UserListAPIView(generics.ListAPIView):
         user_code = list(group_codes)[0]
 
         if user_code == 1:
-            if markaz_tuman and position:
-                print('OOkj')
+
+            if markaz_tuman and position :
                 return CustomUser.objects.all().filter(groups__code=position).filter(markaz_tuman_id=markaz_tuman).filter(groups__code__gte=2).filter(is_active=True)
             if markaz and position:
                 return CustomUser.objects.all().filter(groups__code=position).filter(markaz_id=markaz).filter(groups__code__gte=2).filter(is_active=True)
-            print('CHECK shit')
-            return CustomUser.objects.all().filter(groups__code=position).filter(groups__code__gte=2).filter(is_active=True)
-        # if user_code == 2:
-        #     return CustomUser.objects.filter(Q(markaz=user_markaz) | markaz_tuman = self.request.user).filter(groups__code__gte=3).filter(is_active=True)
-        if position == '3':
-            return CustomUser.objects.filter(markaz=user_markaz).filter(groups__code=3).filter(is_active=True)
+            if position:
+                return CustomUser.objects.filter(groups__code=position).filter(groups__code__gte=2).filter(is_active=True)
+            else:
+                return CustomUser.objects.filter(groups__code__gte=2).filter(is_active=True)
 
-        if position == '4':
-            return CustomUser.objects.filter(markaz=user_markaz).filter(groups__code=4).filter(is_active=True)
+        elif user_code == 2:
+            # print('vgg',self.request.user.markaz.region)
+            # print('alaa2',CustomUser.objects.filter(markaz_tuman__district__region_id = self.request.user.markaz.region))
+            return CustomUser.objects.filter(markaz = user_markaz,groups__code__gte=3)|CustomUser.objects.filter(markaz_tuman__district__region_id = self.request.user.markaz.region)
+
+        # if position == '3':
+        #     return CustomUser.objects.filter(markaz=user_markaz).filter(groups__code=3).filter(is_active=True)
+        #
+        # if position == '4':
+        #     return CustomUser.objects.filter(markaz=user_markaz).filter(groups__code=4).filter(is_active=True)
+
     pagination_class = UserPagination
     serializer_class = serializers.UserListSerializer
 
 
-class UserDeleteAPIView(GenericAPIView):
+class UserRetrieveDeleteAPIView(generics.RetrieveDestroyAPIView):
     serializer_class = serializers.UserListSerializer
     queryset = CustomUser.objects.all()
 

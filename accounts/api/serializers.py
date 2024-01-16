@@ -74,7 +74,11 @@ class UserUpdateForApparatSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('id','first_name', 'last_name', 'father_name',
-                  'markaz', 'markaz_tuman', 'groups', 'photo', 'birth_date', "email", 'password', 'login')
+                  'photo', 'birth_date', "email", 'password', 'login')
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
+
     # def to_internal_value(self, data):
     #     groups_data = data.get('groups', [])
     #     if groups_data:
@@ -190,4 +194,4 @@ class UserListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('id','full_name', 'markaz', 'markaz_tuman', 'birth_date', 'photo', 'position','is_active')
+        fields = ('id','login','full_name', 'markaz','email', 'markaz_tuman', 'birth_date', 'photo', 'position','is_active')
