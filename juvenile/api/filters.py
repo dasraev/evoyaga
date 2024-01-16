@@ -2,7 +2,7 @@ from django.db.models import Q
 from django_filters import rest_framework as filters
 
 from juvenile import models
-
+from django.db.models import Count
 
 # Aniqlangan bolalar filter
 class JuvenileFilter(filters.FilterSet):
@@ -558,123 +558,167 @@ class JuvenileReportFilter(filters.FilterSet):
 
     class Meta:
         model = models.Juvenile_Markaz
-        fields = ['address_region']
+        fields = []
+        # fields = ['address_region']
 
-    def search_by_full_name(self, qs, name, value):
+    def search_by_full_name(self, queryset, name, value):
         user_markaz = self.request.user.markaz
         markaz_tuman = self.request.user.markaz_tuman
 
         group_codes = self.request.user.groups.values_list('code', flat=True)
         user_code = list(group_codes)[0]
 
-
-        qs = models.PersonalInfoJuvenile.objects.all()
-        juveniles_id = []
-        for term in value.split():
-            qs = qs.filter(Q(first_name__icontains=term) | Q(last_name__icontains=term) | Q(father_name__icontains=term))
-            for item in qs:
-                juveniles_id.append(item.juvenile_id)
-
-        juveniles = models.Juvenile_Markaz.objects.filter(juvenile_id__in=juveniles_id).filter(markaz=user_markaz)
         if user_code == 4:
-            juveniles = models.Juvenile_Markaz.objects.filter(juvenile_id__in=juveniles_id).filter(monitoring_markaz_tuman=markaz_tuman)
+            if int(self.request.GET.get('status')) == 14:
+                return models.UnidentifiedJuvenile.objects.none()
+            for term in value.split():
+                queryset = queryset.filter(Q(juvenile__juvenile__first_name__icontains = term) |
+                                            Q(juvenile__juvenile__last_name__icontains = term) |
+                                            Q(juvenile__juvenile__father_name__icontains = term)).filter(monitoring_markaz_tuman=markaz_tuman)
+
+        elif user_code == 1:
+            for term in value.split():
+                if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
+                    queryset = queryset.filter(Q(first_name__icontains = term) |
+                                                Q(last_name__icontains = term) |
+                                                Q(father_name__icontains = term))
+                else:
+                    queryset = queryset.filter(Q(juvenile__juvenile__first_name__icontains = term) |
+                                                Q(juvenile__juvenile__last_name__icontains = term) |
+                                                Q(juvenile__juvenile__father_name__icontains = term))
+        else:
+
+            for term in value.split():
+                if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
+                    queryset = queryset.filter(Q(first_name__icontains = term) |
+                                                Q(last_name__icontains = term) |
+                                                Q(father_name__icontains = term)).filter(markaz=user_markaz)
+
+                else:
+                    queryset = queryset.filter(Q(juvenile__juvenile__first_name__icontains = term) |
+                                            Q(juvenile__juvenile__last_name__icontains = term) |
+                                            Q(juvenile__juvenile__father_name__icontains = term)).filter(markaz=user_markaz)
+        return queryset
+
+    def search_address_region(self, queryset, name, value):
+
+        group_codes = self.request.user.groups.values_list('code', flat=True)
+        user_code = list(group_codes)[0]
+
+        user_markaz = self.request.user.markaz
+        markaz_tuman = self.request.user.markaz_tuman
 
         if user_code == 1:
-            juveniles = models.Juvenile_Markaz.objects.filter(juvenile_id__in=juveniles_id)
+            if int(self.request.GET.get('status')) == 14:
+                # return models.UnidentifiedJuvenile.objects.all()
+                return queryset
+            juveniles = queryset.filter(juvenile__addressinfojuvenile__address_mahalla__district_id__region_id__id = value)
+        elif user_code == 4:
+            if int(self.request.GET.get('status')) == 14:
+                # return models.UnidentifiedJuvenile.objects.none()
+                return queryset
+
+            juveniles = queryset.filter(juvenile__addressinfojuvenile__address_mahalla__district_id__region_id__id = value).filter(monitoring_markaz_tuman=markaz_tuman)
+        else:
+            if int(self.request.GET.get('status')) == 14:
+                # return models.UnidentifiedJuvenile.objects.filter(markaz=user_markaz)
+                return queryset
+
+            juveniles = queryset.filter(juvenile__addressinfojuvenile__address_mahalla__district_id__region_id__id = value).filter(markaz = user_markaz)
 
         return juveniles
 
-    def search_address_region(self, queryset, name, value):
+    def filter_by_status(self, queryset, name, value):
+
         group_codes = self.request.user.groups.values_list('code', flat=True)
         user_code = list(group_codes)[0]
 
         user_markaz = self.request.user.markaz
         markaz_tuman = self.request.user.markaz_tuman
-        juvenile_ids = []
-        juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-            markaz=user_markaz)
-
-        if user_code == 4:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(monitoring_markaz_tuman=markaz_tuman)
-
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile_id)
-
-        address_infos = models.AddressInfoJuvenile.objects.filter(address_mahalla__district_id__region_id__id__icontains=value).filter(
-            juvenile__id__in=juvenile_ids)
-
-        
-        with_address_juvenile_ids = []
-        for address_info in address_infos:
-            with_address_juvenile_ids.append(address_info.juvenile_id)
 
         if user_code == 1:
-            juveniles_id = []
-            address_infos = models.AddressInfoJuvenile.objects.filter(
-                address_mahalla__district_id__region_id__id__icontains=value)
+            if int(value) == 14:
+                return models.UnidentifiedJuvenile.objects.all()
 
-            for item in address_infos:
-                juveniles_id.append(item.juvenile_id)
+            if int(value) == 15:
+                come_2_times_juveniles_values =  queryset.values('juvenile', 'markaz').annotate(
+                markaz_count=Count('id')).filter(markaz_count__gte = 2).distinct()
+                come_2_times_juveniles = queryset.filter(
+                    juvenile__in=come_2_times_juveniles_values.values('juvenile'),
+                    markaz__in=come_2_times_juveniles_values.values('markaz'))
+                return come_2_times_juveniles
 
-            juveniles = models.Juvenile_Markaz.objects.filter(juvenile_id__in=juveniles_id)
-            return juveniles
+            elif int(value) == 16:
+                return queryset.filter(status__in=['1','2','10'])
 
-        if user_code == 4:
-            return models.Juvenile_Markaz.objects.filter(juvenile_id__in=with_address_juvenile_ids).filter(
-                monitoring_markaz_tuman=markaz_tuman)
+            return queryset.filter(status=value)
 
-        return models.Juvenile_Markaz.objects.filter(juvenile_id__in=with_address_juvenile_ids)
-
-    def filter_by_status(self, queryset, name, value):
-        group_codes = self.request.user.groups.values_list('code', flat=True)
-        user_code = list(group_codes)[0]
-
-        if user_code == 1:
-            return models.Juvenile_Markaz.objects.filter(status=value)
-
-        if user_code == 4:
+        elif user_code == 4:
             markaz_tuman = self.request.user.markaz_tuman
-            return models.Juvenile_Markaz.objects.filter(status=value).filter(monitoring_markaz_tuman=markaz_tuman)
 
-        user_markaz = self.request.user.markaz
-        return models.Juvenile_Markaz.objects.filter(status=value).filter(markaz=user_markaz)
+            if int(value) == 14:
+                return models.UnidentifiedJuvenile.objects.none()
+
+            if int(value) == 15:
+                come_2_times_juveniles_values = queryset.values('juvenile', 'markaz').annotate(
+                    markaz_count=Count('id')).filter(markaz_count__gte=2,monitoring_markaz_tuman=markaz_tuman).distinct()
+                come_2_times_juveniles = queryset.filter(
+                    juvenile__in=come_2_times_juveniles_values.values('juvenile'),
+                    markaz__in=come_2_times_juveniles_values.values('markaz') )
+                return come_2_times_juveniles
+
+            if int(value) == 16:
+                return queryset.filter(monitoring_markaz_tuman=markaz_tuman).filter(status__in=['1','2','10']).distinct()
+
+            return queryset.filter(status=value).filter(monitoring_markaz_tuman=markaz_tuman)
+
+        else:
+            if int(value) == 14:
+                return models.UnidentifiedJuvenile.objects.filter(markaz=user_markaz)
+            if int(value) == 15:
+                come_2_times_juveniles_values = queryset.values('juvenile', 'markaz').annotate(
+                    markaz_count=Count('id')).filter(markaz_count__gte=2,markaz=user_markaz).distinct()
+
+                come_2_times_juveniles = queryset.filter(
+                    juvenile__in=come_2_times_juveniles_values.values('juvenile'),
+                    markaz__in=come_2_times_juveniles_values.values('markaz') )
+                return come_2_times_juveniles
+
+            if int(value) == 16:
+                return queryset.filter(markaz=user_markaz,status__in=['1', '2', '10']).distinct()
+
+            return queryset.filter(status=value).filter(markaz=user_markaz)
 
     def search_education_type(self, queryset, name, value):
+
         group_codes = self.request.user.groups.values_list('code', flat=True)
         user_code = list(group_codes)[0]
 
         user_markaz = self.request.user.markaz
         markaz_tuman = self.request.user.markaz_tuman
-        juvenile_ids = []
-        juvenile_markaz = models.Juvenile_Markaz.objects.filter(
-            markaz=user_markaz)
 
         if user_code == 4:
-            juvenile_markaz = models.Juvenile_Markaz.objects.filter(monitoring_markaz_tuman=markaz_tuman)
+            if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
+                # return models.UnidentifiedJuvenile.objects.none()
+                return queryset
 
-        for item in juvenile_markaz:
-            juvenile_ids.append(item.juvenile_id)
-
-        school_types = models.EducationInfoJuvenile.objects.filter(school_type=value).filter(
-            juvenile__id__in=juvenile_ids)
-
-        education_juvenile_ids = []
-        for school_type in school_types:
-            education_juvenile_ids.append(school_type.juvenile_id)
-
-        if user_code == 1:
-            juveniles_id = []
-            education_infos = models.EducationInfoJuvenile.objects.filter(school_type=value)
-
-            for item in education_infos:
-                juveniles_id.append(item.juvenile_id)
-
-            juveniles = models.Juvenile_Markaz.objects.filter(juvenile_id__in=juveniles_id)
-            return juveniles
+            juveniles = queryset.filter(juvenile__educationinfojuvenile__school_type=value).filter(monitoring_markaz_tuman=markaz_tuman)
 
 
-        if user_code == 4:
-            return models.Juvenile_Markaz.objects.filter(juvenile_id__in=education_juvenile_ids).filter(
-                monitoring_markaz_tuman=markaz_tuman)
+        elif user_code == 1:
+            if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
+                # return models.UnidentifiedJuvenile.objects.all()
+                return queryset
 
-        return models.Juvenile_Markaz.objects.filter(juvenile_id__in=education_juvenile_ids)
+            juveniles = queryset.filter(juvenile__educationinfojuvenile__school_type=value)
+
+
+        else:
+            if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
+                # return models.UnidentifiedJuvenile.objects.filter(markaz=user_markaz)
+                return queryset
+
+            juveniles = queryset.filter(juvenile__educationinfojuvenile__school_type=value).filter(
+                markaz=user_markaz)
+
+        return juveniles
