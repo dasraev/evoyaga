@@ -3,6 +3,7 @@ from django_filters import rest_framework as filters
 
 from juvenile import models
 from django.db.models import Count
+from django.shortcuts import get_object_or_404
 
 # Aniqlangan bolalar filter
 class JuvenileFilter(filters.FilterSet):
@@ -629,7 +630,7 @@ class JuvenileReportFilter(filters.FilterSet):
         return juveniles
 
     def filter_by_status(self, queryset, name, value):
-
+        print('90008',value)
         group_codes = self.request.user.groups.values_list('code', flat=True)
         user_code = list(group_codes)[0]
 
@@ -637,6 +638,11 @@ class JuvenileReportFilter(filters.FilterSet):
         markaz_tuman = self.request.user.markaz_tuman
 
         if user_code == 1:
+
+            if int(value) > 16:
+                psychology_conditions = models.PsychologyCondition.objects.all().order_by('-created_at')
+                return queryset.filter(distributed_info__psychology_condition_id = psychology_conditions[int(value)-17])
+
             if int(value) == 14:
                 return models.UnidentifiedJuvenile.objects.all()
 
@@ -648,13 +654,18 @@ class JuvenileReportFilter(filters.FilterSet):
                     markaz__in=come_2_times_juveniles_values.values('markaz'))
                 return come_2_times_juveniles
 
-            elif int(value) == 16:
+            if int(value) == 16:
                 return queryset.filter(status__in=['1','2','10'])
 
             return queryset.filter(status=value)
 
+
         elif user_code == 4:
             markaz_tuman = self.request.user.markaz_tuman
+
+            if int(value) > 16:
+                psychology_conditions = models.PsychologyCondition.objects.all().order_by('-created_at')
+                return queryset.filter(distributed_info__psychology_condition_id = psychology_conditions[int(value)-17])
 
             if int(value) == 14:
                 return models.UnidentifiedJuvenile.objects.none()
@@ -669,10 +680,15 @@ class JuvenileReportFilter(filters.FilterSet):
 
             if int(value) == 16:
                 return queryset.filter(monitoring_markaz_tuman=markaz_tuman).filter(status__in=['1','2','10']).distinct()
-
             return queryset.filter(status=value).filter(monitoring_markaz_tuman=markaz_tuman)
 
+
+
         else:
+            if int(value) > 16:
+                psychology_conditions = models.PsychologyCondition.objects.all().order_by('-created_at')
+                return queryset.filter(distributed_info__psychology_condition_id = psychology_conditions[int(value)-17])
+
             if int(value) == 14:
                 return models.UnidentifiedJuvenile.objects.filter(markaz=user_markaz)
             if int(value) == 15:

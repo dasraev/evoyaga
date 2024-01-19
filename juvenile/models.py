@@ -112,7 +112,7 @@ class JuvenileDistributedInfo(BaseModel):
     training_file = models.FileField(upload_to="training_file/", blank=True, null=True)
     type_healthcare_facility = models.CharField(
         max_length=60, choices=enums.TYPE_HEALTHCARE_FACILITY, default=None, null=True)
-
+    psychology_condition = models.ForeignKey('PsychologyCondition',on_delete=models.SET_NULL,null=True,related_name='distributed_infos')
     class Meta:
         db_table = "juvenile_distributed_info"
 
@@ -211,12 +211,13 @@ class Juvenile(BaseModel):
         db_table = "juvenile"
 
     def __str__(self):
-        p_info = PersonalInfoJuvenile.objects.get(juvenile_id=self.id)
-        # p_info = self.juvenile.first()
-        # if p_
-        return f"{self.id}  |{ p_info.first_name } {p_info.last_name}"
+        try:
+            p_info = PersonalInfoJuvenile.objects.get(juvenile_id=self.id)
+            return f"{self.id}  |{ p_info.first_name } {p_info.last_name}"
+        except:
+            return f"juvenile_id: {self.id}"
 
-
+#Juvenile_Markaz.objects.filter(juvenile__juvenile__gender='F')
 class PersonalInfoJuvenile(BaseModel):
     first_name = models.CharField(max_length=255, null=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
@@ -360,7 +361,7 @@ class Juvenile_Markaz(models.Model):
 
 
 #### my  new code #####
-class DistributionToWhom(models.Model):
+class DistributionToWhom(BaseModel):
     distribution_info = models.ForeignKey(JuvenileDistributedInfo, on_delete=models.SET_NULL,null=True,related_name='distributes')
     first_name = models.CharField(max_length=255,null=True,blank=True)
     last_name = models.CharField(max_length=255,null=True,blank=True)
@@ -371,3 +372,14 @@ class DistributionToWhom(models.Model):
         db_table = "distribution_to_whom"
         verbose_name = "Kimga topshirilgani"
         verbose_name_plural = "Kimga topshirilgani"
+
+
+class PsychologyCondition(BaseModel):
+    title = models.TextField(null=True,blank=True)
+    description = models.TextField(null=True,blank=True)
+    def __str__(self):
+        return self.title
+    class Meta:
+        db_table = "psychology_condition"
+        # verbose_name = "Bola psixologik holati"
+        # verbose_name_plural = "Bola psixologik holati"

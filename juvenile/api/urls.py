@@ -15,6 +15,7 @@ urlpatterns = [
     # all reports
     path('reports/', views.JuvenileReportsListView.as_view()),
     path('reports/<pk>/', views.JuvenileReportsDetailView.as_view()),
+    # path('reports-unidentified/<pk>/',views.UnidentifiedReportsDetailView.as_view()),
     path('is_filled/<pk>/', views.JuvenileStepFilledView.as_view()),
 
     # markazga qabul qilish
@@ -93,5 +94,5 @@ urlpatterns = [
     # path('last_accepted_juveniles/', views.LastAcceptedJuvenilesView.as_view()),
     path('juveniles_no_education/', views.JuvenileNoEducationListView.as_view()),
 
-    # path('apparat/download_statistics7_1/',statistics_veiws.ApparatDownloadStatisticsApiView7_1.as_view())
+    path('psychology-conditions/',views.PsychologyConditionListView.as_view())
 ]

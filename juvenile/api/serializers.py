@@ -115,6 +115,8 @@ class JuvenileDistributedInfoCreateSerializer(serializers.ModelSerializer):
             'is_training',
             'training_file',
             'foreign_to_whom_given',
+            'psychology_condition'
+
         )
 
 
@@ -1153,7 +1155,6 @@ class JuvenileMarkazInfosDetailSerializer(serializers.ModelSerializer):
     distribute_info = serializers.SerializerMethodField()
     monitoring_info = serializers.SerializerMethodField()
     employment_info = serializers.SerializerMethodField()
-
     class Meta:
         model = models.Juvenile_Markaz
         fields = (
@@ -1168,6 +1169,7 @@ class JuvenileMarkazInfosDetailSerializer(serializers.ModelSerializer):
             'monitoring_info',
             'employment_info',
         )
+
 
     def get_personal_info(self, obj):
         request = self.context.get("request")
@@ -1485,15 +1487,20 @@ class JuvenileMarkazInfosDetailSerializer(serializers.ModelSerializer):
             if distribute_info.center_opinion_file:
                 data['center_opinion_file'] = request.build_absolute_uri(distribute_info.center_opinion_file.url)
 
-            if distribute_info.training_file:
-                data['training_file'] = request.build_absolute_uri(distribute_info.training_file.url)
+            # if distribute_info.training_file:
+            #     data['training_file'] = request.build_absolute_uri(distribute_info.training_file.url)
 
-            if distribute_info.skills_hobbies:
-                data['skills_hobbies'] = request.build_absolute_uri(distribute_info.skills_hobbies.url)
+            # if distribute_info.skills_hobbies:
+            #     data['skills_hobbies'] = request.build_absolute_uri(distribute_info.skills_hobbies.url)
 
-            if distribute_info.psyhology_condition:
-                data['psyhology_condition'] = request.build_absolute_uri(distribute_info.psyhology_condition.url)
-
+            # if distribute_info.psyhology_condition:
+            #     data['psyhology_condition'] = request.build_absolute_uri(distribute_info.psyhology_condition.url)
+            if distribute_info.psychology_condition:
+                data['pschology_condition'] = {
+                    "id":distribute_info.psychology_condition.id,
+                    "title": distribute_info.psychology_condition.title,
+                    "description": distribute_info.psychology_condition.description
+                }
             return data
         else:
             return None
@@ -2316,8 +2323,8 @@ class JuvenileMarkazSerializer(serializers.ModelSerializer):
     passport_seria = serializers.CharField(source='juvenile.juvenile.first.passport_seria')
     pinfl = serializers.CharField(source='juvenile.juvenile.first.pinfl')
     birth_date = serializers.DateField(source='juvenile.juvenile.first.birth_date')
-    birth_region = serializers.CharField(source='juvenile.juvenile.first.birth_district.region_id.name')
-    birth_district = serializers.CharField(source='juvenile.juvenile.first.birth_district.name')
+    birth_region = serializers.SerializerMethodField()
+    birth_district = serializers.SerializerMethodField()
     parent_first_name = serializers.SerializerMethodField()
     parent_last_name = serializers.SerializerMethodField()
     parent_father_name = serializers.SerializerMethodField()
@@ -2329,9 +2336,18 @@ class JuvenileMarkazSerializer(serializers.ModelSerializer):
                   'birth_date','birth_district','birth_region','parent_first_name','parent_father_name',
                   'parent_last_name','markaz_name','distributed_info']
 
-
+    def get_birth_region(self,obj):
+        try:
+            return obj.juvenile.juvenile.first().birth_district.region_id.name
+        except:
+            return None
+    def get_birth_district(self,obj):
+        try:
+            return obj.juvenile.juvenile.first().birth_district.name
+        except:
+            return None
     def get_created_at(self,obj):
-        return obj.accept_center_info.created_at + timezone.timedelta(hours=5)
+        return obj.accept_center_info.arrived_date + timezone.timedelta(hours=5)
 
 
     def get_parent_first_name(self,obj):
@@ -2400,3 +2416,156 @@ class JuvenileNoEducationListSerializer(serializers.ModelSerializer):
         if instance.reference_type:
             data['reference_type'] = self.context['request'].build_absolute_uri(instance.reference_type.url)
         return data
+
+
+
+class UnidentifiedJuvenileForNewStatusListSerializer(serializers.ModelSerializer):
+    birth_district = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    time_arrival_center = serializers.SerializerMethodField()
+    time_departure_center = serializers.SerializerMethodField()
+    photo = serializers.SerializerMethodField()
+    birth_region = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.UnidentifiedJuvenile
+        fields = (
+            "id",
+            'first_name',
+            'last_name',
+            'father_name',
+            'birth_date',
+            'gender',
+            'birth_district',
+            'birth_region',
+            'time_arrival_center',
+            'time_departure_center',
+            'status',
+            'photo'
+        )
+    def get_photo(self, obj):
+        request = self.context.get("request")
+        if obj.photo is not None:
+            return request.build_absolute_uri(obj.photo.url)
+        return None
+    def get_birth_district(self, obj):
+        if obj.birth_district is not None:
+            district_id = obj.birth_district_id
+            district_name = obj.birth_district.name
+
+            district = {
+                "id": district_id,
+                "name": district_name,
+            }
+            return district
+        return None
+    def get_birth_region(self, obj):
+        if obj.birth_district is not None:
+            region_id = obj.birth_district.region_id.id
+            region_name = obj.birth_district.region_id.name
+
+            region = {
+                "id": region_id,
+                "name": region_name,
+            }
+            return region
+        return None
+    def get_status(self, obj):
+        data = {
+            "text": 'Aniqlanmagan'
+        }
+        return data
+
+    def get_time_departure_center(self, obj):
+        return None
+    def get_time_arrival_center(self,obj):
+        return obj.created_at.date()
+
+
+
+class UnidentifiedJuvenileForNewStatusDetailSerializer(serializers.ModelSerializer):
+    birth_district = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    time_arrival_center = serializers.SerializerMethodField()
+    time_departure_center = serializers.SerializerMethodField()
+    photo = serializers.SerializerMethodField()
+    birth_region = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.UnidentifiedJuvenile
+        fields = (
+            "id",
+            'first_name',
+            'last_name',
+            'father_name',
+            'birth_date',
+            'gender',
+            'birth_district',
+            'birth_region',
+            'time_arrival_center',
+            'time_departure_center',
+            'status',
+            'photo'
+        )
+    def get_photo(self, obj):
+        request = self.context.get("request")
+        if obj.photo is not None:
+            return request.build_absolute_uri(obj.photo.url)
+        return None
+    def get_birth_district(self, obj):
+        if obj.birth_district is not None:
+            district_id = obj.birth_district_id
+            district_name = obj.birth_district.name
+
+            district = {
+                "id": district_id,
+                "name": district_name,
+            }
+            return district
+        return None
+    def get_birth_region(self, obj):
+        if obj.birth_district is not None:
+            region_id = obj.birth_district.region_id.id
+            region_name = obj.birth_district.region_id.name
+
+            region = {
+                "id": region_id,
+                "name": region_name,
+            }
+            return region
+        return None
+    def get_status(self, obj):
+        data = {
+            "text": 'Aniqlanmagan'
+        }
+        return data
+
+    def get_time_departure_center(self, obj):
+        return None
+    def get_time_arrival_center(self,obj):
+        return obj.created_at.date()
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return {
+            'id': representation['id'],
+            'personal_info': {
+            "first_name": representation["first_name"],
+            "last_name": representation["last_name"],
+            "father_name": representation["father_name"],
+            "birth_date": representation["birth_date"],
+            "gender": representation["gender"],
+            "birth_district": representation["birth_district"],
+            "birth_region": representation["birth_region"],
+            "time_arrival_center": representation["time_arrival_center"],
+            "time_departure_center": representation["time_departure_center"],
+            "status": representation["status"],
+            "photo": representation["photo"],
+            }
+        }
+
+class PsychologyConditionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PsychologyCondition
+        fields = ['id','title']
+
