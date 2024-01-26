@@ -17,6 +17,8 @@ class NotificationViewset(ModelViewSet):
 
         notifications = Notification.objects.filter(receiver_markaz=user_markaz).filter(completed=False).order_by(
             '-created_at')
+        # notifications = Notification.objects.filter(receiver_markaz=user_markaz).order_by(
+        #     '-created_at')
         return notifications
 
     def get_serializer_class(self):

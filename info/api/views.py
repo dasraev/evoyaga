@@ -349,6 +349,12 @@ class MarkazViewset(ModelViewSet):
             return Response({"message": "Bu hududga markaz allaqachon qo'shilgan"}, status=status.HTTP_400_BAD_REQUEST)
         response = super().create(request, *args, **kwargs)
         return Response({"message": "Markaz muvaffaqqiyatli qo'shildi"}, status=status.HTTP_201_CREATED)
+    def get_queryset(self):
+        user = self.request.user
+        request_code = user.groups.all()[0].code
+        if request_code == 2:
+            return Markaz.objects.filter(region = user.markaz.region)
+        return Markaz.objects.all()
 
 
 class MarkazTumanViewset(ModelViewSet):
@@ -379,9 +385,14 @@ class MarkazTumanViewset(ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         region_id = self.request.GET.get('region_id', None)
-        markaz_tumans = MarkazTuman.objects.all()
-        if region_id:
+        user = self.request.user
+        request_code = user.groups.all()[0].code
+        if request_code == 2:
+            markaz_tumans = MarkazTuman.objects.filter(district__region_id = user.markaz.region)
+        elif region_id:
             markaz_tumans = MarkazTuman.objects.filter(district__region_id_id=region_id)
+        else:
+            markaz_tumans = MarkazTuman.objects.all()
         serializer = serializers.MarkazTumanListSerializer(markaz_tumans, many=True, context={"request": request})
         return Response(serializer.data)
 

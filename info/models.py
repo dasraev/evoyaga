@@ -270,3 +270,11 @@ class SubReasonBringingChild(models.Model):
 
     def __str__(self):
         return self.title
+
+
+## Token Model for Sudlangan auth
+class AccessRefreshToken(models.Model):
+    access = models.CharField(max_length=500)
+    refresh = models.CharField(max_length=500)
+    date_time_access = models.DateTimeField()
+    date_time_refresh = models.DateTimeField()

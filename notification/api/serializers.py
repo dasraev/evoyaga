@@ -79,8 +79,10 @@ class NotificationDetailSerializer(ModelSerializer):
         
         center_opinion_file = None
         if distribution_info is not None:
-            if distribution_info.center_opinion_file is not None:
-                center_opinion_file = request.build_absolute_uri(
+            print(900877,distribution_info.id,distribution_info.center_opinion_file)
+            # if distribution_info.center_opinion_file is not None:
+            if distribution_info.center_opinion_file != '':
+                    center_opinion_file = request.build_absolute_uri(
                     distribution_info.center_opinion_file.url)
             
 
@@ -91,13 +93,15 @@ class NotificationDetailSerializer(ModelSerializer):
             "father_name": personal_info.father_name,
             "gender": personal_info.gender,
             "birth_date": personal_info.birth_date,
-            "birth_region": personal_info.birth_district.region_id.name,
+            # "birth_region": personal_info.birth_district.region_id.name,
             # "address": address_info.address,
             "center_opinion_file": center_opinion_file,
         }
         print('lok',address_info)
         if address_info:
             data['address'] = address_info.address
+        if personal_info.birth_district:
+            data['birth_region'] = personal_info.birth_district.region_id.name
         return data
 
     def get_sender_center(self, obj):

@@ -4,8 +4,12 @@ from rest_framework.response import Response
 import base64, requests, json, xmltodict
 import xml.etree.ElementTree as ET
 from django.http import Http404
-from info.models import Region, District
-
+from info.models import Region, District,AccessRefreshToken
+import datetime
+import uuid
+from django.utils import timezone
+from .utils import login,get_refresh_token,get_access_token,IntegrationSudEmiProf
+from rest_framework.permissions import AllowAny
 
 def get_gender(gender):
     if gender == '1':
@@ -402,7 +406,7 @@ class GetPassportData(APIView):
         passport_data_with_foto = get_passport_data_with_foto(
             request=request, passport_data=passport_data)
         return Response(passport_data_with_foto)
-
+        # return Response()
 
 class GetAddress(APIView):
     queryset = juvenile_models.Juvenile.objects.all()
@@ -466,3 +470,117 @@ class GetIsConvictedApiView(APIView):
     def get(self, request, format=None):
         # inspector_doc_data = get_is_convicted(request=request)
         return Response('inspector_doc_data')
+
+class SudView(APIView):
+
+    permission_classes = [AllowAny, ]
+
+    def get(self, request):
+        pinfl = self.request.query_params.get('pinfl')
+        headers = {
+            "X-Timestamp": f"{int(datetime.datetime.now().timestamp())}",
+            "X-Request-Id": str(uuid.uuid4()),
+        }
+
+        data_request = {
+            "data": {
+                "pinfl": pinfl
+            },
+            "ident": {
+                "X-token": get_access_token(),
+                "user-id": "e-voyagaYetmagan"
+            }
+        }
+        obj = IntegrationSudEmiProf()
+        sudlangan = obj.sudlangan_by_pinfl(data_request, headers)
+        response = sudlangan.json()['result']
+        if response['code'] == 200 and response['message'].lower() == 'success':
+            return Response(
+                {'sudlangan':bool(response['data'] ) }
+            )
+        else:
+            data = {}
+            data['sudlangan'] = sudlangan.json()
+            return Response(data)
+        # return Response({'sudlangan':sudlangan.json()})
+
+
+
+
+class EmiView(APIView):
+    permission_classes = [AllowAny, ]
+
+    def get(self, request):
+        pinfl = self.request.query_params.get('pinfl')
+        headers = {
+            "X-Timestamp": f"{int(datetime.datetime.now().timestamp())}",
+            "X-Request-Id": str(uuid.uuid4()),
+        }
+
+        data_request = {
+            "data": {
+                "pinfl": pinfl
+            },
+            "ident": {
+                # "X-token":  "T9KvyzItpdrtUhK6Hx3kcnlFtnl",
+                "X-token": get_access_token(),
+                "user-id": "e-voyagaYetmagan"
+            }
+        }
+        obj = IntegrationSudEmiProf()
+        emi = obj.emi_shtraf_by_pinfl(data_request, headers)
+        data = {}
+        response = emi.json()['result']
+        if response['code'] == 200 and response['message'].lower() == 'success':
+            if response['data']:
+                filtered_data = [item for item in response['data'] if item.get("violation_article").replace(" ", "")[:2] == "47"]
+                data['47-modda'] = bool(filtered_data)
+                return Response({'47-modda':bool(filtered_data)})
+        else:
+            data = {}
+            data['47-modda'] = emi.json()
+            return Response(data)
+
+class ProfView(APIView):
+    permission_classes = [AllowAny, ]
+
+    def get(self, request):
+        pinfl = self.request.query_params.get('pinfl')
+        headers = {
+            "X-Timestamp": f"{int(datetime.datetime.now().timestamp())}",
+            "X-Request-Id": str(uuid.uuid4()),
+        }
+
+        data_request = {
+            "data": {
+                "pinfl": pinfl,
+                "type":"PROFUCHPROB"
+            },
+            "ident": {
+                # "X-token":  "T9KvyzItpdrtUhK6Hx3kcnlFtnl",
+                "X-token": get_access_token(),
+                "user-id": "e-voyagaYetmagan"
+            }
+        }
+
+        obj = IntegrationSudEmiProf()
+        prof = obj.prof_uchot_by_pinfl(data_request, headers)
+        data = {}
+        ####
+        response = prof.json()['result']
+        if response['code'] == 200 and response['message'].lower() == 'success':
+            if response['data']:
+                filtered_data = [item for item in response['data'] if
+                                 item.get("R56") != "11" and item.get("R56") != "12" and item.get("R56") != "14" and item.get("R56") != "16" and item.get("R56") != "18" and
+                                  item.get("R56") != "19" and item.get("R56") != "21" and item.get("R56") != "77" ]
+                return Response({'prof_uchot': bool(filtered_data)})
+        else:
+            data = {}
+            data['prof_uchot-modda'] = prof.json()
+            return Response(data)
+        ####
+
+
+
+
+

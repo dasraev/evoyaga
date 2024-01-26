@@ -689,7 +689,6 @@ class JuvenileViewset(ModelViewSet):
         user = request.user
         serializer = serializers.JuvenileDistributedInfoCreateSerializer(data=request.data)
         if serializer.is_valid():
-            print('VALID 11 serializer',serializer)
             juvenile_id = self.request.GET.get('juvenile_id', None)
             monitoring_markaz_tuman = request.data.get('monitoring_markaz_tuman')
             distribution_type = serializer.validated_data.get('distribution_type')
@@ -702,7 +701,6 @@ class JuvenileViewset(ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST)
             juvenile_markaz = models.Juvenile_Markaz.objects.filter(
                 juvenile=juvenile).order_by('-created_at').first()
-            print('MYG',juvenile_markaz.id,juvenile_markaz.distributed_info)
             if juvenile_markaz.distributed_info is None:
                 distributed_info = models.JuvenileDistributedInfo.objects.create(**serializer.validated_data)
                 juvenile_markaz = models.Juvenile_Markaz.objects.filter(

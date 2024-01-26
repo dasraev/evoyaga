@@ -570,7 +570,7 @@ class JuvenileReportFilter(filters.FilterSet):
         user_code = list(group_codes)[0]
 
         if user_code == 4:
-            if int(self.request.GET.get('status')) == 14:
+            if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                 return models.UnidentifiedJuvenile.objects.none()
             for term in value.split():
                 queryset = queryset.filter(Q(juvenile__juvenile__first_name__icontains = term) |
@@ -602,7 +602,6 @@ class JuvenileReportFilter(filters.FilterSet):
         return queryset
 
     def search_address_region(self, queryset, name, value):
-
         group_codes = self.request.user.groups.values_list('code', flat=True)
         user_code = list(group_codes)[0]
 
@@ -610,18 +609,18 @@ class JuvenileReportFilter(filters.FilterSet):
         markaz_tuman = self.request.user.markaz_tuman
 
         if user_code == 1:
-            if int(self.request.GET.get('status')) == 14:
+            if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                 # return models.UnidentifiedJuvenile.objects.all()
                 return queryset
             juveniles = queryset.filter(juvenile__addressinfojuvenile__address_mahalla__district_id__region_id__id = value)
         elif user_code == 4:
-            if int(self.request.GET.get('status')) == 14:
+            if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                 # return models.UnidentifiedJuvenile.objects.none()
                 return queryset
-
+            print(9007)
             juveniles = queryset.filter(juvenile__addressinfojuvenile__address_mahalla__district_id__region_id__id = value).filter(monitoring_markaz_tuman=markaz_tuman)
         else:
-            if int(self.request.GET.get('status')) == 14:
+            if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                 # return models.UnidentifiedJuvenile.objects.filter(markaz=user_markaz)
                 return queryset
 

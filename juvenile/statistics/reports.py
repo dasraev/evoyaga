@@ -11,14 +11,14 @@ from config.settings import env
 
 from info.enums import DETERMINED_LOCATION_CHOICE
 regions = Region.objects.all()
-base_query_2024 = models.Juvenile_Markaz.objects.filter(status__in=['2','3','4','5','6','7','8','9','10','11','12','13'],created_at__year=2024)
+base_query_2024 = models.Juvenile_Markaz.objects.filter(status__in=['2','3','4','5','6','7','8','9','10','11','12','13'],accept_center_info__arrived_date__year=2024)
 
-base_query_2023 = models.Juvenile_Markaz.objects.filter(status__in=['2','3','4','5','6','7','8','9','10','11','12','13'],created_at__year=2023)
-# base_query_2024 = models.Juvenile_Markaz.objects.select_related('juvenile','markaz','accept_center_info').exclude(status='1').filter(created_at__year = 2024)
-# base_query_2023 = models.Juvenile_Markaz.objects.select_related('juvenile','markaz','accept_center_info').exclude(status='1').filter(created_at__year = 2023)
+base_query_2023 = models.Juvenile_Markaz.objects.filter(status__in=['2','3','4','5','6','7','8','9','10','11','12','13'],accept_center_info__arrived_date__year=2023)
+# base_query_2024 = models.Juvenile_Markaz.objects.select_related('juvenile','markaz','accept_center_info').exclude(status='1').filter(accept_center_info__arrived_date__year = 2024)
+# base_query_2023 = models.Juvenile_Markaz.objects.select_related('juvenile','markaz','accept_center_info').exclude(status='1').filter(accept_center_info__arrived_date__year = 2023)
 
-respublika_base_query_2024 = models.Juvenile_Markaz.objects.filter(status__in=['2','3','4','5','6','7','8','9','10','11','12','13'],created_at__year=2024)
-respublika_base_query_2023 = models.Juvenile_Markaz.objects.filter(status__in=['2','3','4','5','6','7','8','9','10','11','12','13'],created_at__year=2023)
+respublika_base_query_2024 = models.Juvenile_Markaz.objects.filter(status__in=['2','3','4','5','6','7','8','9','10','11','12','13'],accept_center_info__arrived_date__year=2024)
+respublika_base_query_2023 = models.Juvenile_Markaz.objects.filter(status__in=['2','3','4','5','6','7','8','9','10','11','12','13'],accept_center_info__arrived_date__year=2023)
 
 query_taqsimlangan = models.Juvenile_Markaz.objects.filter(status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'])
 
@@ -227,8 +227,8 @@ def apparat_to_excel_10(requset):
     # worksheet.write(4, 62, subheaders[headers[16]][2], vertical_header_merge_format)
     # worksheet.write(4, 63,  subheaders[headers[16]][2], vertical_header_merge_format)
 
-    # juvenile_markaz_2024 = models.Juvenile_Markaz.objects.filter(created_at__year=2024).exclude(status='1')
-    # juvenile_markaz_2023 = models.Juvenile_Markaz.objects.filter(created_at__year=2023).exclude(status='1')
+    # juvenile_markaz_2024 = models.Juvenile_Markaz.objects.filter(accept_center_info__arrived_date__year=2024).exclude(status='1')
+    # juvenile_markaz_2023 = models.Juvenile_Markaz.objects.filter(accept_center_info__arrived_date__year=2023).exclude(status='1')
     # juveniles_2024 = models.Juvenile.objects.filter(juvenile_markaz__in=juvenile_markaz_2024).distinct()
     # juveniles_2023 = models.Juvenile.objects.filter(juvenile_markaz__in=juvenile_markaz_2023).distinct()
     regions = Region.objects.all()
@@ -250,68 +250,68 @@ def apparat_to_excel_10(requset):
         #Қабул қилинганларни сақлаш муддатлари
         # query = query_taqsimlangan
         # 48 soat
-        worksheet.write(i+5,5, query_taqsimlangan.filter(created_at__year=2024,markaz__region=regions[j]).filter(
+        worksheet.write(i+5,5, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2024,markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(hours=48)
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(hours=48)
 
         ).distinct().count(),header_merge_format)
 
-        worksheet.write(i+6,5, query_taqsimlangan.filter(created_at__year=2023,markaz__region=regions[j]).filter(
+        worksheet.write(i+6,5, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2023,markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(hours=48)
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(hours=48)
         ).distinct().count(),header_merge_format)
 
         #10 kun
-        worksheet.write(i+5,6, query_taqsimlangan.filter(created_at__year=2024,markaz__region=regions[j]).filter(
+        worksheet.write(i+5,6, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2024,markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=10),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(hours=48),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(hours=48),
 
         ).distinct().count(),header_merge_format)
 
-        worksheet.write(i+6,6, query_taqsimlangan.filter(created_at__year=2023,markaz__region=regions[j]).filter(
+        worksheet.write(i+6,6, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2023,markaz__region=regions[j]).filter(
             time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=10),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(hours=48),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(hours=48),
         ).distinct().count(),header_merge_format)
 
         #20 kun
-        worksheet.write(i+5,7, query_taqsimlangan.filter(created_at__year=2024,markaz__region=regions[j]).filter(
+        worksheet.write(i+5,7, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2024,markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=20),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=10),
         ).distinct().count(),header_merge_format)
 
-        worksheet.write(i+6,7, query_taqsimlangan.filter(created_at__year=2023,markaz__region=regions[j]).filter(
+        worksheet.write(i+6,7, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2023,markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=20),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=10),
         ).distinct().count(),header_merge_format)
 
         #30 kun
-        worksheet.write(i+5,8, query_taqsimlangan.filter(created_at__year=2024,markaz__region=regions[j]).filter(
+        worksheet.write(i+5,8, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2024,markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=30),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=30),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=20),
         ).distinct().count(),header_merge_format)
 
-        worksheet.write(i+6,8, query_taqsimlangan.filter(created_at__year=2023,markaz__region=regions[j]).filter(
+        worksheet.write(i+6,8, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2023,markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=30),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=30),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=20),
         ).distinct().count(),header_merge_format)
 
         #45 kun
-        worksheet.write(i+5,9, query_taqsimlangan.filter(created_at__year=2024,markaz__region=regions[j]).filter(
+        worksheet.write(i+5,9, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2024,markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            # distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=45),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=30),
+            # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=30),
         ).distinct().count(),header_merge_format)
 
-        worksheet.write(i+6,9, query_taqsimlangan.filter(created_at__year=2023,markaz__region = regions[j]).filter(
+        worksheet.write(i+6,9, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2023,markaz__region = regions[j]).filter(
             # time_departure_center__isnull=False,
-            # distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=45),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=30),
+            # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=30),
         ).distinct().count(),header_merge_format)
 
         #Олиб келинган жойлари
@@ -392,10 +392,8 @@ def apparat_to_excel_10(requset):
         worksheet.write(i+5,28, base_query_2024.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='10').distinct().count(),header_merge_format )
         worksheet.write(i+6,28, base_query_2023.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='10').distinct().count(),header_merge_format )
 
-        more_parent_juveniles = (models.Juvenile_Markaz.objects.filter(status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'],markaz__region = regions[j])
-         .annotate(parent_count = Count('juvenile__parentinfojuvenile')).filter(parent_count__gt=1))
 
-        more_parent_juveniles
+
         #oilaviy ahvoli ParentInfoJuvenile
         worksheet.write(i+5,29, base_query_2024.filter(markaz__region = regions[j]).filter(juvenile__parentinfojuvenile__marital_status='1').distinct().count(),header_merge_format )
         worksheet.write(i+6,29, base_query_2023.filter(markaz__region = regions[j]).filter(juvenile__parentinfojuvenile__marital_status='1').distinct().count(),header_merge_format )
@@ -472,55 +470,55 @@ def apparat_to_excel_10(requset):
 
         #kimlarga topshirilgan
         # boshqa markazga yuborilgan
-        worksheet.write(i+5,48, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j]) & Q(status='8') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,48, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j]) & Q(status='8') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,48, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j]) & Q(status='8') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,48, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j]) & Q(status='8') ).distinct().count(),header_merge_format )
 
         # ota-ona yoki ornini bosuvchi
-        worksheet.write(i + 5, 49, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j])).filter(Q(distributed_info__distribution_type='1') | Q(distributed_info__distribution_type='8')).distinct().count(), header_merge_format)
-        worksheet.write(i+6,49, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j])).filter(Q(distributed_info__distribution_type='1')| Q(distributed_info__distribution_type='8')).distinct().count(),header_merge_format )
+        worksheet.write(i + 5, 49, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j])).filter(Q(distributed_info__distribution_type='1') | Q(distributed_info__distribution_type='8')).distinct().count(), header_merge_format)
+        worksheet.write(i+6,49, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j])).filter(Q(distributed_info__distribution_type='1')| Q(distributed_info__distribution_type='8')).distinct().count(),header_merge_format )
 
         #rotm ogil bola
-        worksheet.write(i+5,50, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__rotm_type='2') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,50, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__rotm_type='2') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,50, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__rotm_type='2') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,50, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__rotm_type='2') ).distinct().count(),header_merge_format )
         #qiz ogil bola
-        worksheet.write(i+5,51, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__rotm_type='1') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,51, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__rotm_type='1') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,51, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__rotm_type='1') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,51, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__rotm_type='1') ).distinct().count(),header_merge_format )
 
         #itm
-        worksheet.write(i+5,52, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='3') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,52, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='3') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,52, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='3') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,52, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='3') ).distinct().count(),header_merge_format )
 
         #mehribonlik uyi
-        worksheet.write(i+5,53, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='5') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,53, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='5') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,53, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='5') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,53, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='5') ).distinct().count(),header_merge_format )
 
         #sos bolalar
-        worksheet.write(i+5,54, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='7') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,54, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='7') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,54, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='7') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,54, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='7') ).distinct().count(),header_merge_format )
 
         #oilaviy bolalar uyi
-        worksheet.write(i+5,55, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='6') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,55, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='6') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,55, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='6') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,55, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='6') ).distinct().count(),header_merge_format )
 
         #patronat
-        worksheet.write(i+5,56, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='3') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,56, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='3') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,56, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='3') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,56, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='3') ).distinct().count(),header_merge_format )
 
         #farzandlik
-        worksheet.write(i+5,57, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='4') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,57, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='4') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,57, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='4') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,57, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__type_guardianship='4') ).distinct().count(),header_merge_format )
 
         #vasiy homiy
-        worksheet.write(i+5,58, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j])).filter(Q(distributed_info__type_guardianship='1') | Q(distributed_info__type_guardianship='2')).exclude(distributed_info__distribution_type='1').distinct().count(),header_merge_format )
-        worksheet.write(i+6,58, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j])).filter(Q(distributed_info__type_guardianship='1') | Q(distributed_info__type_guardianship='2')).exclude(distributed_info__distribution_type='1').distinct().count(),header_merge_format )
+        worksheet.write(i+5,58, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j])).filter(Q(distributed_info__type_guardianship='1') | Q(distributed_info__type_guardianship='2')).exclude(distributed_info__distribution_type='1').distinct().count(),header_merge_format )
+        worksheet.write(i+6,58, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j])).filter(Q(distributed_info__type_guardianship='1') | Q(distributed_info__type_guardianship='2')).exclude(distributed_info__distribution_type='1').distinct().count(),header_merge_format )
 
         #sogliqni saqlash
-        worksheet.write(i+5,59, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='5') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,59, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='5') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,59, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='5') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,59, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='5') ).distinct().count(),header_merge_format )
 
         #boshqa davlatga yuborish
-        worksheet.write(i+5,60, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='7') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,60, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='7') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,60, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='7') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,60, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz__region = regions[j]) & Q(distributed_info__distribution_type='7') ).distinct().count(),header_merge_format )
 
         #Бошка давлатларда яшовчи фуқаролар фарзандлари
 
@@ -571,68 +569,67 @@ def apparat_to_excel_10(requset):
 
     # Қабул қилинганларни сақлаш муддатлари
     # 48 soat
-    worksheet.write(33, 5, query_taqsimlangan.filter(created_at__year=2024,
+    worksheet.write(33, 5, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2024,
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(hours=48)
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(hours=48)
 
     ).distinct().count(), header_merge_format_bold)
 
-    worksheet.write(34, 5, query_taqsimlangan.filter(created_at__year=2023,
+    worksheet.write(34, 5, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2023,
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(hours=48)
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(hours=48)
     ).distinct().count(), header_merge_format)
 
     # 10 kun
-    worksheet.write(33, 6, query_taqsimlangan.filter(created_at__year=2024,
+    worksheet.write(33, 6, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2024,
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=10),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(hours=48),
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=10),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(hours=48),
 
     ).distinct().count(), header_merge_format_bold)
 
-    worksheet.write(34, 6, query_taqsimlangan.filter(created_at__year=2023,
+    worksheet.write(34, 6, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2023,
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=10),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(hours=48),
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=10),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(hours=48),
     ).distinct().count(), header_merge_format)
 
     # 20 kun
-    worksheet.write(33, 7, query_taqsimlangan.filter(created_at__year=2024,
+    worksheet.write(33, 7, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2024,
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=20),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=10),
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=20),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=10),
     ).distinct().count(), header_merge_format_bold)
 
-    worksheet.write(34, 7, query_taqsimlangan.filter(created_at__year=2023,
+    worksheet.write(34, 7, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2023,
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=20),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=10),
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=20),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=10),
     ).distinct().count(), header_merge_format)
-
     # 30 kun
-    worksheet.write(33, 8, query_taqsimlangan.filter(created_at__year=2024,
+    worksheet.write(33, 8, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2024,
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=30),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=20),
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=30),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=20),
     ).distinct().count(), header_merge_format_bold)
 
-    worksheet.write(34, 8, query_taqsimlangan.filter(created_at__year=2023,
+    worksheet.write(34, 8, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2023,
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=30),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=20),
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=30),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=20),
     ).distinct().count(), header_merge_format)
 
     # 45 kun
-    worksheet.write(33, 9, query_taqsimlangan.filter(created_at__year=2024,
+    worksheet.write(33, 9, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2024,
         # time_departure_center__isnull=False,
-        # distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=45),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=30),
+        # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=30),
     ).distinct().count(), header_merge_format_bold)
 
-    worksheet.write(34, 9, query_taqsimlangan.filter(created_at__year=2023,
+    worksheet.write(34, 9, query_taqsimlangan.filter(accept_center_info__arrived_date__year=2023,
         # time_departure_center__isnull=False,
-        # distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=45),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=30),
+        # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=30),
     ).distinct().count(), header_merge_format)
 
     # Олиб келинган жойлари
@@ -883,109 +880,109 @@ def apparat_to_excel_10(requset):
     # kimlarga topshirilgan
     # boshqa markazga yuborilgan
     worksheet.write(33, 48, query_taqsimlangan.filter(
-        Q(created_at__year=2024) & Q(
+        Q(accept_center_info__arrived_date__year=2024) & Q(
             status='8')).distinct().count(), header_merge_format_bold)
     worksheet.write(34, 48, query_taqsimlangan.filter(
-        Q(created_at__year=2023) & Q(
+        Q(accept_center_info__arrived_date__year=2023) & Q(
             status='8')).distinct().count(), header_merge_format)
 
     # ota-ona yoki ornini bosuvchi
     worksheet.write(33, 49, query_taqsimlangan.filter(
-        created_at__year=2024).filter(
+        accept_center_info__arrived_date__year=2024).filter(
         Q(distributed_info__distribution_type='1') | Q(distributed_info__distribution_type='8')).distinct().count(),
                     header_merge_format_bold)
     worksheet.write(34, 49, query_taqsimlangan.filter(
-        created_at__year=2023).filter(
+        accept_center_info__arrived_date__year=2023).filter(
         Q(distributed_info__distribution_type='1') | Q(distributed_info__distribution_type='8')).distinct().count(),
                     header_merge_format)
 
     # rotm ogil bola
     worksheet.write(33, 50, query_taqsimlangan.filter(
-        Q(created_at__year=2024) & Q(distributed_info__rotm_type='2')).distinct().count(),
+        Q(accept_center_info__arrived_date__year=2024) & Q(distributed_info__rotm_type='2')).distinct().count(),
                     header_merge_format_bold)
     worksheet.write(34, 50, query_taqsimlangan.filter(
-        Q(created_at__year=2023) & Q(distributed_info__rotm_type='2')).distinct().count(),
+        Q(accept_center_info__arrived_date__year=2023) & Q(distributed_info__rotm_type='2')).distinct().count(),
                     header_merge_format)
     # qiz ogil bola
     worksheet.write(33, 51, query_taqsimlangan.filter(
-        Q(created_at__year=2024)  & Q(distributed_info__rotm_type='1')).distinct().count(),
+        Q(accept_center_info__arrived_date__year=2024)  & Q(distributed_info__rotm_type='1')).distinct().count(),
                     header_merge_format_bold)
     worksheet.write(34, 51, query_taqsimlangan.filter(
-        Q(created_at__year=2023) & Q(distributed_info__rotm_type='1')).distinct().count(),
+        Q(accept_center_info__arrived_date__year=2023) & Q(distributed_info__rotm_type='1')).distinct().count(),
                     header_merge_format)
 
     # itm
     worksheet.write(33, 52, query_taqsimlangan.filter(
-        Q(created_at__year=2024)  & Q(
+        Q(accept_center_info__arrived_date__year=2024)  & Q(
             distributed_info__distribution_type='3')).distinct().count(), header_merge_format_bold)
     worksheet.write(34, 52, query_taqsimlangan.filter(
-        Q(created_at__year=2023) & Q(
+        Q(accept_center_info__arrived_date__year=2023) & Q(
             distributed_info__distribution_type='3')).distinct().count(), header_merge_format)
 
     # mehribonlik uyi
     worksheet.write(33, 53, query_taqsimlangan.filter(
-        Q(created_at__year=2024) & Q(
+        Q(accept_center_info__arrived_date__year=2024) & Q(
             distributed_info__type_guardianship='5')).distinct().count(), header_merge_format_bold)
     worksheet.write(34, 53, query_taqsimlangan.filter(
-        Q(created_at__year=2023) & Q(
+        Q(accept_center_info__arrived_date__year=2023) & Q(
             distributed_info__type_guardianship='5')).distinct().count(), header_merge_format)
 
     # sos bolalar
     worksheet.write(33, 54, query_taqsimlangan.filter(
-        Q(created_at__year=2024)  & Q(
+        Q(accept_center_info__arrived_date__year=2024)  & Q(
             distributed_info__type_guardianship='7')).distinct().count(), header_merge_format_bold)
     worksheet.write(34, 54, query_taqsimlangan.filter(
-        Q(created_at__year=2023) & Q(
+        Q(accept_center_info__arrived_date__year=2023) & Q(
             distributed_info__type_guardianship='7')).distinct().count(), header_merge_format)
 
     # oilaviy bolalar uyi
     worksheet.write(33, 55, query_taqsimlangan.filter(
-        Q(created_at__year=2024) & Q(
+        Q(accept_center_info__arrived_date__year=2024) & Q(
             distributed_info__type_guardianship='6')).distinct().count(), header_merge_format_bold)
     worksheet.write(34, 55, query_taqsimlangan.filter(
-        Q(created_at__year=2023) & Q(
+        Q(accept_center_info__arrived_date__year=2023) & Q(
             distributed_info__type_guardianship='6')).distinct().count(), header_merge_format)
 
     # patronat
     worksheet.write(33, 56, query_taqsimlangan.filter(
-        Q(created_at__year=2024) & Q(
+        Q(accept_center_info__arrived_date__year=2024) & Q(
             distributed_info__type_guardianship='3')).distinct().count(), header_merge_format_bold)
     worksheet.write(34, 56, query_taqsimlangan.filter(
-        Q(created_at__year=2023)  & Q(
+        Q(accept_center_info__arrived_date__year=2023)  & Q(
             distributed_info__type_guardianship='3')).distinct().count(), header_merge_format)
 
     # farzandlik
     worksheet.write(33, 57, query_taqsimlangan.filter(
-        Q(created_at__year=2024) & Q(
+        Q(accept_center_info__arrived_date__year=2024) & Q(
             distributed_info__type_guardianship='4')).distinct().count(), header_merge_format_bold)
     worksheet.write(34, 57, query_taqsimlangan.filter(
-        Q(created_at__year=2023) & Q(
+        Q(accept_center_info__arrived_date__year=2023) & Q(
             distributed_info__type_guardianship='4')).distinct().count(), header_merge_format)
 
     # vasiy homiy
     worksheet.write(33, 58, query_taqsimlangan.filter(
-        created_at__year=2024).filter(
+        accept_center_info__arrived_date__year=2024).filter(
         Q(distributed_info__type_guardianship='1') | Q(distributed_info__type_guardianship='2')).exclude(distributed_info__distribution_type='1').distinct().count(),
                     header_merge_format_bold)
     worksheet.write(34, 58, query_taqsimlangan.filter(
-        created_at__year=2023).filter(
+        accept_center_info__arrived_date__year=2023).filter(
         Q(distributed_info__type_guardianship='1') | Q(distributed_info__type_guardianship='2')).exclude(distributed_info__distribution_type='1').distinct().count(),
                     header_merge_format)
 
     # sogliqni saqlash
     worksheet.write(33, 59, query_taqsimlangan.filter(
-        Q(created_at__year=2024) & Q(
+        Q(accept_center_info__arrived_date__year=2024) & Q(
             distributed_info__distribution_type='5')).distinct().count(), header_merge_format_bold)
     worksheet.write(34, 59, query_taqsimlangan.filter(
-        Q(created_at__year=2023)  & Q(
+        Q(accept_center_info__arrived_date__year=2023)  & Q(
             distributed_info__distribution_type='5')).distinct().count(), header_merge_format)
 
     # boshqa davlatga yuborish
     worksheet.write(33, 60, query_taqsimlangan.filter(
-        Q(created_at__year=2024) & Q(
+        Q(accept_center_info__arrived_date__year=2024) & Q(
             distributed_info__distribution_type='7')).distinct().count(), header_merge_format_bold)
     worksheet.write(34, 60, query_taqsimlangan.filter(
-        Q(created_at__year=2023)  & Q(
+        Q(accept_center_info__arrived_date__year=2023)  & Q(
             distributed_info__distribution_type='7')).distinct().count(), header_merge_format)
 
     #Бошка давлатларда яшовчи фуқаролар фарзандлари
@@ -1022,22 +1019,24 @@ def apparat_to_excel_10(requset):
 
 def apparat_to_excel_7_1(request):
     date_from = request.GET.get('date_from')
+
     date_to = request.GET.get('date_to')
     time_date_to = datetime.strptime(date_to,'%Y-%m-%d').date()
+
     date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
 
     last_year = int(format(datetime.now(), '%Y'))
     if date_from and date_to:
         base_query = models.Juvenile_Markaz.objects.filter(
-        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], created_at__range=[date_from,date_to])
+        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], accept_center_info__arrived_date__range=[date_from,date_to])
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],created_at__range=[date_from,date_to])
+            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],accept_center_info__arrived_date__range=[date_from,date_to])
 
     else:
         base_query = models.Juvenile_Markaz.objects.filter(
-            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], created_at__year=last_year)
+            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], accept_center_info__arrived_date__year=last_year)
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],created_at__year=last_year)
+            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],accept_center_info__arrived_date__year=last_year)
 
     local_time = datetime.now(pytz.timezone('Asia/Tashkent'))
     download_time = format(local_time, '%Y-%m-%d-%H-%M-%S')
@@ -1250,7 +1249,7 @@ def apparat_to_excel_7_1(request):
         # 2 kungacha
         worksheet.write(i + 4, 25, base_query.filter(markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=2)
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=2)
 
         ).distinct().count(), header_merge_format)
 
@@ -1258,32 +1257,32 @@ def apparat_to_excel_7_1(request):
         # 10 kun
         worksheet.write(i + 4, 26, base_query.filter(markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=10),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=2),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=2),
 
         ).distinct().count(), header_merge_format)
 
         # 20 kun
         worksheet.write(i + 4, 27, base_query.filter(markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=20),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=10),
 
         ).distinct().count(), header_merge_format)
 
         # 30 kun
         worksheet.write(i + 4, 28, base_query.filter(markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=30),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=30),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=20),
 
         ).distinct().count(), header_merge_format)
 
         # 45 kun
         worksheet.write(i + 4, 29, base_query.filter(markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
-            # distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=45),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=30),
+            # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=30),
 
         ).distinct().count(), header_merge_format)
 
@@ -1376,39 +1375,39 @@ def apparat_to_excel_7_1(request):
     # 2 kungacha
     worksheet.write(18, 25, base_query.filter(
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=2)
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=2)
 
     ).distinct().count(), header_merge_format)
 
     # 10 kun
     worksheet.write(18, 26, base_query.filter(
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=10),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=2),
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=10),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=2),
 
     ).distinct().count(), header_merge_format)
 
     # 20 kun
     worksheet.write(18, 27, base_query.filter(
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=20),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=10),
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=20),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=10),
 
     ).distinct().count(), header_merge_format)
 
     # 30 kun
     worksheet.write(18, 28, base_query.filter(
         # time_departure_center__isnull=False,
-        distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=30),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=20),
+        accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=30),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=20),
 
     ).distinct().count(), header_merge_format)
 
     # 45 kun
     worksheet.write(18, 29, base_query.filter(
         # time_departure_center__isnull=False,
-        # distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=45),
-        distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=30),
+        # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
+        accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=30),
 
     ).distinct().count(), header_merge_format)
     workbook.close()
@@ -1417,22 +1416,24 @@ def apparat_to_excel_7_1(request):
 
 def apparat_to_excel_7_2(request):
     date_from = request.GET.get('date_from')
+
     date_to = request.GET.get('date_to')
     time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
     date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
+
     last_year = int(format(datetime.now(), '%Y'))
 
     if date_from and date_to:
         base_query = models.Juvenile_Markaz.objects.filter(
-        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], created_at__range=[date_from,date_to])
+        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], accept_center_info__arrived_date__range=[date_from,date_to])
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],created_at__range=[date_from,date_to])
+            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],accept_center_info__arrived_date__range=[date_from,date_to])
 
     else:
         base_query = models.Juvenile_Markaz.objects.filter(
-            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'])
+            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'],accept_center_info__arrived_date__year=last_year)
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'])
+            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],accept_center_info__arrived_date__year=last_year)
 
     local_time = datetime.now(pytz.timezone('Asia/Tashkent'))
     download_time = format(local_time, '%Y-%m-%d-%H-%M-%S')
@@ -1568,7 +1569,7 @@ def apparat_to_excel_7_2(request):
         worksheet.write(i + 4, 2,  regions[j].name, header_merge_format)
 
         # jami olib kelinganlar
-        worksheet.write(i + 4, 3, base_query.filter(markaz__region = regions[j]).count())
+        worksheet.write(i + 4, 3, base_query.filter(markaz__region = regions[j]).count(),header_merge_format)
                         # models.Juvenile_Markaz.objects.filter(juvenile__educationinfojuvenile__isnull=False,juvenile__addressinfojuvenile__isnull=False,
                         #                     juvenile__juvenile__isnull=False,juvenile__parentinfojuvenile__isnull=False).
                         #                     filter(markaz__region = regions[j]).distinct().count(), header_merge_format)
@@ -1640,9 +1641,9 @@ def apparat_to_excel_7_2(request):
 
         #hozirda markazda saqlanayotgan
         if date_from and date_to:
-            query = models.Juvenile_Markaz.objects.filter(status='2',created_at__range=[date_from,date_to],markaz__region=regions[j])
+            query = models.Juvenile_Markaz.objects.filter(status__in=['2','10'],accept_center_info__arrived_date__range=[date_from,date_to],markaz__region=regions[j])
         else:
-            query = models.Juvenile_Markaz.objects.filter(status='2',markaz__region=regions[j])
+            query = models.Juvenile_Markaz.objects.filter(status__in=['2','10'],markaz__region=regions[j],accept_center_info__arrived_date__year=last_year)
 
         worksheet.write(i+4, 17,query.distinct().count(),header_merge_format)
         worksheet.write(i+4, 18,query.filter(juvenile__juvenile__gender='M').distinct().count(),header_merge_format)
@@ -1654,9 +1655,7 @@ def apparat_to_excel_7_2(request):
         #JAMI
 
         # jami olib kelinganlar
-    worksheet.write(18, 3, models.Juvenile_Markaz.objects.filter(juvenile__educationinfojuvenile__isnull=False,juvenile__addressinfojuvenile__isnull=False,
-                                        juvenile__juvenile__isnull=False,juvenile__parentinfojuvenile__isnull=False).
-                                        distinct().count(), header_merge_format)
+    worksheet.write(18, 3, base_query.count(), header_merge_format)
     # kimlarga topshirilgan
     #boshqa markazga yuborilgan
     worksheet.write(18,4, query_taqsimlangan.filter(status='8').distinct().count(),header_merge_format)
@@ -1725,9 +1724,9 @@ def apparat_to_excel_7_2(request):
 
     #hozirda markazda saqlanayotgan
     if date_from and date_to:
-        query = models.Juvenile_Markaz.objects.filter(status='2',created_at__range=[date_from,date_to])
+        query = models.Juvenile_Markaz.objects.filter(status__in=['2','10'],accept_center_info__arrived_date__range=[date_from,date_to])
     else:
-        query = models.Juvenile_Markaz.objects.filter(status='2')
+        query = models.Juvenile_Markaz.objects.filter(status__in=['2','10'],accept_center_info__arrived_date__year=last_year)
 
     worksheet.write(18, 17,query.distinct().count(),header_merge_format)
     worksheet.write(18, 18,query.filter(juvenile__juvenile__gender='M').distinct().count(),header_merge_format)
@@ -1749,15 +1748,15 @@ def apparat_to_excel_7_3(request):
 
     if date_from and date_to:
         base_query = models.Juvenile_Markaz.objects.filter(
-        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], created_at__range=[date_from,date_to])
+        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], accept_center_info__arrived_date__range=[date_from,date_to])
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],created_at__range=[date_from,date_to])
+            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],accept_center_info__arrived_date__range=[date_from,date_to])
 
     else:
         base_query = models.Juvenile_Markaz.objects.filter(
-            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'])
+            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'],accept_center_info__arrived_date__year=last_year)
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9','11', '12', '13'])
+            status__in=['3', '4', '5', '6', '7', '8', '9','11', '12', '13'],accept_center_info__arrived_date__year=last_year)
 
     local_time = datetime.now(pytz.timezone('Asia/Tashkent'))
     download_time = format(local_time, '%Y-%m-%d-%H-%M-%S')
@@ -2071,7 +2070,7 @@ def apparat_to_excel_7_3(request):
     #
     # #hozirda markazda saqlanayotgan
     # if date_from and date_to:
-    #     query = models.Juvenile_Markaz.objects.filter(status='2',created_at__range=[date_from,date_to])
+    #     query = models.Juvenile_Markaz.objects.filter(status='2',accept_center_info__arrived_date__range=[date_from,date_to])
     # else:
     #     query = models.Juvenile_Markaz.objects.filter(status='2')
     #
@@ -2301,8 +2300,8 @@ def center_to_excel_9(request):
     # worksheet.write(4, 62, subheaders[headers[16]][2], vertical_header_merge_format)
     # worksheet.write(4, 63,  subheaders[headers[16]][2], vertical_header_merge_format)
 
-    # juvenile_markaz_2024 = models.Juvenile_Markaz.objects.filter(created_at__year=2024).exclude(status='1')
-    # juvenile_markaz_2023 = models.Juvenile_Markaz.objects.filter(created_at__year=2023).exclude(status='1')
+    # juvenile_markaz_2024 = models.Juvenile_Markaz.objects.filter(accept_center_info__arrived_date__year=2024).exclude(status='1')
+    # juvenile_markaz_2023 = models.Juvenile_Markaz.objects.filter(accept_center_info__arrived_date__year=2023).exclude(status='1')
     # juveniles_2024 = models.Juvenile.objects.filter(juvenile_markaz__in=juvenile_markaz_2024).distinct()
     # juveniles_2023 = models.Juvenile.objects.filter(juvenile_markaz__in=juvenile_markaz_2023).distinct()
     regions = Region.objects.all()
@@ -2327,68 +2326,68 @@ def center_to_excel_9(request):
 
         #Қабул қилинганларни сақлаш муддатлари
         # 48 soat
-        worksheet.write(i+5,5, query_taqsimlangan.filter(markaz = markaz,created_at__year=2024).filter(
+        worksheet.write(i+5,5, query_taqsimlangan.filter(markaz = markaz,accept_center_info__arrived_date__year=2024).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(hours=48)
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(hours=48)
 
         ).distinct().count(),header_merge_format)
 
-        worksheet.write(i+6,5, query_taqsimlangan.filter(markaz = markaz,created_at__year=2023).filter(
+        worksheet.write(i+6,5, query_taqsimlangan.filter(markaz = markaz,accept_center_info__arrived_date__year=2023).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(hours=48)
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(hours=48)
         ).distinct().count(),header_merge_format)
 
         #10 kun
-        worksheet.write(i+5,6, query_taqsimlangan.filter(markaz = markaz,created_at__year=2024).filter(
+        worksheet.write(i+5,6, query_taqsimlangan.filter(markaz = markaz,accept_center_info__arrived_date__year=2024).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=10),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(hours=48),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(hours=48),
 
         ).distinct().count(),header_merge_format)
 
-        worksheet.write(i+6,6, query_taqsimlangan.filter(markaz = markaz,created_at__year=2023).filter(
+        worksheet.write(i+6,6, query_taqsimlangan.filter(markaz = markaz,accept_center_info__arrived_date__year=2023).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=10),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(hours=48),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(hours=48),
         ).distinct().count(),header_merge_format)
 
         #20 kun
-        worksheet.write(i+5,7, query_taqsimlangan.filter(markaz = markaz,created_at__year=2024).filter(
+        worksheet.write(i+5,7, query_taqsimlangan.filter(markaz = markaz,accept_center_info__arrived_date__year=2024).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=20),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=10),
         ).distinct().count(),header_merge_format)
 
-        worksheet.write(i+6,7, query_taqsimlangan.filter(markaz = markaz,created_at__year=2023).filter(
+        worksheet.write(i+6,7, query_taqsimlangan.filter(markaz = markaz,accept_center_info__arrived_date__year=2023).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=20),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=10),
         ).distinct().count(),header_merge_format)
 
         #30 kun
-        worksheet.write(i+5,8, query_taqsimlangan.filter(markaz = markaz,created_at__year=2024).filter(
+        worksheet.write(i+5,8, query_taqsimlangan.filter(markaz = markaz,accept_center_info__arrived_date__year=2024).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=30),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=30),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=20),
         ).distinct().count(),header_merge_format)
 
-        worksheet.write(i+6,8, query_taqsimlangan.filter(markaz = markaz,created_at__year=2023).filter(
+        worksheet.write(i+6,8, query_taqsimlangan.filter(markaz = markaz,accept_center_info__arrived_date__year=2023).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=30),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=30),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=20),
         ).distinct().count(),header_merge_format)
 
         #45 kun
-        worksheet.write(i+5,9, query_taqsimlangan.filter(markaz = markaz,created_at__year=2024).filter(
+        worksheet.write(i+5,9, query_taqsimlangan.filter(markaz = markaz,accept_center_info__arrived_date__year=2024).filter(
             # time_departure_center__isnull=False,
-            # distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=45),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=30),
+            # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=30),
         ).distinct().count(),header_merge_format)
 
-        worksheet.write(i+6,9, query_taqsimlangan.filter(markaz = markaz,created_at__year=2023).filter(
+        worksheet.write(i+6,9, query_taqsimlangan.filter(markaz = markaz,accept_center_info__arrived_date__year=2023).filter(
             # time_departure_center__isnull=False,
-            # distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=45),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=30),
+            # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=30),
         ).distinct().count(),header_merge_format)
 
         #Олиб келинган жойлари
@@ -2547,55 +2546,55 @@ def center_to_excel_9(request):
 
         #kimlarga topshirilgan
         # boshqa markazga yuborilgan
-        worksheet.write(i+5,48, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz) & Q(status='8') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,48, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz) & Q(status='8') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,48, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz) & Q(status='8') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,48, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz) & Q(status='8') ).distinct().count(),header_merge_format )
 
         # ota-ona yoki ornini bosuvchi
-        worksheet.write(i+5,49, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz)).filter(Q(distributed_info__distribution_type='1')| Q(distributed_info__distribution_type='8')).distinct().count(),header_merge_format )
-        worksheet.write(i+6,49, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz)).filter(Q(distributed_info__distribution_type='1')| Q(distributed_info__distribution_type='8')).distinct().count(),header_merge_format )
+        worksheet.write(i+5,49, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz)).filter(Q(distributed_info__distribution_type='1')| Q(distributed_info__distribution_type='8')).distinct().count(),header_merge_format )
+        worksheet.write(i+6,49, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz)).filter(Q(distributed_info__distribution_type='1')| Q(distributed_info__distribution_type='8')).distinct().count(),header_merge_format )
 
         #rotm ogil bola
-        worksheet.write(i+5,50, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz) & Q(distributed_info__rotm_type='2') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,50, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz) & Q(distributed_info__rotm_type='2') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,50, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz) & Q(distributed_info__rotm_type='2') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,50, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz) & Q(distributed_info__rotm_type='2') ).distinct().count(),header_merge_format )
         #qiz ogil bola
-        worksheet.write(i+5,51, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz) & Q(distributed_info__rotm_type='1') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,51, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz) & Q(distributed_info__rotm_type='1') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,51, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz) & Q(distributed_info__rotm_type='1') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,51, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz) & Q(distributed_info__rotm_type='1') ).distinct().count(),header_merge_format )
 
         #itm
-        worksheet.write(i+5,52, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz) & Q(distributed_info__distribution_type='3') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,52, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz) & Q(distributed_info__distribution_type='3') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,52, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz) & Q(distributed_info__distribution_type='3') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,52, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz) & Q(distributed_info__distribution_type='3') ).distinct().count(),header_merge_format )
 
         #mehribonlik uyi
-        worksheet.write(i+5,53, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='5') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,53, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='5') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,53, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='5') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,53, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='5') ).distinct().count(),header_merge_format )
 
         #sos bolalar
-        worksheet.write(i+5,54, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='7') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,54, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='7') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,54, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='7') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,54, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='7') ).distinct().count(),header_merge_format )
 
         #oilaviy bolalar uyi
-        worksheet.write(i+5,55, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='6') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,55, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='6') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,55, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='6') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,55, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='6') ).distinct().count(),header_merge_format )
 
         #patronat
-        worksheet.write(i+5,56, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='3') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,56, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='3') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,56, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='3') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,56, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='3') ).distinct().count(),header_merge_format )
 
         #farzandlik
-        worksheet.write(i+5,57, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='4') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,57, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='4') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,57, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='4') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,57, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz) & Q(distributed_info__type_guardianship='4') ).distinct().count(),header_merge_format )
 
         #vasiy homiy
-        worksheet.write(i+5,58, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz)).filter(Q(distributed_info__type_guardianship='1') | Q(distributed_info__type_guardianship='2')).exclude(distributed_info__distribution_type='1').distinct().count(),header_merge_format )
-        worksheet.write(i+6,58, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz)).filter(Q(distributed_info__type_guardianship='1') | Q(distributed_info__type_guardianship='2')).exclude(distributed_info__distribution_type='1').distinct().count(),header_merge_format )
+        worksheet.write(i+5,58, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz)).filter(Q(distributed_info__type_guardianship='1') | Q(distributed_info__type_guardianship='2')).exclude(distributed_info__distribution_type='1').distinct().count(),header_merge_format )
+        worksheet.write(i+6,58, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz)).filter(Q(distributed_info__type_guardianship='1') | Q(distributed_info__type_guardianship='2')).exclude(distributed_info__distribution_type='1').distinct().count(),header_merge_format )
 
         #sogliqni saqlash
-        worksheet.write(i+5,59, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz) & Q(distributed_info__distribution_type='5') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,59, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz) & Q(distributed_info__distribution_type='5') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,59, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz) & Q(distributed_info__distribution_type='5') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,59, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz) & Q(distributed_info__distribution_type='5') ).distinct().count(),header_merge_format )
 
         #boshqa davlatga yuborish
-        worksheet.write(i+5,60, query_taqsimlangan.filter(Q(created_at__year = 2024) & Q(markaz = markaz) & Q(distributed_info__distribution_type='7') ).distinct().count(),header_merge_format )
-        worksheet.write(i+6,60, query_taqsimlangan.filter(Q(created_at__year = 2023) & Q(markaz = markaz) & Q(distributed_info__distribution_type='7') ).distinct().count(),header_merge_format )
+        worksheet.write(i+5,60, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2024) & Q(markaz = markaz) & Q(distributed_info__distribution_type='7') ).distinct().count(),header_merge_format )
+        worksheet.write(i+6,60, query_taqsimlangan.filter(Q(accept_center_info__arrived_date__year = 2023) & Q(markaz = markaz) & Q(distributed_info__distribution_type='7') ).distinct().count(),header_merge_format )
 
         #Бошка давлатларда яшовчи фуқаролар фарзандлари
 
@@ -2641,15 +2640,15 @@ def center_to_excel_8_1(request):
 
     if date_from and date_to:
         base_query = models.Juvenile_Markaz.objects.filter(
-        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], created_at__range=[date_from,date_to])
+        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], accept_center_info__arrived_date__range=[date_from,date_to])
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],created_at__range=[date_from,date_to])
+            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],accept_center_info__arrived_date__range=[date_from,date_to])
 
     else:
         base_query = models.Juvenile_Markaz.objects.filter(
-            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], created_at__year=last_year)
+            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], accept_center_info__arrived_date__year=last_year)
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],created_at__year=last_year)
+            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],accept_center_info__arrived_date__year=last_year)
 
     local_time = datetime.now(pytz.timezone('Asia/Tashkent'))
     download_time = format(local_time, '%Y-%m-%d-%H-%M-%S')
@@ -2860,7 +2859,7 @@ def center_to_excel_8_1(request):
         # 2 kungacha
         worksheet.write(i + 4, 25, base_query.filter(markaz=markaz).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=2)
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=2)
 
         ).distinct().count(), header_merge_format)
 
@@ -2868,32 +2867,32 @@ def center_to_excel_8_1(request):
         # 10 kun
         worksheet.write(i + 4, 26, base_query.filter(markaz=markaz).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=10),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=2),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=2),
 
         ).distinct().count(), header_merge_format)
 
         # 20 kun
         worksheet.write(i + 4, 27, base_query.filter(markaz=markaz).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=20),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=10),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=10),
 
         ).distinct().count(), header_merge_format)
 
         # 30 kun
         worksheet.write(i + 4, 28, base_query.filter(markaz=markaz).filter(
             # time_departure_center__isnull=False,
-            distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=30),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=20),
+            accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=30),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=20),
 
         ).distinct().count(), header_merge_format)
 
         # 45 kun
         worksheet.write(i + 4, 29, base_query.filter(markaz=markaz).filter(
             # time_departure_center__isnull=False,
-            # distributed_info__created_at__lte=F('time_arrival_center') + timedelta(days=45),
-            distributed_info__created_at__gt=F('time_arrival_center') + timedelta(days=30),
+            # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
+            accept_center_info__arrived_date__gt=F('time_arrival_center') + timedelta(days=30),
 
         ).distinct().count(), header_merge_format)
 
@@ -2908,10 +2907,14 @@ def center_to_excel_8_1(request):
 
 def center_to_excel_8_2(request):
     date_from = request.GET.get('date_from')
+
     date_to = request.GET.get('date_to')
     time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+
     date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
     markaz_id = request.GET.get('markaz_id')
+
+    last_year = int(format(datetime.now(), '%Y'))
 
     if markaz_id:
         markaz = Markaz.objects.get(id=markaz_id)
@@ -2920,15 +2923,15 @@ def center_to_excel_8_2(request):
 
     if date_from and date_to:
         base_query = models.Juvenile_Markaz.objects.filter(
-        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], created_at__range=[date_from,date_to])
+        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], accept_center_info__arrived_date__range=[date_from,date_to])
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],created_at__range=[date_from,date_to])
+            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],accept_center_info__arrived_date__range=[date_from,date_to])
 
     else:
         base_query = models.Juvenile_Markaz.objects.filter(
-            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'])
+            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'],accept_center_info__arrived_date__year=last_year)
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'])
+            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],accept_center_info__arrived_date__year=last_year)
 
     local_time = datetime.now(pytz.timezone('Asia/Tashkent'))
     download_time = format(local_time, '%Y-%m-%d-%H-%M-%S')
@@ -3059,9 +3062,10 @@ def center_to_excel_8_2(request):
     while j < 1:
 
         # jami olib kelinganlar
-        worksheet.write(i + 4, 3, models.Juvenile_Markaz.objects.filter(juvenile__educationinfojuvenile__isnull=False,juvenile__addressinfojuvenile__isnull=False,
-                                            juvenile__juvenile__isnull=False,juvenile__parentinfojuvenile__isnull=False).
-                                            filter(markaz=markaz).distinct().count(), header_merge_format)
+        worksheet.write(i + 4, 3, base_query.filter(markaz = markaz).distinct().count(),header_merge_format)
+                        # models.Juvenile_Markaz.objects.filter(juvenile__educationinfojuvenile__isnull=False,juvenile__addressinfojuvenile__isnull=False,
+                        #                     juvenile__juvenile__isnull=False,juvenile__parentinfojuvenile__isnull=False).
+                        #                     filter(markaz=markaz).distinct().count(), header_merge_format)
         # kimlarga topshirilgan
         #boshqa markazga yuborilgan
         worksheet.write(i+4,4, query_taqsimlangan.filter(markaz=markaz,status='8').distinct().count(),header_merge_format)
@@ -3130,9 +3134,9 @@ def center_to_excel_8_2(request):
 
         #hozirda markazda saqlanayotgan
         if date_from and date_to:
-            query = models.Juvenile_Markaz.objects.filter(status='2',created_at__range=[date_from,date_to],markaz=markaz)
+            query = models.Juvenile_Markaz.objects.filter(status__in=['2','10'],accept_center_info__arrived_date__range=[date_from,date_to],markaz=markaz)
         else:
-            query = models.Juvenile_Markaz.objects.filter(status='2',markaz=markaz)
+            query = models.Juvenile_Markaz.objects.filter(status__in=['2','10'],markaz=markaz,accept_center_info__arrived_date__year=last_year)
 
         worksheet.write(i+4, 17,query.distinct().count(),header_merge_format)
         worksheet.write(i+4, 18,query.filter(juvenile__juvenile__gender='M').distinct().count(),header_merge_format)
@@ -3153,6 +3157,8 @@ def center_to_excel_8_3(request):
     time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
     date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
     markaz_id = request.GET.get('markaz_id')
+    last_year = int(format(datetime.now(), '%Y'))
+
 
     if markaz_id:
         markaz = Markaz.objects.get(id=markaz_id)
@@ -3160,15 +3166,15 @@ def center_to_excel_8_3(request):
         markaz = request.user.markaz
     if date_from and date_to:
         base_query = models.Juvenile_Markaz.objects.filter(
-        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], created_at__range=[date_from,date_to])
+        status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'], accept_center_info__arrived_date__range=[date_from,date_to])
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],created_at__range=[date_from,date_to])
+            status__in=['3', '4', '5', '6', '7', '8', '9', '11', '12', '13'],accept_center_info__arrived_date__range=[date_from,date_to])
 
     else:
         base_query = models.Juvenile_Markaz.objects.filter(
-            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'])
+            status__in=['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'],accept_center_info__arrived_date__year=last_year)
         query_taqsimlangan = models.Juvenile_Markaz.objects.filter(
-            status__in=['3', '4', '5', '6', '7', '8', '9','11', '12', '13'])
+            status__in=['3', '4', '5', '6', '7', '8', '9','11', '12', '13'],accept_center_info__arrived_date__year=last_year)
 
     local_time = datetime.now(pytz.timezone('Asia/Tashkent'))
     download_time = format(local_time, '%Y-%m-%d-%H-%M-%S')

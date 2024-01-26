@@ -9,7 +9,7 @@ media/
 
 venv/
 venv
-
+.env
 venv
 db.sqlite3
 

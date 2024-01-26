@@ -44,7 +44,7 @@ ALLOWED_HOSTS = [
     '192.168.43.16',
     '192.168.1.141',
     '10.1.27.96',
-
+    "4fbc-195-158-15-110.ngrok-free.app"
 ]
 
 
@@ -190,9 +190,17 @@ DATABASES = {
         'PORT': '5432',
 
     }
-
 }
 
+
+#
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         # 'NAME': BASE_DIR / 'dbtest.sqlite3',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

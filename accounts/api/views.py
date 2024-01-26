@@ -161,12 +161,12 @@ class UserUpdateForApparatAPIView(generics.UpdateAPIView):
     serializer_class = serializers.UserUpdateForApparatSerializer
 
 
-    def put(self, request, pk, format=None):
-        instance = CustomUser.objects.get(pk=pk)
+    def patch(self, request, pk, format=None):
+        instance = get_object_or_404(CustomUser,pk=pk)
         request_code = request.user.groups.all()[0].code
         group_code = request.data.get('groups')
         markaz_id = request.data.get('markaz',request.user.markaz_id)
-
+        print(9077,request_code)
         if request_code == 1:
             # if markaz_id and g//roup_code:
             #     users = CustomUser.objects.all().filter(markaz=markaz_id)
@@ -180,6 +180,7 @@ class UserUpdateForApparatAPIView(generics.UpdateAPIView):
             #                 return Response({"Bu viloyatga direktor allaqachon qo'shilgan!"})
             serializer = serializers.UserUpdateForApparatSerializer(instance, data=request.data,partial=True)
             if serializer.is_valid():
+                print(223,serializer.validated_data.get("password"))
                 instance.set_password(serializer.validated_data.get("password"))
 
                 instance.save()
@@ -281,18 +282,18 @@ class UserListAPIView(generics.ListAPIView):
         if user_code == 1:
 
             if markaz_tuman and position :
-                return CustomUser.objects.all().filter(groups__code=position).filter(markaz_tuman_id=markaz_tuman).filter(groups__code__gte=2).filter(is_active=True)
+                return CustomUser.objects.filter(groups__code=position).filter(markaz_tuman_id=markaz_tuman).filter(is_active=True)
             if markaz and position:
-                return CustomUser.objects.all().filter(groups__code=position).filter(markaz_id=markaz).filter(groups__code__gte=2).filter(is_active=True)
+                return CustomUser.objects.filter(groups__code=position).filter(markaz_id=markaz).filter(is_active=True)
             if position:
-                return CustomUser.objects.filter(groups__code=position).filter(groups__code__gte=2).filter(is_active=True)
+                return CustomUser.objects.filter(groups__code=position).filter(is_active=True)
             else:
                 return CustomUser.objects.filter(groups__code__gte=2).filter(is_active=True)
 
         elif user_code == 2:
             # print('vgg',self.request.user.markaz.region)
             # print('alaa2',CustomUser.objects.filter(markaz_tuman__district__region_id = self.request.user.markaz.region))
-            return CustomUser.objects.filter(markaz = user_markaz,groups__code__gte=3)|CustomUser.objects.filter(markaz_tuman__district__region_id = self.request.user.markaz.region)
+            return CustomUser.objects.filter(markaz = user_markaz,groups__code__gte=3)|CustomUser.objects.filter(markaz_tuman__district__region_id = self.request.user.markaz.region).filter(is_active=True)
 
         # if position == '3':
         #     return CustomUser.objects.filter(markaz=user_markaz).filter(groups__code=3).filter(is_active=True)

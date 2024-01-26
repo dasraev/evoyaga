@@ -8,6 +8,8 @@ from .views import (
 
 )
 from info.integrations import views as integrations_views
+from info.integrations.test_integration import IntegrationView,AccessTokenView,RefreshTokenView,ProfView,EmiView
+from info.integrations.views import SudView
 router = routers.DefaultRouter()
 
 router.register('regions', viewset=views.RegionViewset)
@@ -50,4 +52,10 @@ urlpatterns = [
          integrations_views.GetIsRegisteredNarkoDispensaryByBirthDoc.as_view()),
     path('get_is_convicted/',
          integrations_views.GetIsConvictedApiView.as_view()),
+    path('test',IntegrationView.as_view()),
+    path('sud/',SudView.as_view()),
+    path('prof/',ProfView.as_view()),
+    path('emi/',EmiView.as_view()),
+    path('login/', AccessTokenView.as_view()),
+    path('refresh/', RefreshTokenView.as_view())
 ]
