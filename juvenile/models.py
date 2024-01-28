@@ -40,9 +40,9 @@ class JuvenileParent(BaseModel):
     employment = models.TextField(max_length=1500, blank=True, null=True)
     is_abroad = models.BooleanField(null=True, default=None)
     is_wanted = models.BooleanField(null=True, default=None)
-    is_sudlangan = models.BooleanField(null=True,default=None)
-    is_in_prophylactic = models.BooleanField(null=True,default=None)
-    is_47_criminal = models.BooleanField(null=True,default=None)
+    # is_sudlangan = models.BooleanField(null=True,default=None)
+    # is_in_prophylactic = models.BooleanField(null=True,default=None)
+    # is_47_criminal = models.BooleanField(null=True,default=None)
 
 
 
@@ -241,8 +241,8 @@ class PersonalInfoJuvenile(BaseModel):
     foreign_country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True,
                                         related_name="country")
     juvenile = models.ForeignKey(Juvenile, on_delete=models.SET_NULL, null=True, blank=True, related_name="juvenile")
-    is_sudlangan = models.BooleanField(null=True, default=None)
-    is_in_prophylactic = models.BooleanField(null=True, default=None)
+    # is_sudlangan = models.BooleanField(null=True, default=None)
+    # is_in_prophylactic = models.BooleanField(null=True, default=None)
 
 
     class Meta:

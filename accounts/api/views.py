@@ -48,7 +48,6 @@ class LoginView(generics.GenericAPIView):
         if user is not None:
             if user.is_active:
                 data = get_tokens_for_user(user)
-                print(data)
                 # response.set_cookie(
                 #     settings.SIMPLE_JWT['AUTH_COOKIE_REFRESH'],
                 #     data["refresh_token"],
@@ -137,7 +136,7 @@ class UserCreateForApparatAPIView(generics.CreateAPIView):
                 except:
                     user_instance_code = None
                 if user_instance_code:
-                    if user_instance_code == 2 and group_code == '2':
+                    if user_instance_code == 2 and group_code == '2' and user.is_active == True:
                         return Response({"Bu viloyatga direktor allaqachon qo'shilgan!"},
                                         status=status.HTTP_400_BAD_REQUEST)
             if 'photo' in request.data and request.data['photo']:
@@ -166,7 +165,6 @@ class UserUpdateForApparatAPIView(generics.UpdateAPIView):
         request_code = request.user.groups.all()[0].code
         group_code = request.data.get('groups')
         markaz_id = request.data.get('markaz',request.user.markaz_id)
-        print(9077,request_code)
         if request_code == 1:
             # if markaz_id and g//roup_code:
             #     users = CustomUser.objects.all().filter(markaz=markaz_id)
@@ -180,7 +178,6 @@ class UserUpdateForApparatAPIView(generics.UpdateAPIView):
             #                 return Response({"Bu viloyatga direktor allaqachon qo'shilgan!"})
             serializer = serializers.UserUpdateForApparatSerializer(instance, data=request.data,partial=True)
             if serializer.is_valid():
-                print(223,serializer.validated_data.get("password"))
                 instance.set_password(serializer.validated_data.get("password"))
 
                 instance.save()
