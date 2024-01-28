@@ -578,6 +578,7 @@ class JuvenileReportFilter(filters.FilterSet):
                                             Q(juvenile__juvenile__father_name__icontains = term)).filter(monitoring_markaz_tuman=markaz_tuman)
 
         elif user_code == 1:
+            print('VAA',value)
             for term in value.split():
                 if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                     queryset = queryset.filter(Q(first_name__icontains = term) |

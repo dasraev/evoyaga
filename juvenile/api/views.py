@@ -978,8 +978,9 @@ class JuvenileReportsListView(generics.ListAPIView):
         return models.Juvenile_Markaz.objects.all().filter(markaz=user_markaz).order_by('-created_at')
 
     def get_serializer_class(self):
+        print(112312)
         status = self.request.GET.get('status')
-        if status and isinstance(status,int) and int(status) == 14:
+        if status and int(status) == 14:
             return serializers.UnidentifiedJuvenileForNewStatusListSerializer
         else:
             return serializers.JuvenileMarkazListSerializer
