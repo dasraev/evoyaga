@@ -1552,3 +1552,24 @@ class JuvenileNoEducationListView(generics.ListAPIView):
 class PsychologyConditionListView(generics.ListAPIView):
     queryset = models.PsychologyCondition.objects.all()
     serializer_class = serializers.PsychologyConditionSerializer
+
+class JuvenileDeleteView(generics.DestroyAPIView):
+    queryset = models.Juvenile.objects.all()
+    def get_object(self,pk):
+
+        if isinstance(pk, int):
+            instance = get_object_or_404(models.Juvenile_Markaz,pk=pk)
+
+        else:
+            instance = get_object_or_404(models.UnidentifiedJuvenile, id=pk)
+        return instance
+
+    def delete(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        try:
+            pk = int(pk)
+        except:
+            pass
+        instance = self.get_object(pk)
+        instance.delete()
+        return Response("Muvaffaqiyatli o'chirildi",status=status.HTTP_204_NO_CONTENT)

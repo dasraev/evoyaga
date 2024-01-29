@@ -94,5 +94,8 @@ urlpatterns = [
     # path('last_accepted_juveniles/', views.LastAcceptedJuvenilesView.as_view()),
     path('juveniles_no_education/', views.JuvenileNoEducationListView.as_view()),
 
-    path('psychology-conditions/',views.PsychologyConditionListView.as_view())
+    path('psychology-conditions/',views.PsychologyConditionListView.as_view()),
+
+    path('juvenile_delete/<pk>/', views.JuvenileDeleteView.as_view()),
+
 ]

@@ -313,4 +313,4 @@ class UserRetrieveDeleteAPIView(generics.RetrieveDestroyAPIView):
         instance.is_active = False
         instance.save()
         # instance.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response("Muvaffaqiyatli o'chirildi",status=status.HTTP_204_NO_CONTENT)
