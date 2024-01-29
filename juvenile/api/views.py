@@ -183,15 +183,15 @@ class JuvenileViewset(ModelViewSet):
                     last_name = request.data.get('last_name')
                     father_name = request.data.get('father_name')
                     birth_date = request.data.get('birth_date')
-                    personal_info = models.PersonalInfoJuvenile.objects.get(first_name=first_name,last_name=last_name,
-                                                                            father_name=father_name,birth_date=birth_date)
+                    personal_info = models.PersonalInfoJuvenile.objects.get(first_name__icontains=first_name,last_name__icontains=last_name,
+                                                                            father_name__icontains=father_name,birth_date=birth_date)
 
                 else:
-                    try:
+                    if request.data.get("pinfl"):
                         personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=request.data.get("pinfl"))
-                    except:
+                    else:
                         personal_info = models.PersonalInfoJuvenile.objects.get(passport_seria=request.data.get('passport_seria'))
-            # except models.PersonalInfoJuvenile.DoesNotExist:
+
             except:
                 personal_info = None
 
@@ -211,6 +211,8 @@ class JuvenileViewset(ModelViewSet):
             #         print('just checking')
             #     return Response({message}, status=status.HTTP_400_BAD_REQUEST)
             if personal_info:
+                print('ppp',personal_info)
+                print('ppp222',personal_info.juvenile)
                 ######
                 # print('111111')
                 # juvenile = models.Juvenile.objects.get(id=personal_info.juvenile_id)
@@ -348,9 +350,11 @@ class JuvenileViewset(ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def juvenile_addressinfo_create_or_update(self, request, pk=None):
+        print('shit 221',models.Juvenile.objects.filter(pk=pk))
         try:
             juvenile = models.Juvenile.objects.get(pk=pk)
         except ObjectDoesNotExist:
+            print('nonono')
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         try:

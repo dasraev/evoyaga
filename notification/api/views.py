@@ -170,21 +170,21 @@ class DonationNotificationDetailAPIView(RetrieveAPIView):
         instance.completed = True
         instance.save()
 
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            'notification_group', {
-                'type': 'send_donation_notification'
-            }
-        )
+        # channel_layer = get_channel_layer()
+        # async_to_sync(channel_layer.group_send)(
+        #     'notification_group', {
+        #         'type': 'send_donation_notification'
+        #     }
+        # )
         return Response({'message': 'Bildirishnoma yakunlandi'})
         
 #Xayriya qo'shilganda chiqadigan xabarnoma
 def send_donation_notification(donation, user):
     DonationNotification.objects.create(markaz=user.markaz, donation=donation, created_by=user)
 
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        'notification_group', {
-            'type': 'send_donation_notification'
-        }
-    )
+    # channel_layer = get_channel_layer()
+    # async_to_sync(channel_layer.group_send)(
+    #     'notification_group', {
+    #         'type': 'send_donation_notification'
+    #     }
+    # )
