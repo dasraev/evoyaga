@@ -386,8 +386,8 @@ def apparat_to_excel_10(requset):
         worksheet.write(i+5,26, base_query_2024.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='8').distinct().count(),header_merge_format )
         worksheet.write(i+6,26, base_query_2023.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='8').distinct().count(),header_merge_format )
 
-        worksheet.write(i+5,27, base_query_2024.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='9').distinct().count(),header_merge_format )
-        worksheet.write(i+6,27, base_query_2023.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='9').distinct().count(),header_merge_format )
+        worksheet.write(i+5,27, base_query_2024.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='9').filter(juvenile__juvenile__passport_type=5).distinct().count(),header_merge_format )
+        worksheet.write(i+6,27, base_query_2023.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='9').filter(juvenile__juvenile__passport_type=5).distinct().count(),header_merge_format )
 
         worksheet.write(i+5,28, base_query_2024.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='10').distinct().count(),header_merge_format )
         worksheet.write(i+6,28, base_query_2023.filter(markaz__region = regions[j]).filter(juvenile__educationinfojuvenile__school_type='10').distinct().count(),header_merge_format )
@@ -745,9 +745,9 @@ def apparat_to_excel_10(requset):
         juvenile__educationinfojuvenile__school_type='8').distinct().count(), header_merge_format)
 
     worksheet.write(33, 27, respublika_base_query_2024.filter(
-        juvenile__educationinfojuvenile__school_type='9').distinct().count(), header_merge_format_bold)
+        juvenile__educationinfojuvenile__school_type='9').filter(juvenile__juvenile__passport_type=5).distinct().count(), header_merge_format_bold)
     worksheet.write(34, 27, respublika_base_query_2023.filter(
-        juvenile__educationinfojuvenile__school_type='9').distinct().count(), header_merge_format)
+        juvenile__educationinfojuvenile__school_type='9').filter(juvenile__juvenile__passport_type=5).distinct().count(), header_merge_format)
 
     worksheet.write(33, 28, respublika_base_query_2024.filter(
         juvenile__educationinfojuvenile__school_type='10').distinct().count(), header_merge_format_bold)
@@ -1212,7 +1212,7 @@ def apparat_to_excel_7_1(request):
         worksheet.write(i+4 ,15 ,base_query.filter(markaz__region=regions[j]).filter(juvenile__educationinfojuvenile__school_type='6').distinct().count(),header_merge_format)
         worksheet.write(i+4 ,16 ,base_query.filter(markaz__region=regions[j]).filter(juvenile__educationinfojuvenile__school_type='7').distinct().count(),header_merge_format)
         worksheet.write(i+4 ,17 ,base_query.filter(markaz__region=regions[j]).filter(juvenile__educationinfojuvenile__school_type='8').distinct().count(),header_merge_format)
-        worksheet.write(i+4 ,18 ,base_query.filter(markaz__region=regions[j]).filter(juvenile__educationinfojuvenile__school_type='9').distinct().count(),header_merge_format)
+        worksheet.write(i+4 ,18 ,base_query.filter(markaz__region=regions[j]).filter(juvenile__educationinfojuvenile__school_type='9').filter(juvenile__juvenile__passport_type=5).distinct().count(),header_merge_format)
         worksheet.write(i+4 ,19 ,base_query.filter(markaz__region=regions[j]).filter(juvenile__educationinfojuvenile__school_type='10').distinct().count(),header_merge_format)
 
         # yoshi
@@ -1333,7 +1333,7 @@ def apparat_to_excel_7_1(request):
     worksheet.write(18, 17, base_query.filter(
         juvenile__educationinfojuvenile__school_type='8').distinct().count(), header_merge_format)
     worksheet.write(18, 18, base_query.filter(
-        juvenile__educationinfojuvenile__school_type='9').distinct().count(), header_merge_format)
+        juvenile__educationinfojuvenile__school_type='9').filter(juvenile__juvenile__passport_type=5).distinct().count(), header_merge_format)
     worksheet.write(18, 19, base_query.filter(
         juvenile__educationinfojuvenile__school_type='10').distinct().count(), header_merge_format)
 
@@ -2462,8 +2462,8 @@ def center_to_excel_9(request):
         worksheet.write(i+5,26, base_query_2024.filter(markaz = markaz).filter(juvenile__educationinfojuvenile__school_type='8').distinct().count(),header_merge_format )
         worksheet.write(i+6,26, base_query_2023.filter(markaz = markaz).filter(juvenile__educationinfojuvenile__school_type='8').distinct().count(),header_merge_format )
 
-        worksheet.write(i+5,27, base_query_2024.filter(markaz = markaz).filter(juvenile__educationinfojuvenile__school_type='9').distinct().count(),header_merge_format )
-        worksheet.write(i+6,27, base_query_2023.filter(markaz = markaz).filter(juvenile__educationinfojuvenile__school_type='9').distinct().count(),header_merge_format )
+        worksheet.write(i+5,27, base_query_2024.filter(markaz = markaz).filter(juvenile__educationinfojuvenile__school_type='9').filter(juvenile__juvenile__passport_type=5).distinct().count(),header_merge_format )
+        worksheet.write(i+6,27, base_query_2023.filter(markaz = markaz).filter(juvenile__educationinfojuvenile__school_type='9').filter(juvenile__juvenile__passport_type=5).distinct().count(),header_merge_format )
 
         worksheet.write(i+5,28, base_query_2024.filter(markaz = markaz).filter(juvenile__educationinfojuvenile__school_type='10').distinct().count(),header_merge_format )
         worksheet.write(i+6,28, base_query_2023.filter(markaz = markaz).filter(juvenile__educationinfojuvenile__school_type='10').distinct().count(),header_merge_format )
@@ -2822,7 +2822,7 @@ def center_to_excel_8_1(request):
         worksheet.write(i+4 ,15 ,base_query.filter(markaz=markaz).filter(juvenile__educationinfojuvenile__school_type='6').distinct().count(),header_merge_format)
         worksheet.write(i+4 ,16 ,base_query.filter(markaz=markaz).filter(juvenile__educationinfojuvenile__school_type='7').distinct().count(),header_merge_format)
         worksheet.write(i+4 ,17 ,base_query.filter(markaz=markaz).filter(juvenile__educationinfojuvenile__school_type='8').distinct().count(),header_merge_format)
-        worksheet.write(i+4 ,18 ,base_query.filter(markaz=markaz).filter(juvenile__educationinfojuvenile__school_type='9').distinct().count(),header_merge_format)
+        worksheet.write(i+4 ,18 ,base_query.filter(markaz=markaz).filter(juvenile__educationinfojuvenile__school_type='9').filter(juvenile__juvenile__passport_type=5).distinct().count(),header_merge_format)
         worksheet.write(i+4 ,19 ,base_query.filter(markaz=markaz).filter(juvenile__educationinfojuvenile__school_type='10').distinct().count(),header_merge_format)
 
         # yoshi

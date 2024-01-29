@@ -550,8 +550,7 @@ class EducationTypeStatisticsSerializer(serializers.ModelSerializer):
         else:
             juvenile_markaz = get_juvenile_markaz(markaz_id=user_markaz)
 
-        not_study_not_working = juvenile_markaz.filter(juvenile__educationinfojuvenile__school_type=9).distinct().count()
-
+        not_study_not_working = juvenile_markaz.filter(Q(juvenile__educationinfojuvenile__school_type=9)|Q(juvenile__juvenile__passport_type=5)).distinct().count()
 
         return not_study_not_working
 
@@ -2407,6 +2406,6 @@ class ApparatEducationTypeStatisticsSerializer(serializers.ModelSerializer):
             juvenile_markaz = get_juvenile_markaz()
 
         not_study_not_working = juvenile_markaz.filter(
-            juvenile__educationinfojuvenile__school_type=9).distinct().count()
+            Q(juvenile__educationinfojuvenile__school_type=9)|Q(juvenile__juvenile__passport_type=5)).distinct().count()
 
         return not_study_not_working
