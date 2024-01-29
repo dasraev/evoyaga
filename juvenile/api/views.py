@@ -1565,6 +1565,9 @@ class JuvenileDeleteView(generics.DestroyAPIView):
         return instance
 
     def delete(self, request, *args, **kwargs):
+        request_code = request.user.groups.all()[0].code
+        if request_code != 1:
+            return Response({"message": "joriy foydalanuvchi apparat emas!"}, status=status.HTTP_401_UNAUTHORIZED)
         pk = kwargs.get('pk')
         try:
             pk = int(pk)
