@@ -1590,3 +1590,4 @@ class JuvenileDeleteView(generics.DestroyAPIView):
 # class MarkazListView(generics.ListAPIView):
 #     queryset = Markaz.objects.all()
 #     serializer_class = MarkazListSerializer
+

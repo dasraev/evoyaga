@@ -67,112 +67,129 @@ class JuvenileAcceptedFilter(filters.FilterSet):
         fields = ['birth_date', 'birth_region', 'birth_district']
 
     #####
-
-    ######
     def search_by_full_name(self, qs, name, value):
-        user_markaz = self.request.user.markaz
-
-        group_codes = self.request.user.groups.values_list('code', flat=True)
-        user_code = list(group_codes)[0]
-
-        qs = models.PersonalInfoJuvenile.objects.all()
-        juveniles_id = []
         for term in value.split():
-            qs = qs.filter(Q(first_name__icontains=term) | Q(last_name__icontains=term) | Q(father_name__icontains=term))
-            for item in qs:
-                juveniles_id.append(item.juvenile_id)
-
-        juveniles = models.Juvenile.objects.filter(pk__in=juveniles_id).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=2)
-        if user_code == 1:
-            juveniles = models.Juvenile.objects.filter(pk__in=juveniles_id)
-
-        return juveniles.distinct()
-
-
-
+            qs = qs.filter(Q(juvenile__first_name__icontains=term) | Q(juvenile__last_name__icontains=term) | Q(juvenile__father_name__icontains=term))
+        return qs
     def search_birth_region(self, queryset, name, value):
-        user_markaz = self.request.user.markaz
-
-        personal_infos = models.PersonalInfoJuvenile.objects.filter(birth_district__region_id=value)
-
-        juveniles_ids = []
-
-
-        for item in personal_infos:
-            juveniles_ids.append(item.juvenile_id)
-
-        juveniles = models.Juvenile.objects.filter(pk__in=juveniles_ids).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=2)
-
-
-        filtered_juveniles = []
-        for item in juveniles:
-            if item not in filtered_juveniles:
-                filtered_juveniles.append(item)
-
-        juvenile_ids = []
-        for item in filtered_juveniles:
-            juvenile_ids.append(item.id)
-
-        juveniles = models.Juvenile.objects.filter(pk__in=juvenile_ids)
-
-
-        return juveniles
+        queryset = queryset.filter(juvenile__birth_district__region_id=value)
+        return queryset
 
     def search_birth_district(self, queryset, name, value):
-        user_markaz = self.request.user.markaz
-
-        personal_infos = models.PersonalInfoJuvenile.objects.filter(birth_district_id=value)
-
-        juveniles_ids = []
-
-
-        for item in personal_infos:
-            juveniles_ids.append(item.juvenile_id)
-
-        juveniles = models.Juvenile.objects.filter(pk__in=juveniles_ids).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=2)
-
-
-        filtered_juveniles = []
-        for item in juveniles:
-            if item not in filtered_juveniles:
-                filtered_juveniles.append(item)
-
-        juvenile_ids = []
-        for item in filtered_juveniles:
-            juvenile_ids.append(item.id)
-
-        juveniles = models.Juvenile.objects.filter(pk__in=juvenile_ids)
-
-
-        return juveniles
-
+        queryset = queryset.filter(juvenile__birth_district_id=value)
+        return queryset
     def search_birth_date(self, queryset, name, value):
-        user_markaz = self.request.user.markaz
 
-        personal_infos = models.PersonalInfoJuvenile.objects.filter(birth_date=value)
+        queryset = queryset.filter(juvenile__birth_date=value)
 
-        juveniles_ids = []
-
-
-        for item in personal_infos:
-            juveniles_ids.append(item.juvenile_id)
-
-        juveniles = models.Juvenile.objects.filter(pk__in=juveniles_ids).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=2)
+        return queryset
 
 
-        filtered_juveniles = []
-        for item in juveniles:
-            if item not in filtered_juveniles:
-                filtered_juveniles.append(item)
+    ######
+    # def search_by_full_name(self, qs, name, value):
+    #     user_markaz = self.request.user.markaz
+    #
+    #     group_codes = self.request.user.groups.values_list('code', flat=True)
+    #     user_code = list(group_codes)[0]
+    #
+    #     qs = models.PersonalInfoJuvenile.objects.all()
+    #     juveniles_id = []
+    #     for term in value.split():
+    #         qs = qs.filter(Q(first_name__icontains=term) | Q(last_name__icontains=term) | Q(father_name__icontains=term))
+    #         for item in qs:
+    #             juveniles_id.append(item.juvenile_id)
+    #
+    #     juveniles = models.Juvenile.objects.filter(pk__in=juveniles_id).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=2)
+    #     if user_code == 1:
+    #         juveniles = models.Juvenile.objects.filter(pk__in=juveniles_id)
+    #
+    #     return juveniles.distinct()
 
-        juvenile_ids = []
-        for item in filtered_juveniles:
-            juvenile_ids.append(item.id)
-
-        juveniles = models.Juvenile.objects.filter(pk__in=juvenile_ids)
 
 
-        return juveniles
+    # def search_birth_region(self, queryset, name, value):
+    #     user_markaz = self.request.user.markaz
+    #
+    #     personal_infos = models.PersonalInfoJuvenile.objects.filter(birth_district__region_id=value)
+    #
+    #     juveniles_ids = []
+    #
+    #
+    #     for item in personal_infos:
+    #         juveniles_ids.append(item.juvenile_id)
+    #
+    #     juveniles = models.Juvenile.objects.filter(pk__in=juveniles_ids).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=2)
+    #
+    #
+    #     filtered_juveniles = []
+    #     for item in juveniles:
+    #         if item not in filtered_juveniles:
+    #             filtered_juveniles.append(item)
+    #
+    #     juvenile_ids = []
+    #     for item in filtered_juveniles:
+    #         juvenile_ids.append(item.id)
+    #
+    #     juveniles = models.Juvenile.objects.filter(pk__in=juvenile_ids)
+    #
+    #
+    #     return juveniles
+
+    # def search_birth_district(self, queryset, name, value):
+    #     user_markaz = self.request.user.markaz
+    #
+    #     personal_infos = models.PersonalInfoJuvenile.objects.filter(birth_district_id=value)
+    #
+    #     juveniles_ids = []
+    #
+    #
+    #     for item in personal_infos:
+    #         juveniles_ids.append(item.juvenile_id)
+    #
+    #     juveniles = models.Juvenile.objects.filter(pk__in=juveniles_ids).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=2)
+    #
+    #
+    #     filtered_juveniles = []
+    #     for item in juveniles:
+    #         if item not in filtered_juveniles:
+    #             filtered_juveniles.append(item)
+    #
+    #     juvenile_ids = []
+    #     for item in filtered_juveniles:
+    #         juvenile_ids.append(item.id)
+    #
+    #     juveniles = models.Juvenile.objects.filter(pk__in=juvenile_ids)
+    #
+    #
+    #     return juveniles
+
+    # def search_birth_date(self, queryset, name, value):
+    #     user_markaz = self.request.user.markaz
+    #
+    #     personal_infos = models.PersonalInfoJuvenile.objects.filter(birth_date=value)
+    #
+    #     juveniles_ids = []
+    #
+    #
+    #     for item in personal_infos:
+    #         juveniles_ids.append(item.juvenile_id)
+    #
+    #     juveniles = models.Juvenile.objects.filter(pk__in=juveniles_ids).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=2)
+    #
+    #
+    #     filtered_juveniles = []
+    #     for item in juveniles:
+    #         if item not in filtered_juveniles:
+    #             filtered_juveniles.append(item)
+    #
+    #     juvenile_ids = []
+    #     for item in filtered_juveniles:
+    #         juvenile_ids.append(item.id)
+    #
+    #     juveniles = models.Juvenile.objects.filter(pk__in=juvenile_ids)
+    #
+    #
+    #     return juveniles
 
 
 # Taqsimlangan bolalar filter
