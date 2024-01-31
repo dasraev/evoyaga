@@ -519,7 +519,7 @@ class JuvenileReportFilter(filters.FilterSet):
     def search_by_markaz(self, queryset, name, value):
         group_codes = self.request.user.groups.values_list('code', flat=True)
         user_code = list(group_codes)[0]
-
+        print("JORABEK")
         if user_code == 1:
             if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                 # return models.UnidentifiedJuvenile.objects.all()
