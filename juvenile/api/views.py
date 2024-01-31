@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from info import enums
+from info.models import Markaz
 from juvenile import models
 from . import filters as filter
 from . import serializers
@@ -114,7 +115,14 @@ class JuvenileViewset(ModelViewSet):
 
         user_markaz = self.request.user.markaz
         # Agar aniqlangan bolaning ma'lumoti to'liq bo'lmasa markazga qabul qilish bo'limida chiqib qolishi kerak emas
-        juveniles = check_juvenile_information(user_markaz)
+        # juveniles = check_juvenile_information(user_markaz)
+        juveniles = (models.Juvenile.objects.filter(current_markaz=user_markaz).filter(
+            juvenile_markaz__status=1,juvenile__isnull=False,addressinfojuvenile__isnull=False,
+            educationinfojuvenile__isnull=False,parentinfojuvenile__isnull=False)
+             |models.Juvenile.objects.filter(juvenile__passport_type=5,current_markaz=user_markaz,juvenile_markaz__status=1)).distinct().order_by('-created_at')
+
+
+
         return juveniles
 
     def get_serializer_class(self):
@@ -614,8 +622,6 @@ class JuvenileViewset(ModelViewSet):
         medical_list = json.loads(request.data.pop('medical_list')[0])
         juvenile_id = self.request.GET.get('juvenile_id', None)
         request.data._mutable = False
-        print('99RRFG',request.data.get('filled_date'))
-        print('22RRFG',type(request.data.get('filled_date')))
 
         try:
             juvenile = models.Juvenile.objects.get(id=juvenile_id)
@@ -1580,3 +1586,7 @@ class JuvenileDeleteView(generics.DestroyAPIView):
         instance = self.get_object(pk)
         instance.delete()
         return Response("Muvaffaqiyatli o'chirildi",status=status.HTTP_204_NO_CONTENT)
+
+# class MarkazListView(generics.ListAPIView):
+#     queryset = Markaz.objects.all()
+#     serializer_class = MarkazListSerializer

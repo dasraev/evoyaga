@@ -29,283 +29,31 @@ class JuvenileFilter(filters.FilterSet):
             markaz=user_markaz).filter(status="1")
 
     def search_birth_region(self, queryset, name, value):
-        user_markaz = self.request.user.markaz
-
-        personal_infos = models.PersonalInfoJuvenile.objects.filter(birth_district__region_id=value)
-
-        juveniles_ids = []
-
-        queryset = models.Juvenile.objects.filter(juvenile_markaz__markaz=user_markaz)
-        list_juveniles = list(queryset)
-        incomplete_juveniles = []
-        for juvenile in list_juveniles:
-            personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not personal_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            address_info = models.AddressInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not address_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            education_info = models.EducationInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not education_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            parent_info = models.ParentInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not parent_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-        for incomplete_juvenile in incomplete_juveniles:
-            personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile_id=incomplete_juvenile.id).order_by(
-                '-created_at').first()
-
-            if personal_info:
-                if personal_info.passport_type == '5':
-                    incomplete_juveniles.remove(incomplete_juvenile)
-
-        incomplete_juvenile_ids = []
-        for item in incomplete_juveniles:
-            incomplete_juvenile_ids.append(item.id)
-
-
-        for item in personal_infos:
-            juveniles_ids.append(item.juvenile_id)
-
-
-        for juvenile_id in juveniles_ids:
-            if juvenile_id in incomplete_juvenile_ids:
-                juveniles_ids.remove(juvenile_id)
-        juveniles = models.Juvenile.objects.filter(pk__in=juveniles_ids).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=1)
-
-
-        filtered_juveniles = []
-        for item in juveniles:
-            if item not in filtered_juveniles:
-                filtered_juveniles.append(item)
-
-        juvenile_ids = []
-        for item in filtered_juveniles:
-            juvenile_ids.append(item.id)
-
-        juveniles = models.Juvenile.objects.filter(pk__in=juvenile_ids)
-
-
-        return juveniles
+        queryset = queryset.filter(juvenile__birth_district__region_id=value)
+        return queryset
 
     def search_birth_district(self, queryset, name, value):
-        user_markaz = self.request.user.markaz
-
-        personal_infos = models.PersonalInfoJuvenile.objects.filter(birth_district_id=value)
-
-        juveniles_ids = []
-
-        queryset = models.Juvenile.objects.filter(juvenile_markaz__markaz=user_markaz)
-        list_juveniles = list(queryset)
-        incomplete_juveniles = []
-        for juvenile in list_juveniles:
-            personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not personal_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            address_info = models.AddressInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not address_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            education_info = models.EducationInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not education_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            parent_info = models.ParentInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not parent_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-        for incomplete_juvenile in incomplete_juveniles:
-            personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile_id=incomplete_juvenile.id).order_by(
-                '-created_at').first()
-
-            if personal_info:
-                if personal_info.passport_type == '5':
-                    incomplete_juveniles.remove(incomplete_juvenile)
-
-        incomplete_juvenile_ids = []
-        for item in incomplete_juveniles:
-            incomplete_juvenile_ids.append(item.id)
-
-
-        for item in personal_infos:
-            juveniles_ids.append(item.juvenile_id)
-
-
-        for juvenile_id in juveniles_ids:
-            if juvenile_id in incomplete_juvenile_ids:
-                juveniles_ids.remove(juvenile_id)
-        juveniles = models.Juvenile.objects.filter(pk__in=juveniles_ids).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=1)
-
-
-        filtered_juveniles = []
-        for item in juveniles:
-            if item not in filtered_juveniles:
-                filtered_juveniles.append(item)
-
-        juvenile_ids = []
-        for item in filtered_juveniles:
-            juvenile_ids.append(item.id)
-
-        juveniles = models.Juvenile.objects.filter(pk__in=juvenile_ids)
-
-
-        return juveniles
+        queryset = queryset.filter(juvenile__birth_district_id=value)
+        return queryset
 
     def search_school_type(self, queryset, name, value):
         user_markaz = self.request.user.markaz
         return models.Juvenile.objects.filter(school_type__contains=value).filter(markaz=user_markaz).filter(status="1")
 
     def search_birth_date(self, queryset, name, value):
-        user_markaz = self.request.user.markaz
 
-        personal_infos = models.PersonalInfoJuvenile.objects.filter(birth_date=value)
+        queryset = queryset.filter(juvenile__birth_date=value)
 
-        juveniles_ids = []
-
-        queryset = models.Juvenile.objects.filter(juvenile_markaz__markaz=user_markaz)
-        list_juveniles = list(queryset)
-        incomplete_juveniles = []
-        for juvenile in list_juveniles:
-            personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not personal_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            address_info = models.AddressInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not address_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            education_info = models.EducationInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not education_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            parent_info = models.ParentInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not parent_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-        for incomplete_juvenile in incomplete_juveniles:
-            personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile_id=incomplete_juvenile.id).order_by(
-                '-created_at').first()
-
-            if personal_info:
-                if personal_info.passport_type == '5':
-                    incomplete_juveniles.remove(incomplete_juvenile)
-
-        incomplete_juvenile_ids = []
-        for item in incomplete_juveniles:
-            incomplete_juvenile_ids.append(item.id)
-
-
-        for item in personal_infos:
-            juveniles_ids.append(item.juvenile_id)
-
-
-        for juvenile_id in juveniles_ids:
-            if juvenile_id in incomplete_juvenile_ids:
-                juveniles_ids.remove(juvenile_id)
-        juveniles = models.Juvenile.objects.filter(pk__in=juveniles_ids).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=1)
-
-
-        filtered_juveniles = []
-        for item in juveniles:
-            if item not in filtered_juveniles:
-                filtered_juveniles.append(item)
-
-        juvenile_ids = []
-        for item in filtered_juveniles:
-            juvenile_ids.append(item.id)
-
-        juveniles = models.Juvenile.objects.filter(pk__in=juvenile_ids)
-
-
-        return juveniles
+        return queryset
 
     def search_by_full_name(self, qs, name, value):
-        user_markaz = self.request.user.markaz
 
         group_codes = self.request.user.groups.values_list('code', flat=True)
-        user_code = list(group_codes)[0]
-
-        qs = models.PersonalInfoJuvenile.objects.all()
-        juveniles_id = []
-
-        queryset = models.Juvenile.objects.filter(juvenile_markaz__markaz=user_markaz)
-        list_juveniles = list(queryset)
-        incomplete_juveniles = []
-        for juvenile in list_juveniles:
-            personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not personal_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            address_info = models.AddressInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not address_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            education_info = models.EducationInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not education_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            parent_info = models.ParentInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not parent_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-        for incomplete_juvenile in incomplete_juveniles:
-            personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile_id=incomplete_juvenile.id).order_by(
-                '-created_at').first()
-
-            if personal_info:
-                if personal_info.passport_type == '5':
-                    incomplete_juveniles.remove(incomplete_juvenile)
-
-        incomplete_juvenile_ids = []
-        for item in incomplete_juveniles:
-            incomplete_juvenile_ids.append(item.id)
 
         for term in value.split():
-            qs = qs.filter(Q(first_name__icontains=term) | Q(last_name__icontains=term) | Q(father_name__icontains=term))
-            for item in qs:
-                juveniles_id.append(item.juvenile_id)
+            qs = qs.filter(Q(juvenile__first_name__icontains=term) | Q(juvenile__last_name__icontains=term) | Q(juvenile__father_name__icontains=term))
 
-        for juvenile_id in juveniles_id:
-            if juvenile_id in incomplete_juvenile_ids:
-                juveniles_id.remove(juvenile_id)
-        juveniles = models.Juvenile.objects.filter(pk__in=juveniles_id).filter(juvenile_markaz__markaz=user_markaz).filter(juvenile_markaz__status=1)
-
-        filtered_juveniles = []
-        for item in juveniles:
-            if item not in filtered_juveniles:
-                filtered_juveniles.append(item)
-
-        juvenile_ids = []
-        for item in filtered_juveniles:
-            juvenile_ids.append(item.id)
-
-        juveniles = models.Juvenile.objects.filter(pk__in=juvenile_ids)
-
-        if user_code == 1:
-            juveniles = models.Juvenile.objects.filter(pk__in=juveniles_id)
-
-        return juveniles
+        return qs
 
 
 # Markazga qabul qilingan bolalar filter
@@ -314,7 +62,13 @@ class JuvenileAcceptedFilter(filters.FilterSet):
     birth_date = filters.DateFilter(method='search_birth_date')
     birth_region = filters.CharFilter(method='search_birth_region')
     birth_district = filters.CharFilter(method='search_birth_district')
+    class Meta:
+        model = models.Juvenile
+        fields = ['birth_date', 'birth_region', 'birth_district']
 
+    #####
+
+    ######
     def search_by_full_name(self, qs, name, value):
         user_markaz = self.request.user.markaz
 
@@ -332,11 +86,9 @@ class JuvenileAcceptedFilter(filters.FilterSet):
         if user_code == 1:
             juveniles = models.Juvenile.objects.filter(pk__in=juveniles_id)
 
-        return juveniles
+        return juveniles.distinct()
 
-    class Meta:
-        model = models.Juvenile
-        fields = ['birth_date', 'birth_region', 'birth_district']
+
 
     def search_birth_region(self, queryset, name, value):
         user_markaz = self.request.user.markaz
@@ -430,6 +182,11 @@ class JuvenileExpelledFilter(filters.FilterSet):
     birth_region = filters.CharFilter(method='search_birth_region')
     birth_district = filters.CharFilter(method='search_birth_district')
 
+
+
+    ######
+
+    ######
     def search_by_full_name(self, qs, name, value):
         user_markaz = self.request.user.markaz
         markaz_tuman = self.request.user.markaz_tuman
@@ -556,6 +313,8 @@ class JuvenileReportFilter(filters.FilterSet):
     full_name = filters.CharFilter(method='search_by_full_name')
     address_region = filters.CharFilter(method='search_address_region')
     school_type = filters.CharFilter(method='search_education_type')
+    markaz = filters.CharFilter(method='search_by_markaz')
+
 
     class Meta:
         model = models.Juvenile_Markaz
@@ -563,6 +322,7 @@ class JuvenileReportFilter(filters.FilterSet):
         # fields = ['address_region']
 
     def search_by_full_name(self, queryset, name, value):
+        print(99098)
         user_markaz = self.request.user.markaz
         markaz_tuman = self.request.user.markaz_tuman
 
@@ -738,3 +498,17 @@ class JuvenileReportFilter(filters.FilterSet):
                 markaz=user_markaz)
 
         return juveniles
+
+    def search_by_markaz(self, queryset, name, value):
+        group_codes = self.request.user.groups.values_list('code', flat=True)
+        user_code = list(group_codes)[0]
+
+        if user_code == 1:
+            if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
+                # return models.UnidentifiedJuvenile.objects.all()
+                return queryset
+            return queryset.filter(markaz = value)
+
+
+
+
