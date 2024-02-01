@@ -719,3 +719,8 @@ class ApparatDownloadStatisticsApiView4(generics.GenericAPIView):
             # 'file4': file_path4,
 
         })
+
+
+class ApparatMapStatisticsView(generics.GenericAPIView):
+    queryset = models.Juvenile.objects.all()
+    serializer_class = serializers.ApparatMapStatisticsSerializer

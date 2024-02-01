@@ -4,12 +4,11 @@ from rest_framework.response import Response
 import base64, requests, json, xmltodict
 import xml.etree.ElementTree as ET
 from django.http import Http404
-from info.models import Region, District,AccessRefreshToken
+from info.models import Region, District
+from rest_framework.permissions import AllowAny
 import datetime
 import uuid
-from django.utils import timezone
 from .utils import login,get_refresh_token,get_access_token,IntegrationSudEmiProf
-from rest_framework.permissions import AllowAny
 
 def get_gender(gender):
     if gender == '1':
@@ -55,19 +54,14 @@ def get_authorization_token():
         'username': 'mvd-eve',
         'password': 'aCee2VzTMa1cJJw6D1Z4',
     }
-    data = {
-        'grant_type': 'password',
-        'username': 'mvd-eve',
-        'password': 'aCee2VzTMa1cJJw6D1Z4',
-    }
     response = requests.post(
         url,
         headers=header,
-        data=data,
         params=params,
         auth=(Consumer_key, Consumer_secret)
     )
     data = response.json()
+    print('1111111111111111', data)
     return data['access_token']
 
 
@@ -85,7 +79,6 @@ def get_inspector_authorization_token():
         "Password": "11V_NazoR@T",
         "CurrentSystem": "1"
     }
-
     json_object = json.dumps(data, indent=4)
     response = requests.post(
         url,
@@ -259,6 +252,32 @@ def get_is_registered_narko_dispensary_by_birth_doc(request):
 def get_passport_data(request):
     pinfl = request.GET.get('pinfl', None)
     passport_data = request.GET.get('passport_data', None)
+    # url = "https://apimgw.egov.uz:8243/gcp/pinser/v1"
+    url = "https://apimgw.egov.uz:8243/gcp/docrest/v1"
+    token = get_authorization_token()
+    header = {
+        'Content-Type': 'application/json',
+        "Authorization": f"Bearer {token}",
+    }
+    data = {
+        "transaction_id": 1,
+        "is_consent": "Y",
+        "pinpp": pinfl,
+        "document": passport_data,
+        "langId": 1,
+        "is_photo": 'Y',
+        "Sender": "M",
+        "sender_pinfl": pinfl
+
+    }
+    json_data = json.dumps(data, indent=4)
+    response = requests.post(url, headers=header, data=json_data)
+    return response.json()
+
+
+def get_passport_data2(request):
+    pinfl = request.GET.get('pinfl', None)
+    passport_data = request.GET.get('passport_data', None)
     url = "https://apimgw.egov.uz:8243/gcp/pinser/v1"
     token = get_authorization_token()
     header = {
@@ -370,7 +389,6 @@ def get_is_convicted(request):
     firstName = request.GET.get('firstName', None)
     lastName = request.GET.get('lastName', None)
 
-
     url = "https://stat.mvd.uz/api/uis/v1/api/e-xukumat/request"
     token = get_convicted_auth_token()
     header = {
@@ -403,10 +421,11 @@ class GetPassportData(APIView):
 
     def get(self, request, format=None):
         passport_data = get_passport_data(request=request)
-        passport_data_with_foto = get_passport_data_with_foto(
-            request=request, passport_data=passport_data)
-        return Response(passport_data_with_foto)
-        # return Response()
+        # passport_data_with_foto = get_passport_data_with_foto(
+        #    request=request, passport_data=passport_data)
+        passport_data['data'][0]['birth_date'] = "2015-09-05"
+        return Response(passport_data)
+
 
 class GetAddress(APIView):
     queryset = juvenile_models.Juvenile.objects.all()
@@ -471,6 +490,8 @@ class GetIsConvictedApiView(APIView):
         # inspector_doc_data = get_is_convicted(request=request)
         return Response('inspector_doc_data')
 
+
+
 class SudView(APIView):
 
     permission_classes = [AllowAny, ]
@@ -494,15 +515,14 @@ class SudView(APIView):
         obj = IntegrationSudEmiProf()
         sudlangan = obj.sudlangan_by_pinfl(data_request, headers)
         response = sudlangan.json()['result']
+        data = {}
+
         if response['code'] == 200 and response['message'].lower() == 'success':
-            return Response(
-                {'sudlangan':bool(response['data'] ) }
-            )
-        else:
-            data = {}
-            data['sudlangan'] = sudlangan.json()
+            data['sudlangan'] = bool(response['data'])
             return Response(data)
-        # return Response({'sudlangan':sudlangan.json()})
+        else:
+            data['sudlangan'] = None
+            return Response(data)
 
 
 
@@ -532,13 +552,11 @@ class EmiView(APIView):
         data = {}
         response = emi.json()['result']
         if response['code'] == 200 and response['message'].lower() == 'success':
-            if response['data']:
-                filtered_data = [item for item in response['data'] if item.get("violation_article").replace(" ", "")[:2] == "47"]
-                data['47-modda'] = bool(filtered_data)
-                return Response({'47-modda':bool(filtered_data)})
+            filtered_data = [item for item in response['data'] if item.get("violation_article").replace(" ", "")[:2] == "47"]
+            data['47-modda'] = bool(filtered_data)
+            return Response(data)
         else:
-            data = {}
-            data['47-modda'] = emi.json()
+            data['47-modda'] = None
             return Response(data)
 
 class ProfView(APIView):
@@ -566,19 +584,16 @@ class ProfView(APIView):
         obj = IntegrationSudEmiProf()
         prof = obj.prof_uchot_by_pinfl(data_request, headers)
         data = {}
-        ####
         response = prof.json()['result']
         if response['code'] == 200 and response['message'].lower() == 'success':
-            if response['data']:
-                filtered_data = [item for item in response['data'] if
-                                 item.get("R56") != "11" and item.get("R56") != "12" and item.get("R56") != "14" and item.get("R56") != "16" and item.get("R56") != "18" and
-                                  item.get("R56") != "19" and item.get("R56") != "21" and item.get("R56") != "77" ]
-                return Response({'prof_uchot': bool(filtered_data)})
-        else:
-            data = {}
-            data['prof_uchot-modda'] = prof.json()
+            filtered_data = [item for item in response['data'] if
+                             item.get("R56") != "11" and item.get("R56") != "12" and item.get("R56") != "14" and item.get("R56") != "16" and item.get("R56") != "18" and
+                              item.get("R56") != "19" and item.get("R56") != "21" and item.get("R56") != "77" ]
+            data['prof_uchot'] = bool(filtered_data)
             return Response(data)
-        ####
+        else:
+            data['prof_uchot'] = None
+            return Response(data)
 
 
 

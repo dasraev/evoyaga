@@ -2409,3 +2409,61 @@ class ApparatEducationTypeStatisticsSerializer(serializers.ModelSerializer):
             Q(juvenile__educationinfojuvenile__school_type=9)|Q(juvenile__juvenile__passport_type=5)).distinct().count()
 
         return not_study_not_working
+
+
+class ApparatMapStatisticsSerializer(serializers.ModelSerializer):
+    accepted_center_childs_per_region = serializers.SerializerMethodField()
+    class Meta:
+        model = models.Juvenile
+        fields = [
+            "accepted_center_childs_per_region",
+        ]
+
+    def get_accepted_center_childs_per_region(self,obj):
+        request = self.context.get('request')
+
+        last_year = int(format(datetime.now(), '%Y'))
+
+        date_from = request.GET.get('date_from')
+        date_to = request.GET.get('date_to')
+        time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+        date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
+        markaz_id = request.GET.get('markaz_id')
+        if markaz_id == '':
+            markaz_id = None
+
+        if markaz_id:
+            try:
+                info_db.Markaz.objects.get(pk=markaz_id)
+            except:
+                raise serializers.ValidationError({'message': 'markaz_id is not valid!'})
+
+
+        if date_from and date_to and markaz_id:
+            data={}
+            regions = info.models.Region.objects.all()
+            juvenile_markaz = get_juvenile_markaz(date_from,date_to,markaz_id)
+            for region in regions:
+                data[region.name] = juvenile_markaz.filter(markaz__region = region).count()
+
+
+        elif date_from and date_to:
+
+            data = {}
+            regions = info.models.Region.objects.all()
+            juvenile_markaz = get_juvenile_markaz(date_from,date_to)
+            for region in regions:
+                data[region.name] = juvenile_markaz.filter(markaz__region=region).count()
+        elif markaz_id:
+            data = {}
+            regions = info.models.Region.objects.all()
+            juvenile_markaz = get_juvenile_markaz(markaz_id=markaz_id)
+            for region in regions:
+                data[region.name] = juvenile_markaz.filter(markaz__region=region).count()
+        else:
+            data = {}
+            regions = info.models.Region.objects.all()
+            juvenile_markaz = get_juvenile_markaz()
+            for region in regions:
+                data[region.name] = juvenile_markaz.filter(markaz__region=region).count()
+        return data
