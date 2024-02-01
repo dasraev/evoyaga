@@ -421,9 +421,6 @@ class GetPassportData(APIView):
 
     def get(self, request, format=None):
         passport_data = get_passport_data(request=request)
-        # passport_data_with_foto = get_passport_data_with_foto(
-        #    request=request, passport_data=passport_data)
-        passport_data['data'][0]['birth_date'] = "2015-09-05"
         return Response(passport_data)
 
 
