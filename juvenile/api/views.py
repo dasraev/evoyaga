@@ -455,60 +455,32 @@ class JuvenileViewset(ModelViewSet):
     @action(detail=False)
     def incomplete_juveniles(self, request):
         full_name = request.GET.get('full_name')
+        birth_date = request.GET.get('birth_date')
+        birth_district = request.GET.get('birth_district')
+        birth_region = request.GET.get('birth_region')
         user = request.user
-        juveniles = models.Juvenile.objects.filter(juvenile_markaz__markaz=user.markaz)
+        incomplete_juveniles = models.Juvenile.objects.filter(
+            Q(juvenile_markaz__markaz=user.markaz) and (
+                    Q(addressinfojuvenile=None) | Q(educationinfojuvenile=None) | Q(parentinfojuvenile=None))
+        ).exclude(juvenile__passport_type='5')
 
         if full_name:
-            qs = models.PersonalInfoJuvenile.objects.all()
-            juveniles_id = []
             for term in full_name.split():
-                qs = qs.filter(
-                    Q(first_name__icontains=term) | Q(last_name__icontains=term) | Q(father_name__icontains=term))
-                for item in qs:
-                    juveniles_id.append(item.juvenile_id)
+                incomplete_juveniles = incomplete_juveniles.filter(
+                    Q(juvenile__first_name__icontains=term) | Q(juvenile__last_name__icontains=term) | Q(juvenile__father_name__icontains=term)).exclude(juvenile__passport_type='5')
+        if birth_date:
+                incomplete_juveniles = incomplete_juveniles.filter(juvenile__birth_date=birth_date)
+        if birth_district:
+            incomplete_juveniles = incomplete_juveniles.filter(juvenile__birth_district=birth_district)
+        if birth_region:
+            incomplete_juveniles = incomplete_juveniles.filter(juvenile__birth_district__region_id=birth_region)
 
-            juveniles = models.Juvenile.objects.filter(pk__in=juveniles_id)
-        list_juveniles = list(juveniles)
-        incomplete_juveniles = []
-        for juvenile in list_juveniles:
-            personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not personal_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
 
-            address_info = models.AddressInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not address_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            education_info = models.EducationInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not education_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-
-            parent_info = models.ParentInfoJuvenile.objects.filter(juvenile_id=juvenile.id)
-            if not parent_info:
-                if juvenile not in incomplete_juveniles:
-                    incomplete_juveniles.append(juvenile)
-        incomplete_juveniles = [juvenile for juvenile in incomplete_juveniles if not (models.PersonalInfoJuvenile.objects
-                                                                                      .filter(juvenile_id=juvenile.id, passport_type='5')
-                                                                                      .order_by('-created_at').first())]
-        # for incomplete_juvenile in incomplete_juveniles:
-        #     print('ONE INCOMPLETE',incomplete_juvenile)
-        #     personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile_id=incomplete_juvenile.id).order_by(
-        #         '-created_at').first()
-        #
-        #     if personal_info:
-        #         if personal_info.passport_type == '5':
-        #             print('5PASS INCOMPLETE',incomplete_juvenile)
-        #             incomplete_juveniles.remove(incomplete_juvenile)
-        #             print('2nd',incomplete_juveniles)
 
         page = self.paginate_queryset(incomplete_juveniles)
         if page is not None:
             serializer = serializers.JuvenileListPersonalInfoSerializer(page, many=True, context={"request": request})
             return self.get_paginated_response(serializer.data)
-        print('SS juv',incomplete_juveniles)
         serializer = serializers.JuvenileListPersonalInfoSerializer(incomplete_juveniles, many=True,
                                                                     context={"request": request})
         return Response(serializer.data)
@@ -576,6 +548,15 @@ class JuvenileViewset(ModelViewSet):
         last_name = self.request.GET.get('last_name', None)
         birth_date = self.request.GET.get('birth_date', None)
 
+        if pinfl:
+            try:
+                personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=pinfl)
+                juvenile = models.Juvenile.objects.get(pk=personal_info.juvenile_id)
+            except:
+                return Response({"message": "Bola topilmadi!"}, status=status.HTTP_404_NOT_FOUND)
+            serializer = serializers.JuvenileListPersonalInfoSerializer(juvenile, context={'request': request})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
         if first_name and last_name and birth_date:
             try:
                 personal_info = models.PersonalInfoJuvenile.objects.get(first_name=first_name, last_name=last_name,
@@ -586,14 +567,6 @@ class JuvenileViewset(ModelViewSet):
             except:
                 return Response({"message": "Bola mavjud emas!"}, status=status.HTTP_404_NOT_FOUND)
 
-        if pinfl:
-            try:
-                personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=pinfl)
-                juvenile = models.Juvenile.objects.get(pk=personal_info.juvenile_id)
-            except:
-                return Response({"message": "Bola topilmadi!"}, status=status.HTTP_404_NOT_FOUND)
-            serializer = serializers.JuvenileListPersonalInfoSerializer(juvenile, context={'request': request})
-            return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(
             {
@@ -963,7 +936,7 @@ class JuvenileViewset(ModelViewSet):
 
 # All reports of Juvenile
 class JuvenileReportsListView(generics.ListAPIView):
-    serializer_class = serializers.JuvenileListSerializer
+    # serializer_class = serializers.JuvenileListSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = filter.JuvenileReportFilter
     pagination_class = JuvenilePagination
@@ -988,7 +961,6 @@ class JuvenileReportsListView(generics.ListAPIView):
         return models.Juvenile_Markaz.objects.all().filter(markaz=user_markaz).order_by('-created_at')
 
     def get_serializer_class(self):
-        print(112312)
         status = self.request.GET.get('status')
         if status and int(status) == 14:
             return serializers.UnidentifiedJuvenileForNewStatusListSerializer

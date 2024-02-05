@@ -1009,6 +1009,8 @@ class JuvenileMarkazListSerializer(serializers.ModelSerializer):
         }
         return data
     def get_time_arrival_center(self, obj):
+        if obj.accept_center_info:
+            return obj.accept_center_info.arrived_date.date()
         return obj.time_arrival_center.date()
 
     def get_time_departure_center(self, obj):

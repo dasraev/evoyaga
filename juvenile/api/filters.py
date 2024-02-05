@@ -330,7 +330,7 @@ class JuvenileReportFilter(filters.FilterSet):
     full_name = filters.CharFilter(method='search_by_full_name')
     address_region = filters.CharFilter(method='search_address_region')
     school_type = filters.CharFilter(method='search_education_type')
-    markaz = filters.CharFilter(method='search_by_markaz')
+    markaz_id = filters.CharFilter(method='search_by_markaz')
 
 
     class Meta:
