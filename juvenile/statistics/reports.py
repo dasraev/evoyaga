@@ -1246,14 +1246,14 @@ def apparat_to_excel_7_1(request):
 
         #saqlangan muddatlar
         # 2 kungacha
-        worksheet.write(i + 4, 25, base_query.filter(markaz__region=regions[j]).filter(
+        worksheet.write(i + 4, 25, query_taqsimlangan.filter(markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
             accept_center_info__arrived_date__gte=F('time_departure_center') - timedelta(days=2)
         ).distinct().count(), header_merge_format)
 
 
         # 10 kun
-        worksheet.write(i + 4, 26, base_query.filter(markaz__region=regions[j]).filter(
+        worksheet.write(i + 4, 26, query_taqsimlangan.filter(markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
             accept_center_info__arrived_date__lt=F('time_departure_center') - timedelta(days=2),
             accept_center_info__arrived_date__gte=F('time_departure_center') - timedelta(days=10)
@@ -1261,7 +1261,7 @@ def apparat_to_excel_7_1(request):
         ).distinct().count(), header_merge_format)
 
         # 20 kun
-        worksheet.write(i + 4, 27, base_query.filter(markaz__region=regions[j]).filter(
+        worksheet.write(i + 4, 27, query_taqsimlangan.filter(markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
             accept_center_info__arrived_date__lt=F('time_departure_center') - timedelta(days=10),
             accept_center_info__arrived_date__gte=F('time_departure_center') - timedelta(days=20)
@@ -1269,7 +1269,7 @@ def apparat_to_excel_7_1(request):
         ).distinct().count(), header_merge_format)
 
         # 30 kun
-        worksheet.write(i + 4, 28, base_query.filter(markaz__region=regions[j]).filter(
+        worksheet.write(i + 4, 28, query_taqsimlangan.filter(markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
             accept_center_info__arrived_date__lt=F('time_departure_center') - timedelta(days=20),
             accept_center_info__arrived_date__gte=F('time_departure_center') - timedelta(days=30)
@@ -1277,7 +1277,7 @@ def apparat_to_excel_7_1(request):
         ).distinct().count(), header_merge_format)
 
         # 45 kun
-        worksheet.write(i + 4, 29, base_query.filter(markaz__region=regions[j]).filter(
+        worksheet.write(i + 4, 29, query_taqsimlangan.filter(markaz__region=regions[j]).filter(
             # time_departure_center__isnull=False,
             # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
             accept_center_info__arrived_date__lt=F('time_departure_center') - timedelta(days=30),
@@ -1371,13 +1371,13 @@ def apparat_to_excel_7_1(request):
 
     # saqlangan muddatlar
     # 2 kungacha
-    worksheet.write(18, 25, base_query.filter(
+    worksheet.write(18, 25, query_taqsimlangan.filter(
         # time_departure_center__isnull=False,
         accept_center_info__arrived_date__gte=F('time_departure_center') - timedelta(days=2)
     ).distinct().count(), header_merge_format)
 
     # 10 kun
-    worksheet.write(18, 26, base_query.filter(
+    worksheet.write(18, 26, query_taqsimlangan.filter(
         # time_departure_center__isnull=False,
         accept_center_info__arrived_date__lt=F('time_departure_center') - timedelta(days=2),
         accept_center_info__arrived_date__gte=F('time_departure_center') - timedelta(days=10)
@@ -1385,7 +1385,7 @@ def apparat_to_excel_7_1(request):
     ).distinct().count(), header_merge_format)
 
     # 20 kun
-    worksheet.write(18, 27, base_query.filter(
+    worksheet.write(18, 27, query_taqsimlangan.filter(
         # time_departure_center__isnull=False,
         accept_center_info__arrived_date__lt=F('time_departure_center') - timedelta(days=10),
         accept_center_info__arrived_date__gte=F('time_departure_center') - timedelta(days=20)
@@ -1393,7 +1393,7 @@ def apparat_to_excel_7_1(request):
     ).distinct().count(), header_merge_format)
 
     # 30 kun
-    worksheet.write(18, 28, base_query.filter(
+    worksheet.write(18, 28, query_taqsimlangan.filter(
         # time_departure_center__isnull=False,
         accept_center_info__arrived_date__lt=F('time_departure_center') - timedelta(days=20),
         accept_center_info__arrived_date__gte=F('time_departure_center') - timedelta(days=30)
@@ -1401,7 +1401,7 @@ def apparat_to_excel_7_1(request):
     ).distinct().count(), header_merge_format)
 
     # 45 kun
-    worksheet.write(18, 29, base_query.filter(
+    worksheet.write(18, 29, query_taqsimlangan.filter(
         # time_departure_center__isnull=False,
         # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
         accept_center_info__arrived_date__lt=F('time_departure_center') - timedelta(days=30),
@@ -2853,7 +2853,7 @@ def center_to_excel_8_1(request):
 
         #saqlangan muddatlar
         # 2 kungacha
-        worksheet.write(i + 4, 25, base_query.filter(markaz=markaz).filter(
+        worksheet.write(i + 4, 25, query_taqsimlangan.filter(markaz=markaz).filter(
 
             # time_departure_center__isnull=False,
         #time_departure_center-accept_center_info.arrived_date<=2
@@ -2863,14 +2863,14 @@ def center_to_excel_8_1(request):
 
 
         # 10 kun
-        worksheet.write(i + 4, 26, base_query.filter(markaz=markaz).filter(
+        worksheet.write(i + 4, 26, query_taqsimlangan.filter(markaz=markaz).filter(
         # F('time_departure_center') - accept_center_info__arrived_date > 2, <=10
         accept_center_info__arrived_date__lt = F('time_departure_center') - timedelta(days=2),
         accept_center_info__arrived_date__gte = F('time_departure_center') - timedelta(days=10)
         ).distinct().count(), header_merge_format)
 
         # 20 kun
-        worksheet.write(i + 4, 27, base_query.filter(markaz=markaz).filter(
+        worksheet.write(i + 4, 27, query_taqsimlangan.filter(markaz=markaz).filter(
             # time_departure_center__isnull=False,
             accept_center_info__arrived_date__lt=F('time_departure_center') - timedelta(days=10),
             accept_center_info__arrived_date__gte=F('time_departure_center') - timedelta(days=20)
@@ -2878,7 +2878,7 @@ def center_to_excel_8_1(request):
         ).distinct().count(), header_merge_format)
 
         # 30 kun
-        worksheet.write(i + 4, 28, base_query.filter(markaz=markaz).filter(
+        worksheet.write(i + 4, 28, query_taqsimlangan.filter(markaz=markaz).filter(
             # time_departure_center__isnull=False,
             accept_center_info__arrived_date__lt=F('time_departure_center') - timedelta(days=20),
             accept_center_info__arrived_date__gte=F('time_departure_center') - timedelta(days=30)
@@ -2886,7 +2886,7 @@ def center_to_excel_8_1(request):
         ).distinct().count(), header_merge_format)
 
         # 45 kun
-        worksheet.write(i + 4, 29, base_query.filter(markaz=markaz).filter(
+        worksheet.write(i + 4, 29, query_taqsimlangan.filter(markaz=markaz).filter(
             # time_departure_center__isnull=False,
             # accept_center_info__arrived_date__lte=F('time_arrival_center') + timedelta(days=45),
             accept_center_info__arrived_date__lt=F('time_departure_center') - timedelta(days=30),

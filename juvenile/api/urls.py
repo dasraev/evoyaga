@@ -82,7 +82,7 @@ urlpatterns = [
     path('apparat/download_statistics-3/',
              statistics_veiws.ApparatDownloadStatisticsApiView3.as_view()),
     path('apparat/download_statistics-4/',
-             statistics_veiws.ApparatDownloadStatisticsApiView3.as_view()),
+             statistics_veiws.ApparatDownloadStatisticsApiView4.as_view()),
     # path('test/',
     #          statistics_veiws.CenterDownloadStatisticsApiView9.as_view()),
 
