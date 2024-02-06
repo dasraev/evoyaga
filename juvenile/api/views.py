@@ -1532,6 +1532,7 @@ class JuvenileDeleteView(generics.DestroyAPIView):
             pass
         instance = self.get_object(pk)
         instance.delete()
+        print('test')
         return Response("Muvaffaqiyatli o'chirildi",status=status.HTTP_204_NO_CONTENT)
 
 # class MarkazListView(generics.ListAPIView):
