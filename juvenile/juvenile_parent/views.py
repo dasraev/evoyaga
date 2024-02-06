@@ -39,7 +39,6 @@ class JuvenileParentViewset(ModelViewSet):
                 try:
                     parent_obj = models.JuvenileParent.objects.get(pinfl=pinfl)
                 except ObjectDoesNotExist:
-                    print(33309,parent)
                     parent_obj = models.JuvenileParent.objects.create(**parent)
 
                 parent_info_juvenile = models.ParentInfoJuvenile.objects.get(pk=parent_info_juvenile_id)

@@ -12,7 +12,6 @@ from datetime import datetime,timedelta
 
 def get_juvenile_markaz(date_from = None, date_to = None, markaz_id = None):
     last_year = int(format(datetime.now(), '%Y'))
-    print('datey',date_to)
     juvenile_markaz = models.Juvenile_Markaz.objects.filter(
         status__in=['2','3','4','5','6','7','8','9','10','11','12','13'] )
     if date_from and date_to:
@@ -46,7 +45,6 @@ class DashboardCardStatisticsSerializer(serializers.ModelSerializer):
     def get_accepted_center_childs(self, obj):
         request = self.context.get('request')
         user_markaz = request.user.markaz
-        print(980,user_markaz.id)
 
         last_year = int(format(datetime.now(), '%Y'))
 
@@ -1173,7 +1171,6 @@ class ApparatDashboardCardStatisticsSerializer(serializers.ModelSerializer):
         time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
         date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
         markaz_id = request.GET.get('markaz_id')
-        print('41FROM',date_from)
         if markaz_id == '':
             markaz_id = None
 

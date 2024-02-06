@@ -79,7 +79,6 @@ class NotificationDetailSerializer(ModelSerializer):
         
         center_opinion_file = None
         if distribution_info is not None:
-            print(900877,distribution_info.id,distribution_info.center_opinion_file)
             # if distribution_info.center_opinion_file is not None:
             if distribution_info.center_opinion_file != '':
                     center_opinion_file = request.build_absolute_uri(
@@ -97,7 +96,6 @@ class NotificationDetailSerializer(ModelSerializer):
             # "address": address_info.address,
             "center_opinion_file": center_opinion_file,
         }
-        print('lok',address_info)
         if address_info:
             data['address'] = address_info.address
         if personal_info.birth_district:

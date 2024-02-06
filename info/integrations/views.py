@@ -61,7 +61,6 @@ def get_authorization_token():
         auth=(Consumer_key, Consumer_secret)
     )
     data = response.json()
-    print('1111111111111111', data)
     return data['access_token']
 
 

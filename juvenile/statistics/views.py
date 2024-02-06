@@ -423,10 +423,8 @@ class ApparatDownloadStatisticsAPIView(generics.ListAPIView):
 
         domain_name = env('DOMAIN_NAME')
 
-        print(domain_name)
         file_path = f'{domain_name}/{workbook.filename}'
-        print(file_path)
-        
+
         #Umumiy ma'lumotlar
         data1 = dashboard_card_statistics_serializer.data
 
@@ -655,7 +653,6 @@ class ApparatDownloadStatisticsApiView1(generics.GenericAPIView):
     def get_queryset(self):
         return models.Juvenile.objects.all()
     def get(self,request):
-        print('CDF',request.user)
         file_path1 = reports.apparat_to_excel_10(request)
         # file_path2 = reports.apparat_to_excel_7_1(request)
         # file_path3 = reports.apparat_to_excel_7_2(request)
@@ -673,7 +670,6 @@ class ApparatDownloadStatisticsApiView2(generics.GenericAPIView):
     def get_queryset(self):
         return models.Juvenile.objects.all()
     def get(self,request):
-        print('CDF',request.user)
         # file_path1 = reports.apparat_to_excel_10(request)
         file_path2 = reports.apparat_to_excel_7_1(request)
         # file_path3 = reports.apparat_to_excel_7_2(request)
@@ -690,7 +686,6 @@ class ApparatDownloadStatisticsApiView3(generics.GenericAPIView):
     def get_queryset(self):
         return models.Juvenile.objects.all()
     def get(self,request):
-        print('CDF',request.user)
         # file_path1 = reports.apparat_to_excel_10(request)
         # file_path2 = reports.apparat_to_excel_7_1(request)
         file_path3 = reports.apparat_to_excel_7_2(request)
@@ -707,7 +702,6 @@ class ApparatDownloadStatisticsApiView4(generics.GenericAPIView):
     def get_queryset(self):
         return models.Juvenile.objects.all()
     def get(self,request):
-        print('CDF',request.user)
         # file_path1 = reports.apparat_to_excel_10(request)
         # file_path2 = reports.apparat_to_excel_7_1(request)
         # file_path3 = reports.apparat_to_excel_7_2(request)

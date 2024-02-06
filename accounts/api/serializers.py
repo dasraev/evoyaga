@@ -87,7 +87,6 @@ class UserUpdateForApparatSerializer(serializers.ModelSerializer):
 
 
     def update(self, instance, validated_data):
-        # print('1100000',validated_data)
         # groups = validated_data.pop('groups')
 
         # user_role = Group.objects.get(code=groups[0].code)

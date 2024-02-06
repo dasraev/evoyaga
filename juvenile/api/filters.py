@@ -339,7 +339,6 @@ class JuvenileReportFilter(filters.FilterSet):
         # fields = ['address_region']
 
     def search_by_full_name(self, queryset, name, value):
-        print(99098)
         user_markaz = self.request.user.markaz
         markaz_tuman = self.request.user.markaz_tuman
 
@@ -355,7 +354,6 @@ class JuvenileReportFilter(filters.FilterSet):
                                             Q(juvenile__juvenile__father_name__icontains = term)).filter(monitoring_markaz_tuman=markaz_tuman)
 
         elif user_code == 1:
-            print('VAA',value)
             for term in value.split():
                 if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                     queryset = queryset.filter(Q(first_name__icontains = term) |
@@ -395,7 +393,6 @@ class JuvenileReportFilter(filters.FilterSet):
             if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                 # return models.UnidentifiedJuvenile.objects.none()
                 return queryset
-            print(9007)
             juveniles = queryset.filter(juvenile__addressinfojuvenile__address_mahalla__district_id__region_id__id = value).filter(monitoring_markaz_tuman=markaz_tuman)
         else:
             if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
@@ -407,7 +404,6 @@ class JuvenileReportFilter(filters.FilterSet):
         return juveniles
 
     def filter_by_status(self, queryset, name, value):
-        print('90008',value)
         group_codes = self.request.user.groups.values_list('code', flat=True)
         user_code = list(group_codes)[0]
 
@@ -519,7 +515,6 @@ class JuvenileReportFilter(filters.FilterSet):
     def search_by_markaz(self, queryset, name, value):
         group_codes = self.request.user.groups.values_list('code', flat=True)
         user_code = list(group_codes)[0]
-        print("JORABEK")
         if user_code == 1:
             if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                 # return models.UnidentifiedJuvenile.objects.all()

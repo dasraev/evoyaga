@@ -51,10 +51,8 @@ def check_is_exist_in_center(juvenile_info):
         try:
             # models.PersonalInfoJuvenile.objects.get(pinfl=juvenile_info['pinfl'])
             # personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=juvenile_info['pinfl'])
-            print('ffr')
             # is_in_markaz = models.Juvenile_Markaz.objects.get(juvenile__juvenile__pinfl=juvenile_info['pinfl'])
             is_in_markaz = models.Juvenile_Markaz.objects.filter(juvenile__juvenile__pinfl=juvenile_info['pinfl']).order_by('-created_at').first()
-            print('ggr')
             # # if is_in_markaz.status == "3":
             #     return not_available
             #
@@ -140,7 +138,6 @@ class JuvenileViewset(ModelViewSet):
         return serializer_class
 
     def create(self, request, *args, **kwargs):
-        print(9001,request.data)
         user = request.user
         try:
             is_in_identified_list = request.data['is_in_identified_list']
@@ -184,9 +181,7 @@ class JuvenileViewset(ModelViewSet):
             personal_info_serializer = serializers.PersonalInfoJuvenileCreateSerializer(data=request.data)
             try:
                 passport_type = request.data.get('passport_type')
-                print(998,passport_type)
                 if int(passport_type) == 5 or int(passport_type) == 6:
-                    print('UYH')
                     first_name = request.data.get('first_name')
                     last_name = request.data.get('last_name')
                     father_name = request.data.get('father_name')
@@ -206,7 +201,6 @@ class JuvenileViewset(ModelViewSet):
             # is_available = check_is_exist_in_center(request.data)
             #
             # if is_available['status']:
-            #     print('AVAILABLE')
             #     passport_type = request.data.get('passport_type')
             #     if passport_type == 4 or passport_type == 5:
             #         personal_info = models.PersonalInfoJuvenile.objects.get()
@@ -216,13 +210,9 @@ class JuvenileViewset(ModelViewSet):
             #         message = f"{personal_info.first_name} {personal_info.last_name} {personal_info.father_name} {juvenile_markaz.markaz.name} ga qabul qilingan!"
             #     else:
             #         message = f"{personal_info.first_name} {personal_info.last_name} {personal_info.father_name} {juvenile_markaz.markaz.name} ga qabul qilingan!. Lekin taqsimlanmagan"
-            #         print('just checking')
             #     return Response({message}, status=status.HTTP_400_BAD_REQUEST)
             if personal_info:
-                print('ppp',personal_info)
-                print('ppp222',personal_info.juvenile)
                 ######
-                # print('111111')
                 # juvenile = models.Juvenile.objects.get(id=personal_info.juvenile_id)
                 # juvenile.updated_by = user
                 # juvenile.current_markaz = user.markaz
@@ -256,7 +246,6 @@ class JuvenileViewset(ModelViewSet):
 
 
             if personal_info_serializer.is_valid():
-                print(22222,personal_info_serializer)
 
                 juvenile = models.Juvenile.objects.create()
                 personal_info = models.PersonalInfoJuvenile.objects.create(**personal_info_serializer.validated_data,
@@ -264,16 +253,13 @@ class JuvenileViewset(ModelViewSet):
                 juvenile.created_by = user
                 juvenile.current_markaz = user.markaz
                 # juvenile.accepted_center_number += 1
-                print('098aa')
                 juvenile.save()
-                print('765')
                 personal_info.save()
                 models.Juvenile_Markaz.objects.create(juvenile=juvenile, markaz=user.markaz, status=1)
                 return Response({
                     "message": "Bola aniqlanganlar ro'yxatiga qo'shildi!",
                     "juvenile_id": juvenile.id
                 }, status=status.HTTP_201_CREATED)
-            print('GHT')
             return Response(personal_info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
@@ -358,11 +344,9 @@ class JuvenileViewset(ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def juvenile_addressinfo_create_or_update(self, request, pk=None):
-        print('shit 221',models.Juvenile.objects.filter(pk=pk))
         try:
             juvenile = models.Juvenile.objects.get(pk=pk)
         except ObjectDoesNotExist:
-            print('nonono')
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         try:
@@ -620,14 +604,12 @@ class JuvenileViewset(ModelViewSet):
                         **inspector_serializer.validated_data)
                 accept_info = models.JuvenileAcceptCenterInfo.objects.create(
                     **serializer.validated_data)
-                print('ACCEPT',accept_info)
                 accept_info.inspector = inspector_obj
 
                 for item in medical_list:
                     models.JuvenileMedicalList.objects.create(medical_list_id=item, accept_center_info=accept_info)
                 juvenile_markaz = models.Juvenile_Markaz.objects.filter(juvenile=juvenile).order_by(
                     '-created_at').first()
-                print('JJJ',juvenile_markaz)
                 juvenile_markaz.accept_center_info = accept_info
                 juvenile_markaz.status = 2
                 juvenile.accepted_center_number += 1
@@ -635,7 +617,6 @@ class JuvenileViewset(ModelViewSet):
                 juvenile_markaz.save()
                 accept_info.save()
                 juvenile.save()
-                print('markaz1',juvenile_markaz.accept_center_info)
                 return Response({
                     'message': 'Bola markazga muvaffaqqiyatli qabul qilindi!'
                 }, status=status.HTTP_201_CREATED)
@@ -715,7 +696,6 @@ class JuvenileViewset(ModelViewSet):
                     juvenile_markaz.monitoring_markaz_tuman_id = monitoring_markaz_tuman
                     juvenile_markaz.save()
                 message = f'Bola taqsimlandi!'
-                print('OILA1',distributed_info)
                 return self.distribute(juvenile_markaz, distributed_info, 3, message)
             else:
                 return Response({"message": "Bu bola allaqachon taqsimlangan!"}, status=status.HTTP_400_BAD_REQUEST)
@@ -880,7 +860,6 @@ class JuvenileViewset(ModelViewSet):
         new_status = [{'id':14,'text':'Shaxsi aniqlanmagan'}, {'id':15,'text':'2 va undan ortiq kelgan'}, {'id':16,'text':'Markazda saqlanayotgan'}]
         values += new_status
         count = 17
-        print(1717,values)
         for psychology_condition in models.PsychologyCondition.objects.all().order_by('-created_at'):
             psychology_status = {"id":count,"text":psychology_condition.title}
             count += 1
@@ -893,7 +872,6 @@ class JuvenileViewset(ModelViewSet):
         #     {"id": 21, 'text': "Ijtimoiy psixologik muammosi mavjud bulmagan"},
         #     {"id": 22, 'text': "Emotsional soxasida muammosi mavjud"}
         # ]
-        print(2727,values)
         return Response(values)
 
     @action(detail=False, methods=['get'])
@@ -1030,9 +1008,7 @@ class JuvenileReportsDetailView(generics.GenericAPIView):
             return Response(serializer.data)
         # try:
         #     instance = self.get_object()
-        #     print('test 1')
         #     serializer = self.get_serializer(instance)
-        #     print('test 2')
         #     return Response(serializer.data)
         # except:
         #     instance =
@@ -1524,7 +1500,6 @@ class JuvenileNoEducationListView(generics.ListAPIView):
 #     permission_classes = [AllowAny]  # Allow any permission for testing
 #
 #     def post(self,request):
-#         print("ABBA",request.data)
 #         return HttpResponse('ba')
 
 # class UnidentifiedReportsDetailView(generics.RetrieveAPIView):

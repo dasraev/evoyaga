@@ -288,8 +288,6 @@ class UserListAPIView(generics.ListAPIView):
                 return CustomUser.objects.filter(groups__code__gte=2).filter(is_active=True)
 
         elif user_code == 2:
-            # print('vgg',self.request.user.markaz.region)
-            # print('alaa2',CustomUser.objects.filter(markaz_tuman__district__region_id = self.request.user.markaz.region))
             return CustomUser.objects.filter(markaz = user_markaz,groups__code__gte=3)|CustomUser.objects.filter(markaz_tuman__district__region_id = self.request.user.markaz.region).filter(is_active=True)
 
         # if position == '3':
