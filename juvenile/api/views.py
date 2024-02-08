@@ -443,15 +443,15 @@ class JuvenileViewset(ModelViewSet):
         birth_district = request.GET.get('birth_district')
         birth_region = request.GET.get('birth_region')
         user = request.user
-        incomplete_juveniles = models.Juvenile.objects.filter(
-            Q(juvenile_markaz__markaz=user.markaz) and (
-                    Q(addressinfojuvenile=None) | Q(educationinfojuvenile=None) | Q(parentinfojuvenile=None))
-        ).exclude(juvenile__passport_type='5')
+        incomplete_juveniles = models.Juvenile.objects.filter(juvenile_markaz__markaz=user.markaz).filter(
+        Q(addressinfojuvenile=None) | Q(educationinfojuvenile=None) | Q(parentinfojuvenile=None)).exclude(juvenile__passport_type='5')
+
+
 
         if full_name:
             for term in full_name.split():
                 incomplete_juveniles = incomplete_juveniles.filter(
-                    Q(juvenile__first_name__icontains=term) | Q(juvenile__last_name__icontains=term) | Q(juvenile__father_name__icontains=term)).exclude(juvenile__passport_type='5')
+                    Q(juvenile__first_name__icontains=term) | Q(juvenile__last_name__icontains=term) | Q(juvenile__father_name__icontains=term))
         if birth_date:
                 incomplete_juveniles = incomplete_juveniles.filter(juvenile__birth_date=birth_date)
         if birth_district:
