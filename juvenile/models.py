@@ -236,7 +236,7 @@ class PersonalInfoJuvenile(BaseModel):
     photo = models.ImageField(upload_to="juveniles/", null=True, max_length=None)
     passport_type = models.CharField(
         max_length=30, choices=enums.PASSPORT_TYPE_CHOICE, null=True)
-    passport_seria = models.CharField(max_length=255, blank=True, null=True, unique=True)
+    passport_seria = models.CharField(max_length=255, blank=True, null=True)
     reference_type = models.FileField(upload_to="reference_types/", null=True, blank=True)
     foreign_country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True,
                                         related_name="country")

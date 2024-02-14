@@ -184,16 +184,17 @@ class JuvenileViewset(ModelViewSet):
                 if int(passport_type) == 5 or int(passport_type) == 6:
                     first_name = request.data.get('first_name')
                     last_name = request.data.get('last_name')
-                    father_name = request.data.get('father_name')
                     birth_date = request.data.get('birth_date')
                     personal_info = models.PersonalInfoJuvenile.objects.get(first_name__icontains=first_name,last_name__icontains=last_name,
-                                                                            father_name__icontains=father_name,birth_date=birth_date)
+                                                                            birth_date=birth_date)
 
                 else:
                     if request.data.get("pinfl"):
                         personal_info = models.PersonalInfoJuvenile.objects.get(pinfl=request.data.get("pinfl"))
                     else:
-                        personal_info = models.PersonalInfoJuvenile.objects.get(passport_seria=request.data.get('passport_seria'))
+                        personal_info = None
+                    # else:
+                    #     personal_info = models.PersonalInfoJuvenile.objects.get(passport_seria=request.data.get('passport_seria'))
 
             except:
                 personal_info = None
@@ -395,6 +396,7 @@ class JuvenileViewset(ModelViewSet):
             parent_info = models.ParentInfoJuvenile.objects.get(juvenile=juvenile)
             serializer = serializers.ParentInfoJuvenileCreateSerializer(parent_info, data=request.data)
         except ObjectDoesNotExist:
+            print('cc create')
             serializer = serializers.ParentInfoJuvenileCreateSerializer(data = request.data)
 
         if serializer.is_valid():
