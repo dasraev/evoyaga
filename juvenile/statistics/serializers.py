@@ -15,7 +15,9 @@ def get_juvenile_markaz(date_from = None, date_to = None, markaz_id = None):
     juvenile_markaz = models.Juvenile_Markaz.objects.filter(
         status__in=['2','3','4','5','6','7','8','9','10','11','12','13'] )
     if date_from and date_to:
+        print(date_to,date_from)
         juvenile_markaz = juvenile_markaz.filter(accept_center_info__arrived_date__range=[date_from, date_to])
+        print(juvenile_markaz.only('id').query)
     if date_from == None and date_to == None:
         juvenile_markaz = juvenile_markaz.filter(accept_center_info__arrived_date__year=last_year)
     if markaz_id:

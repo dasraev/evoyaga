@@ -12,7 +12,7 @@ from config.settings import env
 from info.enums import DETERMINED_LOCATION_CHOICE
 regions = Region.objects.all()
 base_query_2024 = models.Juvenile_Markaz.objects.filter(status__in=['2','3','4','5','6','7','8','9','10','11','12','13'],accept_center_info__arrived_date__year=2024)
-
+print(123213123123444443,base_query_2024.only('id').query)
 base_query_2023 = models.Juvenile_Markaz.objects.filter(status__in=['2','3','4','5','6','7','8','9','10','11','12','13'],accept_center_info__arrived_date__year=2023)
 # base_query_2024 = models.Juvenile_Markaz.objects.select_related('juvenile','markaz','accept_center_info').exclude(status='1').filter(accept_center_info__arrived_date__year = 2024)
 # base_query_2023 = models.Juvenile_Markaz.objects.select_related('juvenile','markaz','accept_center_info').exclude(status='1').filter(accept_center_info__arrived_date__year = 2023)
@@ -2091,6 +2091,11 @@ def center_to_excel_9(request):
     local_time = datetime.now(pytz.timezone('Asia/Tashkent'))
     download_time = format(local_time, '%Y-%m-%d-%H-%M-%S')
     markaz_id = request.GET.get('markaz_id')
+
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+    date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
 
     if markaz_id:
         markaz = Markaz.objects.get(id=markaz_id)

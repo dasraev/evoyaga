@@ -1,0 +1,1161 @@
+[
+  {
+    "name": "Oltinko'l tumani",
+    "soato": 1703202,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "9"
+  },
+  {
+    "name": "Andijon tumani",
+    "soato": 1703203,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "15"
+  },
+  {
+    "name": "Andijon shahri",
+    "soato": 1703401,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "14"
+  },
+  {
+    "name": "Baliqchi tumani",
+    "soato": 1703206,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "1"
+  },
+  {
+    "name": "Bo'z tumani",
+    "soato": 1703209,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "2"
+  },
+  {
+    "name": "Buloqboshi tumani",
+    "soato": 1703210,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "3"
+  },
+  {
+    "name": "Jalaquduq tumani",
+    "soato": 1703211,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "5"
+  },
+  {
+    "name": "Izboskan tumani",
+    "soato": 1703214,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "4"
+  },
+  {
+    "name": "Ulug'nor tumani",
+    "soato": 1703217,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "13"
+  },
+  {
+    "name": "Qo'rg'ontepa tumani",
+    "soato": 1703220,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "11"
+  },
+  {
+    "name": "Asaka tumani",
+    "soato": 1703224,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "16"
+  },
+  {
+    "name": "Marxamat tumani",
+    "soato": 1703227,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "8"
+  },
+  {
+    "name": "Shaxrixon tumani",
+    "soato": 1703230,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "12"
+  },
+  {
+    "name": "Paxtaobod tumani",
+    "soato": 1703232,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "10"
+  },
+  {
+    "name": "Xo'jaobod tumani",
+    "soato": 1703236,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "7"
+  },
+  {
+    "name": "Olot tumani",
+    "soato": 1706204,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "23"
+  },
+  {
+    "name": "Buxoro tumani",
+    "soato": 1706207,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "18"
+  },
+  {
+    "name": "Vobkent tumani",
+    "soato": 1706212,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "29"
+  },
+  {
+    "name": "G'ijduvon tumani",
+    "soato": 1706215,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "19"
+  },
+  {
+    "name": "Kogon tumani",
+    "soato": 1706219,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "22"
+  },
+  {
+    "name": "Qorako'l tumani",
+    "soato": 1706230,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "25"
+  },
+  {
+    "name": "Qorovulbozor tumani",
+    "soato": 1706232,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "26"
+  },
+  {
+    "name": "Xonobod shahri",
+    "soato": 1703408,
+    "region_id": "f7ec9963-bca8-4ebb-9b6a-1d2eed3d6ccf",
+    "mvd_profilactic_district_id": "6"
+  },
+  {
+    "name": "Peshku tumani",
+    "soato": 1706240,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "24"
+  },
+  {
+    "name": "Romitan tumani",
+    "soato": 1706242,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "27"
+  },
+  {
+    "name": "Jondor tumani",
+    "soato": 1706246,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "20"
+  },
+  {
+    "name": "Shofirkon tumani",
+    "soato": 1706258,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "28"
+  },
+  {
+    "name": "Arnasoy tumani",
+    "soato": 1708201,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "49"
+  },
+  {
+    "name": "Baxmal tumani",
+    "soato": 1708204,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "50"
+  },
+  {
+    "name": "G'allaorol tumani",
+    "soato": 1708209,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "53"
+  },
+  {
+    "name": "Sharof Rashidov tumani",
+    "soato": 1708212,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "57"
+  },
+  {
+    "name": "Do'stlik tumani",
+    "soato": 1708215,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "51"
+  },
+  {
+    "name": "Zomin tumani",
+    "soato": 1708218,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "61"
+  },
+  {
+    "name": "Zarbdor tumani",
+    "soato": 1708220,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "60"
+  },
+  {
+    "name": "Mirzacho'l tumani",
+    "soato": 1708223,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "55"
+  },
+  {
+    "name": "Zafarobod tumani",
+    "soato": 1708225,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "59"
+  },
+  {
+    "name": "Paxtakor tumani",
+    "soato": 1708228,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "56"
+  },
+  {
+    "name": "Forish tumani",
+    "soato": 1708235,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "52"
+  },
+  {
+    "name": "Yangiobod tumani",
+    "soato": 1708237,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "58"
+  },
+  {
+    "name": "G'uzor tumani",
+    "soato": 1710207,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "65"
+  },
+  {
+    "name": "Dehqonobod tumani",
+    "soato": 1710212,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "64"
+  },
+  {
+    "name": "Qamashi tumani",
+    "soato": 1710220,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "72"
+  },
+  {
+    "name": "Qarshi tumani",
+    "soato": 1710224,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "74"
+  },
+  {
+    "name": "Koson tumani",
+    "soato": 1710229,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "68"
+  },
+  {
+    "name": "Kitob tumani",
+    "soato": 1710232,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "67"
+  },
+  {
+    "name": "Mirishkor tumani",
+    "soato": 1710233,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "69"
+  },
+  {
+    "name": "Muborak tumani",
+    "soato": 1710234,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "70"
+  },
+  {
+    "name": "Nishon tumani",
+    "soato": 1710235,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "71"
+  },
+  {
+    "name": "Kasbi tumani",
+    "soato": 1710237,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "66"
+  },
+  {
+    "name": "Chiroqchi tumani",
+    "soato": 1710242,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "63"
+  },
+  {
+    "name": "Shahrisabz tumani",
+    "soato": 1710245,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "76"
+  },
+  {
+    "name": "Yakkabog' tumani",
+    "soato": 1710250,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "77"
+  },
+  {
+    "name": "Konimex tumani",
+    "soato": 1712211,
+    "region_id": "c7dcf9ef-5b8a-4a58-b440-38503c26be25",
+    "mvd_profilactic_district_id": "106"
+  },
+  {
+    "name": "Qiziltepa tumani",
+    "soato": 1712216,
+    "region_id": "c7dcf9ef-5b8a-4a58-b440-38503c26be25",
+    "mvd_profilactic_district_id": "110"
+  },
+  {
+    "name": "Navbahor tumani",
+    "soato": 1712230,
+    "region_id": "c7dcf9ef-5b8a-4a58-b440-38503c26be25",
+    "mvd_profilactic_district_id": "107"
+  },
+  {
+    "name": "Karmana tumani",
+    "soato": 1712234,
+    "region_id": "c7dcf9ef-5b8a-4a58-b440-38503c26be25",
+    "mvd_profilactic_district_id": "104"
+  },
+  {
+    "name": "Nurota tumani",
+    "soato": 1712238,
+    "region_id": "c7dcf9ef-5b8a-4a58-b440-38503c26be25",
+    "mvd_profilactic_district_id": "109"
+  },
+  {
+    "name": "Tomdi tumani",
+    "soato": 1712244,
+    "region_id": "c7dcf9ef-5b8a-4a58-b440-38503c26be25",
+    "mvd_profilactic_district_id": "111"
+  },
+  {
+    "name": "Uchquduq tumani",
+    "soato": 1712248,
+    "region_id": "c7dcf9ef-5b8a-4a58-b440-38503c26be25",
+    "mvd_profilactic_district_id": "112"
+  },
+  {
+    "name": "Xatirchi tumani",
+    "soato": 1712251,
+    "region_id": "c7dcf9ef-5b8a-4a58-b440-38503c26be25",
+    "mvd_profilactic_district_id": "105"
+  },
+  {
+    "name": "Mingbuloq tumani",
+    "soato": 1714204,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "94"
+  },
+  {
+    "name": "Kosonsoy tumani",
+    "soato": 1714207,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "93"
+  },
+  {
+    "name": "Namangan tumani",
+    "soato": 1714212,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "96"
+  },
+  {
+    "name": "Norin tumani",
+    "soato": 1714216,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "97"
+  },
+  {
+    "name": "Pop tumani",
+    "soato": 1714219,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "98"
+  },
+  {
+    "name": "To'raqo'rg'on tumani",
+    "soato": 1714224,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "99"
+  },
+  {
+    "name": "Uychi tumani",
+    "soato": 1714229,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "101"
+  },
+  {
+    "name": "Uchqo'rg'on tumani",
+    "soato": 1714234,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "100"
+  },
+  {
+    "name": "Chortoq tumani",
+    "soato": 1714236,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "91"
+  },
+  {
+    "name": "Chust tumani",
+    "soato": 1714237,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "92"
+  },
+  {
+    "name": "Yangiqo'rg'on tumani",
+    "soato": 1714242,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "102"
+  },
+  {
+    "name": "Oqdaryo tumani",
+    "soato": 1718203,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "138"
+  },
+  {
+    "name": "Bulung'ur tumani",
+    "soato": 1718206,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "131"
+  },
+  {
+    "name": "Jomboy tumani",
+    "soato": 1718209,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "133"
+  },
+  {
+    "name": "Ishtixon tumani",
+    "soato": 1718212,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "132"
+  },
+  {
+    "name": "Kattaqo'rg'on tumani",
+    "soato": 1718215,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "135"
+  },
+  {
+    "name": "'shrabot tumani",
+    "soato": 1718216,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "142"
+  },
+  {
+    "name": "pay tumani",
+    "soato": 1718218,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "136"
+  },
+  {
+    "name": "Payariq tumani",
+    "soato": 1718224,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "141"
+  },
+  {
+    "name": "Pastdarg'om tumani",
+    "soato": 1718227,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "140"
+  },
+  {
+    "name": "Paxtachi tumani",
+    "soato": 1718230,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "139"
+  },
+  {
+    "name": "Samarqand tumani",
+    "soato": 1718233,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "144"
+  },
+  {
+    "name": "Nurobod tumani",
+    "soato": 1718235,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "137"
+  },
+  {
+    "name": "Urgut tumani",
+    "soato": 1718236,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "146"
+  },
+  {
+    "name": "Tayloq tumani",
+    "soato": 1718238,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "145"
+  },
+  {
+    "name": "Oltinsoy tumani",
+    "soato": 1722201,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "151"
+  },
+  {
+    "name": "Angor tumani",
+    "soato": 1722202,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "160"
+  },
+  {
+    "name": "Boysun tumani",
+    "soato": 1722204,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "147"
+  },
+  {
+    "name": "Muzrabot tumani",
+    "soato": 1722207,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "150"
+  },
+  {
+    "name": "Denov tumani",
+    "soato": 1722210,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "148"
+  },
+  {
+    "name": "Jarqo'rg'on tumani",
+    "soato": 1722212,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "149"
+  },
+  {
+    "name": "Qumqo'rg'on tumani",
+    "soato": 1722214,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "153"
+  },
+  {
+    "name": "Qiziriq tumani",
+    "soato": 1722215,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "152"
+  },
+  {
+    "name": "Sariosiyo tumani",
+    "soato": 1722217,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "154"
+  },
+  {
+    "name": "Termiz tumani",
+    "soato": 1722220,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "158"
+  },
+  {
+    "name": "Uzun tumani",
+    "soato": 1722221,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "159"
+  },
+  {
+    "name": "Sherobod tumani",
+    "soato": 1722223,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "155"
+  },
+  {
+    "name": "Sho'rchi tumani",
+    "soato": 1722226,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "156"
+  },
+  {
+    "name": "Oqoltin tumani",
+    "soato": 1724206,
+    "region_id": "e6b1d31b-2614-4b8a-b073-5e0734b6b63e",
+    "mvd_profilactic_district_id": "167"
+  },
+  {
+    "name": "Boyovut tumani",
+    "soato": 1724212,
+    "region_id": "e6b1d31b-2614-4b8a-b073-5e0734b6b63e",
+    "mvd_profilactic_district_id": "162"
+  },
+  {
+    "name": "Sayxunobod tumani",
+    "soato": 1724216,
+    "region_id": "e6b1d31b-2614-4b8a-b073-5e0734b6b63e",
+    "mvd_profilactic_district_id": "169"
+  },
+  {
+    "name": "Guliston tumani",
+    "soato": 1724220,
+    "region_id": "e6b1d31b-2614-4b8a-b073-5e0734b6b63e",
+    "mvd_profilactic_district_id": "164"
+  },
+  {
+    "name": "Sardoba tumani",
+    "soato": 1724226,
+    "region_id": "e6b1d31b-2614-4b8a-b073-5e0734b6b63e",
+    "mvd_profilactic_district_id": "168"
+  },
+  {
+    "name": "Mirzaobod tumani",
+    "soato": 1724228,
+    "region_id": "e6b1d31b-2614-4b8a-b073-5e0734b6b63e",
+    "mvd_profilactic_district_id": "166"
+  },
+  {
+    "name": "Sirdaryo tumani",
+    "soato": 1724231,
+    "region_id": "e6b1d31b-2614-4b8a-b073-5e0734b6b63e",
+    "mvd_profilactic_district_id": "171"
+  },
+  {
+    "name": "Xovos tumani",
+    "soato": 1724235,
+    "region_id": "e6b1d31b-2614-4b8a-b073-5e0734b6b63e",
+    "mvd_profilactic_district_id": "165"
+  },
+  {
+    "name": "Oqqo'rg'on tumani",
+    "soato": 1727206,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "195"
+  },
+  {
+    "name": "Ohangaron tumani",
+    "soato": 1727212,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "193"
+  },
+  {
+    "name": "Bekobod tumani",
+    "soato": 1727220,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "186"
+  },
+  {
+    "name": "Bo'stonliq tumani",
+    "soato": 1727224,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "188"
+  },
+  {
+    "name": "Bo'ka tumani",
+    "soato": 1727228,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "187"
+  },
+  {
+    "name": "Quyichirchiq tumani",
+    "soato": 1727233,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "200"
+  },
+  {
+    "name": "Zangiota tumani",
+    "soato": 1727237,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "204"
+  },
+  {
+    "name": "Yuqorichirchiq tumani",
+    "soato": 1727239,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "203"
+  },
+  {
+    "name": "Qibray tumani",
+    "soato": 1727248,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "199"
+  },
+  {
+    "name": "Parkent tumani",
+    "soato": 1727249,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "197"
+  },
+  {
+    "name": "Pskent tumani",
+    "soato": 1727250,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "198"
+  },
+  {
+    "name": "O'rtachirchiq tumani",
+    "soato": 1727253,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "196"
+  },
+  {
+    "name": "Chinoz tumani",
+    "soato": 1727256,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "189"
+  },
+  {
+    "name": "yo'l tumani",
+    "soato": 1727259,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "202"
+  },
+  {
+    "name": "Toshkent tumani",
+    "soato": 1727265,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "206"
+  },
+  {
+    "name": "Oltiariq tumani",
+    "soato": 1730203,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "39"
+  },
+  {
+    "name": "Qo'shtepa tumani",
+    "soato": 1730206,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "40"
+  },
+  {
+    "name": "Bog'dod tumani",
+    "soato": 1730209,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "31"
+  },
+  {
+    "name": "Buvayda tumani",
+    "soato": 1730212,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "32"
+  },
+  {
+    "name": "Beshariq tumani",
+    "soato": 1730215,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "30"
+  },
+  {
+    "name": "Quva tumani",
+    "soato": 1730218,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "41"
+  },
+  {
+    "name": "Uchko'prik tumani",
+    "soato": 1730221,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "46"
+  },
+  {
+    "name": "Rishton tumani",
+    "soato": 1730224,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "43"
+  },
+  {
+    "name": "So'x tumani",
+    "soato": 1730226,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "44"
+  },
+  {
+    "name": "Toshloq tumani",
+    "soato": 1730227,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "45"
+  },
+  {
+    "name": "O'zbekiston tumani",
+    "soato": 1730230,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "47"
+  },
+  {
+    "name": "Farg' tumani",
+    "soato": 1730233,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "35"
+  },
+  {
+    "name": "Dang'ara tumani",
+    "soato": 1730236,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "33"
+  },
+  {
+    "name": "Furqat tumani",
+    "soato": 1730238,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "36"
+  },
+  {
+    "name": "Yozyovon tumani",
+    "soato": 1730242,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+
+    "mvd_profilactic_district_id": "48"
+  },
+  {
+    "name": "Bog'ot tumani",
+    "soato": 1733204,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+
+    "mvd_profilactic_district_id": "78"
+  },
+  {
+    "name": "Gurlan tumani",
+    "soato": 1733208,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+
+    "mvd_profilactic_district_id": "79"
+  },
+  {
+    "name": "Qo'shko'pir tumani",
+    "soato": 1733212,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+
+    "mvd_profilactic_district_id": "84"
+  },
+  {
+    "name": "Urganch tumani",
+    "soato": 1733217,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+
+    "mvd_profilactic_district_id": "88"
+  },
+  {
+    "name": "Xazorasp tumani",
+    "soato": 1733220,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+    "mvd_profilactic_district_id": "80"
+  },
+  {
+    "name": "Xonqa tumani",
+    "soato": 1733223,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+    "mvd_profilactic_district_id": "83"
+  },
+  {
+    "name": "Xiva tumani",
+    "soato": 1733226,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+    "mvd_profilactic_district_id": "82"
+  },
+  {
+    "name": "Shovot tumani",
+    "soato": 1733230,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+    "mvd_profilactic_district_id": "85"
+  },
+  {
+    "name": "Yangiariq tumani",
+    "soato": 1733233,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+    "mvd_profilactic_district_id": "89"
+  },
+  {
+    "name": "Yangibozor tumani",
+    "soato": 1733236,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+    "mvd_profilactic_district_id": "90"
+  },
+  {
+    "name": "Amudaryo tumani",
+    "soato": 1735204,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "128"
+  },
+  {
+    "name": "Beruniy tumani",
+    "soato": 1735207,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "114"
+  },
+  {
+    "name": "Qorao'zak tumani",
+    "soato": 1735211,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "122"
+  },
+  {
+    "name": "Kegeyli tumani",
+    "soato": 1735212,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "117"
+  },
+  {
+    "name": "Qo'ng'irot tumani",
+    "soato": 1735215,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "123"
+  },
+  {
+    "name": "Qanlikoʻl tumani",
+    "soato": 1735218,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "124"
+  },
+  {
+    "name": "Mo'ynoq tumani",
+    "soato": 1735222,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "119"
+  },
+  {
+    "name": "Nukus tumani",
+    "soato": 1735225,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "121"
+  },
+  {
+    "name": "Taxiatosh tumani",
+    "soato": 1735228,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "130"
+  },
+  {
+    "name": "Taxtako'pir tumani",
+    "soato": 1735230,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "126"
+  },
+  {
+    "name": "To'rtko'l tumani",
+    "soato": 1735233,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "127"
+  },
+  {
+    "name": "Xo'jayli tumani",
+    "soato": 1735236,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "118"
+  },
+  {
+    "name": "Chimboy tumani",
+    "soato": 1735240,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "115"
+  },
+  {
+    "name": "Shumanay tumani",
+    "soato": 1735243,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "125"
+  },
+  {
+    "name": "Ellikkala tumani",
+    "soato": 1735250,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "116"
+  },
+  {
+    "name": "Uchtepa tumani",
+    "soato": 1726262,
+    "region_id": "c19341b2-ddf0-4250-8933-a5a3296998d4",
+    "mvd_profilactic_district_id": "179"
+  },
+  {
+    "name": "Bektemir tumani",
+    "soato": 1726264,
+    "region_id": "c19341b2-ddf0-4250-8933-a5a3296998d4",
+    "mvd_profilactic_district_id": "173"
+  },
+  {
+    "name": "Yunusobod tumani",
+    "soato": 1726266,
+    "region_id": "c19341b2-ddf0-4250-8933-a5a3296998d4",
+    "mvd_profilactic_district_id": "183"
+  },
+  {
+    "name": "Mirzo Ulug'bek tumani",
+    "soato": 1726269,
+    "region_id": "c19341b2-ddf0-4250-8933-a5a3296998d4",
+    "mvd_profilactic_district_id": "184"
+  },
+  {
+    "name": "Mirobod tumani",
+    "soato": 1726273,
+    "region_id": "c19341b2-ddf0-4250-8933-a5a3296998d4",
+    "mvd_profilactic_district_id": "175"
+  },
+  {
+    "name": "Shayxontoxur tumani",
+    "soato": 1726277,
+    "region_id": "c19341b2-ddf0-4250-8933-a5a3296998d4",
+    "mvd_profilactic_district_id": "178"
+  },
+  {
+    "name": "Olmazor tumani",
+    "soato": 1726280,
+    "region_id": "c19341b2-ddf0-4250-8933-a5a3296998d4",
+    "mvd_profilactic_district_id": "176"
+  },
+  {
+    "name": "Sirg'ali tumani",
+    "soato": 1726283,
+    "region_id": "c19341b2-ddf0-4250-8933-a5a3296998d4",
+    "mvd_profilactic_district_id": "177"
+  },
+  {
+    "name": "Yakkasaroy tumani",
+    "soato": 1726287,
+    "region_id": "c19341b2-ddf0-4250-8933-a5a3296998d4",
+    "mvd_profilactic_district_id": "180"
+  },
+  {
+    "name": "Yashnobod tumani",
+    "soato": 1726290,
+    "region_id": "c19341b2-ddf0-4250-8933-a5a3296998d4",
+    "mvd_profilactic_district_id": "182"
+  },
+  {
+    "name": "Chilonzor tumani",
+    "soato": 1726294,
+    "region_id": "c19341b2-ddf0-4250-8933-a5a3296998d4",
+    "mvd_profilactic_district_id": "174"
+  },
+  {
+    "name": "Buxoro shahri",
+    "soato": 1706401,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "17"
+  },
+  {
+    "name": "Jizzax shahri",
+    "soato": 1708401,
+    "region_id": "737c72e9-80a0-44d3-94f7-64d07a2e519f",
+    "mvd_profilactic_district_id": "54"
+  },
+  {
+    "name": "Qarshi shahri",
+    "soato": 1710401,
+    "region_id": "c18fea69-5fc0-48eb-98d1-b795a8874987",
+    "mvd_profilactic_district_id": "73"
+  },
+  {
+    "name": "Navoiy shahri",
+    "soato": 1712401,
+    "region_id": "c7dcf9ef-5b8a-4a58-b440-38503c26be25",
+    "mvd_profilactic_district_id": "108"
+  },
+  {
+    "name": "Namangan shahri",
+    "soato": 1714401,
+    "region_id": "6eb6232a-9b2b-4255-9c5a-74faa0e68595",
+    "mvd_profilactic_district_id": "95"
+  },
+  {
+    "name": "Samarqand shahri",
+    "soato": 1718401,
+    "region_id": "597f143c-d890-4c9b-bbce-972c4a9e3f64",
+    "mvd_profilactic_district_id": "143"
+  },
+  {
+    "name": "Termiz shahri",
+    "soato": 1722401,
+    "region_id": "7830817e-a9cc-4422-8d14-2ff8d3a7c383",
+    "mvd_profilactic_district_id": "157"
+  },
+  {
+    "name": "Guliston shahri",
+    "soato": 1724401,
+    "region_id": "e6b1d31b-2614-4b8a-b073-5e0734b6b63e",
+    "mvd_profilactic_district_id": "163"
+  },
+  {
+    "name": "Olmaliq shahri",
+    "soato": 1727404,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "194"
+  },
+  {
+    "name": "Angren shahri",
+    "soato": 1727407,
+    "region_id": "39becd44-a06e-4a3a-b0e3-fe07ba781171",
+    "mvd_profilactic_district_id": "205"
+  },
+  {
+    "name": "Farg'ona shahri",
+    "soato": 1730401,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+    "mvd_profilactic_district_id": "34"
+  },
+  {
+    "name": "Qo'qon shahri",
+    "soato": 1730405,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+    "mvd_profilactic_district_id": "37"
+  },
+  {
+    "name": "Urganch shahri",
+    "soato": 1733401,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+    "mvd_profilactic_district_id": "87"
+  },
+  {
+    "name": "Xiva shahri",
+    "soato": 1733406,
+    "region_id": "83ecce49-d9cb-4115-ae89-79a69ce26462",
+    "mvd_profilactic_district_id": "81"
+  },
+  {
+    "name": "Nukus shahri",
+    "soato": 1735401,
+    "region_id": "3d1dfe83-e667-4273-ae5e-dc29fd2d8c78",
+    "mvd_profilactic_district_id": "120"
+  },
+  {
+    "name": "Kogon shahri",
+    "soato": 1706403,
+    "region_id": "8b559524-d92a-4ba9-a7a0-9190bd7083d0",
+    "mvd_profilactic_district_id": "21"
+  },
+  {
+    "name": "Marg'ilon shahri",
+    "soato": 1730412,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+    "mvd_profilactic_district_id": "38"
+  },
+  {
+    "name": "Quvasoy shahri",
+    "soato": 1730408,
+    "region_id": "3b24baf4-0a1d-4ecd-86fd-c3c31488f842",
+    "mvd_profilactic_district_id": "42"
+  }
+]

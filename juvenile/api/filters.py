@@ -428,7 +428,7 @@ class JuvenileReportFilter(filters.FilterSet):
                 return come_2_times_juveniles
 
             if int(value) == 16:
-                return queryset.filter(status__in=['1','2','10'])
+                return queryset.filter(status__in=['2','10'])
 
             return queryset.filter(status=value)
 
@@ -452,7 +452,7 @@ class JuvenileReportFilter(filters.FilterSet):
                 return come_2_times_juveniles
 
             if int(value) == 16:
-                return queryset.filter(monitoring_markaz_tuman=markaz_tuman).filter(status__in=['1','2','10']).distinct()
+                return queryset.filter(monitoring_markaz_tuman=markaz_tuman).filter(status__in=['2','10']).distinct()
             return queryset.filter(status=value).filter(monitoring_markaz_tuman=markaz_tuman)
 
 
@@ -474,7 +474,7 @@ class JuvenileReportFilter(filters.FilterSet):
                 return come_2_times_juveniles
 
             if int(value) == 16:
-                return queryset.filter(markaz=user_markaz,status__in=['1', '2', '10']).distinct()
+                return queryset.filter(markaz=user_markaz,status__in=['2', '10']).distinct()
 
             return queryset.filter(status=value).filter(markaz=user_markaz)
 
