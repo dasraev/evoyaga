@@ -28,11 +28,13 @@ class Juvenile_MarkazModelAdmin(admin.ModelAdmin):
     search_fields = ('juvenile__juvenile__first_name','juvenile__juvenile__last_name','juvenile__juvenile__father_name')
     ordering =['-created_at']
 
-
+class JuvenileAcceptCenterInfoModelAdmin(admin.ModelAdmin):
+    search_fields = ('accept_center_info__juvenile__juvenile__first_name','accept_center_info__juvenile__juvenile__last_name','accept_center_info__juvenile__juvenile__father_name')
+    ordering =['-created_at']
 
 admin.site.register( models.ProphylacticInspector, )
 admin.site.register( models.JuvenileParent, )
-admin.site.register( models.JuvenileAcceptCenterInfo,)
+admin.site.register( models.JuvenileAcceptCenterInfo,JuvenileAcceptCenterInfoModelAdmin)
 admin.site.register( models.JuvenileDistributedInfo, )
 admin.site.register( models.JuvenileMonitoringInfo, )
 admin.site.register( models.JuvenileEmploymentInfo, )

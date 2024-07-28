@@ -22,9 +22,9 @@ MORE_THREE = 4
 # )
 
 # Olib kelinishiga asos
-IIB_QARORI = 1
-SUD_AJRIMI = 2
-MARKAZ_BUYRUGI = 3
+IIB_QARORI = "1"
+SUD_AJRIMI = "2"
+MARKAZ_BUYRUGI = "3"
 
 ARRIVED_REASON_CHOICE = (
     (IIB_QARORI, 'IIB qarori'),
@@ -41,7 +41,7 @@ BOSHQA_DAVLATLARDAN = '5'
 
 DETERMINED_LOCATION_CHOICE = (
     (BOZOR, 'Bozor'),
-    (YER_TOLA_VA_CHORDOQ, "Yer-to‘la va chor-doq"),
+    (YER_TOLA_VA_CHORDOQ, "Yer-to'la va chor-doq"),
     (KOCHA, "Ko'cha"),
     (BOSHQA_JOYLAR, "Boshqa joylar"),
     (BOSHQA_DAVLATLARDAN, "Boshqa davlatlardan"),
@@ -66,9 +66,9 @@ SCHOOL_TYPE_CHOICE = (
     (KASB_HUNAR_KOLLEJI, "Kasb-hunar kolleji"),
     (LITSEY, "Litsey"),
     (TEXNIKUM, "Texnikum"),
-    (MAXSUS_TALIM, "Maxsus ta’lim"),
+    (MAXSUS_TALIM, "Maxsus ta'lim"),
     (OTM, "OTM"),
-    (OQIMAYDI_ISHLAMAYDI, "O‘qimaydi/Ishlamaydi"),
+    (OQIMAYDI_ISHLAMAYDI, "O'qimaydi/Ishlamaydi"),
     (ISHLAYDI, "Ishlaydi"),
 )
 
@@ -126,16 +126,16 @@ PASSPORT_TYPE_CHOICE = (
     (OTHER_PASSPORT, "Boshqalar"),
 )
 
-QAROR_BILAN_CHIQARILGAN_ROTM = 1
-QOCHGAN_ROTM = 2
+QAROR_BILAN_CHIQARILGAN_ROTM = "1"
+QOCHGAN_ROTM = "2"
 
 HAVE_BEEN_IN_ROTM_REASON_CHOICE = (
     (QAROR_BILAN_CHIQARILGAN_ROTM, 'Qaror bilan chiqarilgan'),
     (QOCHGAN_ROTM, 'Qochgan'),
 )
 
-QAROR_BILAN_CHIQARILGAN_ITM = 1
-QOCHGAN_ITM = 2
+QAROR_BILAN_CHIQARILGAN_ITM = "1"
+QOCHGAN_ITM = "2"
 
 HAVE_BEEN_IN_ITM_REASON_CHOICE = (
     (QAROR_BILAN_CHIQARILGAN_ITM, 'Qaror bilan chiqarilgan'),
@@ -288,7 +288,7 @@ JUVENILE_STATUS_CHOICES = (
     (MARKAZGA_QABUL_QILINGAN, "Markazga qabul qilingan"),
     (TAQSIMLANGAN, "Taqsimlangan"),
     (MONITORING_JARAYONIDA, "Monitoring jarayonida"),
-    (BANKDLIK_TAMINLANISH_JARAYONIDA, "Bandlik ta’minlanish jarayonida"),
+    (BANKDLIK_TAMINLANISH_JARAYONIDA, "Bandlik ta'minlanish jarayonida"),
     (BANDLIK_TAMINLANGAN, "Bandligi taminlangan"),
     (BOSHQA_DAVLATGA_YUBORILGAN, "Boshqa davlatga yuborilgan"),
     (BOSHQA_MARKAZGA_YUBORILGAN, "Boshqa markazga yuborilgan"),
@@ -306,7 +306,7 @@ CHET_EL_ELCHIXONASIGA = 2
 CHET_EL_MARKAZI_XODIMIGA = 3
 
 FOREIGN_TO_WHOM_GIVEN_CHOICES = (
-    (OTA_ONA_YOKI_ORNINI_BOSUVCHI_SHAXSGA, 'Ota-onasi yoki uni o‘rnini bosuvchi shaxsga'),
+    (OTA_ONA_YOKI_ORNINI_BOSUVCHI_SHAXSGA, "Ota-onasi yoki uni o'rnini bosuvchi shaxsga"),
     (CHET_EL_ELCHIXONASIGA, "Chet-el Elchixonasiga"),
     (CHET_EL_MARKAZI_XODIMIGA, "Chet-el Markazi xodimiga"),
 )
@@ -325,7 +325,7 @@ TYPE_HEALTHCARE_FACILITY = (
     (NARKALOGIYA_DISPANSERI, "Narkologiya dispanseri"),
     (TERI_TANOSIL_DISPANSERI, "Teri-tanosil dispanseri"),
     (SIL_KASALLIKLARI_DISPANSERI, "Sil kasaliklari dispanseri"),
-    (SOGLIGIDA_NUQSONI_BOR_BOLALAR_MUASSASASI, "Sog‘ligida nuqsoni bor bolalar muassasasi"),
+    (SOGLIGIDA_NUQSONI_BOR_BOLALAR_MUASSASASI, "Sog'ligida nuqsoni bor bolalar muassasasi"),
 )
 
 # O‘zlashtirishi 
@@ -379,7 +379,7 @@ VASIYLIK_TURIDAN_QAYTARILGAN = 5
 
 MONITORING_STATUS_CHOICE = (
     (MONITORING_JARAYONIDA, "Monitoring jarayonida"),
-    (ITM_VA_ROTMNI_TUGALLAGAN, "RO‘TM va ITMni tugallagan"),
+    (ITM_VA_ROTMNI_TUGALLAGAN, "RO'TM va ITMni tugallagan"),
     (OTA_ONASIDAN_QAYTARILGAN, "Ota-onasidan qaytarilgan"),
     (ITMDAN_QOCHGAN, "ITMdan qochgan"),
     (VASIYLIK_TURIDAN_QAYTARILGAN, "Vasiylik turidan qaytarilgan"),
