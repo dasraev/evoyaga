@@ -22,6 +22,8 @@ from rest_framework.permissions import AllowAny
 import csv
 from django.http import HttpResponse
 from django.db.models import Count
+from datetime import datetime,timedelta
+
 
 # Bola 2 marta bo'lib qolmaslik uchun tekshirish
 def check_is_exist_in_center(juvenile_info):
@@ -1540,4 +1542,18 @@ class JuvenileDeleteView(generics.DestroyAPIView):
 # class MarkazListView(generics.ListAPIView):
 #     queryset = Markaz.objects.all()
 #     serializer_class = MarkazListSerializer
+
+class JuvenilesInfoByProphylacticInspectorListView(generics.ListAPIView):
+    serializer_class = serializers.JuvenilesInfoByProphylacticInspectorListSerializer
+    def get_queryset(self):
+        pinfl = self.request.GET.get('pinfl')
+        # date_from = self.request.GET.get('date_from')
+        # date_to = self.request.GET.get('date_to')
+        # time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
+        # date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
+
+        prophylactic_inspector = get_object_or_404(models.ProphylacticInspector,pinfl=pinfl)
+        return prophylactic_inspector
+
+
 

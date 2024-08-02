@@ -98,4 +98,7 @@ urlpatterns = [
 
     path('juvenile_delete/<pk>/', views.JuvenileDeleteView.as_view()),
 
+
+
+    path('asd',views.JuvenilesInfoByProphylacticInspectorListView.as_view())
 ]

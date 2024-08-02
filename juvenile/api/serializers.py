@@ -1,16 +1,17 @@
 import mimetypes
 import os
+import base64
 
 from hurry.filesize import alternative, size
 from rest_framework import serializers
 from rest_framework.relations import StringRelatedField
+from django.db.models import F
 
 from info import enums
 from juvenile import models
 from info.api.serializers import SubReasonBringingChildByParentListSerializer
 from info import models as info_db
 from django.utils import timezone
-
 
 def is_have_all_info(juvenile_id):
     try:
@@ -2571,3 +2572,117 @@ class PsychologyConditionSerializer(serializers.ModelSerializer):
         model = models.PsychologyCondition
         fields = ['id','title']
 
+
+
+class JuvenileMarkazListSerializer(serializers.ModelSerializer):
+    first_name = serializers.SerializerMethodField()
+    last_name = serializers.SerializerMethodField()
+    father_name = serializers.SerializerMethodField()
+    birth_date = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    time_arrival_center = serializers.SerializerMethodField()
+    time_departure_center = serializers.SerializerMethodField()
+    class Meta:
+        model = models.Juvenile_Markaz
+        fields = (
+            "id",
+            'first_name',
+            'last_name',
+            'father_name',
+            'birth_date',
+            'time_arrival_center',
+            'time_departure_center',
+            'status',
+        )
+
+    def get_first_name(self, obj):
+        last_personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile=obj.juvenile.id).order_by(
+            '-created_at').first()
+        if last_personal_info:
+            return last_personal_info.first_name
+        return None
+
+    def get_last_name(self, obj):
+        last_personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile=obj.juvenile.id).order_by(
+            '-created_at').first()
+        if last_personal_info:
+            return last_personal_info.last_name
+        return None
+
+    def get_father_name(self, obj):
+        last_personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile=obj.juvenile.id).order_by(
+            '-created_at').first()
+        if last_personal_info:
+            return last_personal_info.father_name
+        return None
+
+    def get_birth_date(self, obj):
+        last_personal_info = models.PersonalInfoJuvenile.objects.filter(juvenile=obj.juvenile_id).order_by('-created_at').first()
+        if last_personal_info:
+            return last_personal_info.birth_date
+        return None
+
+    def get_status(self, obj):
+        status = enums.JUVENILE_STATUS_CHOICES[int(
+                obj.status) - 1]
+        data = {
+            "id": status[0],
+            "text": status[1]
+        }
+        return data
+    def get_time_arrival_center(self, obj):
+        if obj.accept_center_info:
+            return obj.accept_center_info.arrived_date.date()
+        return obj.time_arrival_center.date()
+
+    def get_time_departure_center(self, obj):
+        if obj.time_departure_center:
+            return obj.time_departure_center.date()
+
+        if obj.distributed_info:
+            return obj.distributed_info.created_at.date()
+        return None
+
+
+class JuvenileMarkazListByProphylacticInspectorSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(read_only=True)
+    last_name = serializers.CharField(read_only=True)
+    father_name = serializers.CharField(read_only=True)
+    class Meta:
+        model = models.Juvenile_Markaz
+        fields = ['id','first_name','last_name','father_name']
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        distribution_type = enums.DISTRIBUTION_TYPE_CHOICE[int(instance.distribute_info.distribution_type) - 1]
+        distribution_file = instance.distribute_info.basis_sending_file
+        representation['distribution_time'] = instance.distribute_info.created_at
+        representation['distribution_type'] = {
+            "id": distribution_type[0],
+            "text": distribution_type[1]
+        }
+        if distribution_file:
+            with open(distribution_file.path, 'rb') as f:
+                file_data = f.read()
+                base64_encoded_file = base64.b64encode(file_data).decode('utf-8')
+                return f'data:{distribution_file.file.content_type};base64,{base64_encoded_file}'
+        else:
+            return None
+
+        return representation
+
+
+class JuvenilesInfoByProphylacticInspectorListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ProphylacticInspector
+        fields = ['id','first_name','last_name','father_name',]
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        juvenile_markazs = models.Juvenile_Markaz.objects.filter(
+            accept_center_info__inspector = instance).exclude(distributed_info=None).annotate(
+            first_name = F('juvenile__juvenile__first_name'),
+            last_name=F('juvenile__juvenile__last_name'),
+            father_name=F('juvenile__juvenile__father_name'),
+
+        )
+        representation['juvenile_markazs'] = JuvenileMarkazListSerializer(juvenile_markazs,many=True).data
+        return representation
