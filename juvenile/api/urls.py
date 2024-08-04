@@ -100,5 +100,5 @@ urlpatterns = [
 
 
 
-    path('asd',views.JuvenilesInfoByProphylacticInspectorListView.as_view())
+    path('prophylactic-inspector/<str:pinfl>/accepted-juveniles/',views.JuvenilesInfoByProphylacticInspectorListView.as_view())
 ]

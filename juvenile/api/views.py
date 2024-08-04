@@ -1553,7 +1553,7 @@ class JuvenilesInfoByProphylacticInspectorListView(generics.RetrieveAPIView):
         user_code = list(group_codes)[0]
         if user_code!=5:
             raise PermissionDenied()
-        pinfl = self.request.GET.get('pinfl')
+        pinfl = self.kwargs.get('pinfl')
         prophylactic_inspector = get_object_or_404(models.ProphylacticInspector,pinfl=pinfl)
         return prophylactic_inspector
 
