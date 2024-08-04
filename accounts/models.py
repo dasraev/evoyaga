@@ -57,7 +57,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'login'
     REQUIRED_FIELDS = ['username', 'first_name', 'email']
-
+    def save(self, *args, **kwargs):
+        print('admin', kwargs,args)
+        try:
+            if kwargs['password']:
+                self.set_password(kwargs['password'])
+        except Exception:
+            pass
+        finally:
+            super(CustomUser, self).save(*args, **kwargs)
     def __str__(self):
         return f"{self.first_name} {self.last_name} {self.father_name}"
 
