@@ -1556,6 +1556,7 @@ class JuvenilesInfoByProphylacticInspectorListView(generics.RetrieveAPIView):
         pinfl = self.kwargs.get('pinfl')
         prophylactic_inspector = get_object_or_404(models.ProphylacticInspector,pinfl=pinfl)
         return prophylactic_inspector
+#print
 
 
 
