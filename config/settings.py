@@ -132,7 +132,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.6.51:8000",
     "http://e-voyagayetmaganlar.iiv.uz",
     "http://192.168.1.108:3000",
-    "http://192.168.1.104"
+    "http://192.168.1.104",
+    "http://192.168.20.67",
 
 ]
 
