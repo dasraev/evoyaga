@@ -1,6 +1,7 @@
 import mimetypes
 import os
 import base64
+from datetime import datetime,timedelta
 
 from hurry.filesize import alternative, size
 from rest_framework import serializers
@@ -2580,25 +2581,23 @@ class JuvenileMarkazListByProphylacticInspectorSerializer(serializers.ModelSeria
     first_name = serializers.CharField(read_only=True)
     last_name = serializers.CharField(read_only=True)
     father_name = serializers.CharField(read_only=True)
+    markaz_name = serializers.CharField(read_only=True)
     class Meta:
         model = models.Juvenile_Markaz
-        fields = ['id','first_name','last_name','father_name']
+        fields = ['id','first_name','last_name','father_name','markaz_name']
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        distribution_type = enums.DISTRIBUTION_TYPE_CHOICE[int(instance.distribute_info.distribution_type) - 1]
-        distribution_file = instance.distribute_info.basis_sending_file
-        representation['distribution_time'] = instance.distribute_info.created_at
-        representation['distribution_type'] = {
-            "id": distribution_type[0],
-            "text": distribution_type[1]
-        }
-        if distribution_file:
-            with open(distribution_file.path, 'rb') as f:
+        representation['accept_center_info_date'] = instance.accept_center_info.arrived_date.date()
+        arrived_reason_file = instance.accept_center_info.arrived_reason_file
+        if arrived_reason_file:
+            with open(arrived_reason_file.path, 'rb') as f:
                 file_data = f.read()
                 base64_encoded_file = base64.b64encode(file_data).decode('utf-8')
-                return f'data:{distribution_file.file.content_type};base64,{base64_encoded_file}'
+                content_type, _ = mimetypes.guess_type(arrived_reason_file.path)
+                representation['arrived_reason_file'] = f'data:{content_type};base64,{base64_encoded_file}'
         else:
-            return None
+            representation['arrived_reason_file'] = None
 
         return representation
 
@@ -2606,15 +2605,36 @@ class JuvenileMarkazListByProphylacticInspectorSerializer(serializers.ModelSeria
 class JuvenilesInfoByProphylacticInspectorListSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ProphylacticInspector
-        fields = ['id','first_name','last_name','father_name',]
+        fields = ['id','first_name','last_name','father_name','pinfl']
     def to_representation(self, instance):
         representation = super().to_representation(instance)
+        request = self.context.get('request')
+        if request:
+            date_from = request.GET.get('date_from')
+            date_to = request.GET.get('date_to')
+            if date_from and date_to:
+                try:
+                    date_from = datetime.strptime(date_from, '%Y-%m-%d')
+                    date_to = datetime.strptime(date_to, '%Y-%m-%d')+timedelta(days=1)
+
+                    # Ensure date_from is at least August 1, 2024
+                    min_date_from = datetime(2024, 8, 1)
+                    if date_from < min_date_from:
+                        raise serializers.ValidationError("The date_from should be at least August 1, 2024.")
+                except ValueError:
+                    raise serializers.ValidationError("The date_from and date_to should be in YYYY-MM-DD format.")
+            else:
+                raise serializers.ValidationError("The date_from and date_to is required")
+
         juvenile_markazs = models.Juvenile_Markaz.objects.filter(
-            accept_center_info__inspector = instance).exclude(distributed_info=None).annotate(
+            accept_center_info__inspector = instance,
+            accept_center_info__arrived_date__range=[date_from,date_to]).annotate(
+
             first_name = F('juvenile__juvenile__first_name'),
             last_name=F('juvenile__juvenile__last_name'),
             father_name=F('juvenile__juvenile__father_name'),
+            markaz_name=F('markaz__name')
 
         )
-        representation['juvenile_markazs'] = JuvenileMarkazListSerializer(juvenile_markazs,many=True).data
+        representation['juvenile_markazs'] = JuvenileMarkazListByProphylacticInspectorSerializer(juvenile_markazs,many=True).data
         return representation

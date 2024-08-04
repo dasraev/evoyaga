@@ -33,6 +33,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'e-voya-back.technocorp.uz',
     '127.0.0.1',
+    '127.0.0.1:8000',
     '192.168.1.115',
     'evoya.technocorp.uz',
     '192.168.2.3',
@@ -44,7 +45,8 @@ ALLOWED_HOSTS = [
     '192.168.43.16',
     '192.168.1.141',
     '10.1.27.96',
-    "4fbc-195-158-15-110.ngrok-free.app"
+    "4fbc-195-158-15-110.ngrok-free.app",
+    "1.0.0.127.in-addr.arpa"
 ]
 
 

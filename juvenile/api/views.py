@@ -22,7 +22,8 @@ from rest_framework.permissions import AllowAny
 import csv
 from django.http import HttpResponse
 from django.db.models import Count
-from datetime import datetime,timedelta
+from django.core.exceptions import PermissionDenied
+
 
 
 # Bola 2 marta bo'lib qolmaslik uchun tekshirish
@@ -1067,6 +1068,7 @@ class JuvenileAcceptedListView(generics.ListAPIView):
         juvenile_ids = []
 
         juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(status=2)
+        print('evoya',juvenile_markaz)
         for item in juvenile_markaz:
             juvenile_ids.append(item.juvenile_id)
         return models.Juvenile.objects.filter(id__in=juvenile_ids)
@@ -1543,15 +1545,15 @@ class JuvenileDeleteView(generics.DestroyAPIView):
 #     queryset = Markaz.objects.all()
 #     serializer_class = MarkazListSerializer
 
-class JuvenilesInfoByProphylacticInspectorListView(generics.ListAPIView):
+class JuvenilesInfoByProphylacticInspectorListView(generics.RetrieveAPIView):
     serializer_class = serializers.JuvenilesInfoByProphylacticInspectorListSerializer
-    def get_queryset(self):
+    queryset = models.ProphylacticInspector.objects.all()
+    def get_object(self):
+        group_codes = self.request.user.groups.values_list('code', flat=True)
+        user_code = list(group_codes)[0]
+        if user_code!=5:
+            raise PermissionDenied()
         pinfl = self.request.GET.get('pinfl')
-        # date_from = self.request.GET.get('date_from')
-        # date_to = self.request.GET.get('date_to')
-        # time_date_to = datetime.strptime(date_to, '%Y-%m-%d').date()
-        # date_to = (time_date_to + timedelta(days=1)).strftime('%Y-%m-%d')
-
         prophylactic_inspector = get_object_or_404(models.ProphylacticInspector,pinfl=pinfl)
         return prophylactic_inspector
 
