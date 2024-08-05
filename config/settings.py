@@ -135,6 +135,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://192.168.1.104",
     "http://192.168.20.67",
 
+
+    "http://10.1.27.82:80", #unicon
+
 ]
 
 CORS_ALLOW_HEADERS = [
