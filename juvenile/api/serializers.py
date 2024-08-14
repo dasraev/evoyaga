@@ -2587,17 +2587,19 @@ class JuvenileMarkazListByProphylacticInspectorSerializer(serializers.ModelSeria
         fields = ['id','first_name','last_name','father_name','markaz_name']
 
     def to_representation(self, instance):
+        request = self.context.get('request')
         representation = super().to_representation(instance)
         representation['accept_center_info_date'] = instance.accept_center_info.arrived_date.date()
         arrived_reason_file = instance.accept_center_info.arrived_reason_file
         if arrived_reason_file:
-            with open(arrived_reason_file.path, 'rb') as f:
-                file_data = f.read()
-                base64_encoded_file = base64.b64encode(file_data).decode('utf-8')
-                content_type, _ = mimetypes.guess_type(arrived_reason_file.path)
-                representation['arrived_reason_file'] = f'data:{content_type};base64,{base64_encoded_file}'
-        else:
-            representation['arrived_reason_file'] = None
+            representation['arrived_reason_file_url'] = request.build_absolute_uri(arrived_reason_file.url)
+        #     with open(arrived_reason_file.path, 'rb') as f:
+        #         file_data = f.read()
+        #         base64_encoded_file = base64.b64encode(file_data).decode('utf-8')
+        #         content_type, _ = mimetypes.guess_type(arrived_reason_file.path)
+        #         representation['arrived_reason_file'] = f'data:{content_type};base64,{base64_encoded_file}'
+        # else:
+        #     representation['arrived_reason_file'] = None
 
         return representation
 
@@ -2636,5 +2638,6 @@ class JuvenilesInfoByProphylacticInspectorListSerializer(serializers.ModelSerial
             markaz_name=F('markaz__name')
 
         )
-        representation['juvenile_markazs'] = JuvenileMarkazListByProphylacticInspectorSerializer(juvenile_markazs,many=True).data
+        request = self.context.get('request')
+        representation['juvenile_markazs'] = JuvenileMarkazListByProphylacticInspectorSerializer(juvenile_markazs,many=True,context={"request":request}).data
         return representation
