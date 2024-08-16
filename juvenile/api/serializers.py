@@ -2619,10 +2619,10 @@ class JuvenilesInfoByProphylacticInspectorListSerializer(serializers.ModelSerial
                     date_from = datetime.strptime(date_from, '%Y-%m-%d')
                     date_to = datetime.strptime(date_to, '%Y-%m-%d')+timedelta(days=1)
 
-                    # Ensure date_from is at least August 1, 2024
-                    min_date_from = datetime(2024, 8, 1)
+                    # Ensure date_from is at least July 1, 2024
+                    min_date_from = datetime(2024, 7, 1)
                     if date_from < min_date_from:
-                        raise serializers.ValidationError("The date_from should be at least August 1, 2024.")
+                        raise serializers.ValidationError("The date_from should be at least July 1, 2024.")
                 except ValueError:
                     raise serializers.ValidationError("The date_from and date_to should be in YYYY-MM-DD format.")
             else:
