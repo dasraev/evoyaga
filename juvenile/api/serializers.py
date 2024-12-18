@@ -117,7 +117,9 @@ class JuvenileDistributedInfoCreateSerializer(serializers.ModelSerializer):
             'is_training',
             'training_file',
             'foreign_to_whom_given',
-            'psychology_condition'
+            'psychology_condition',
+
+            'prophylactic_file'
 
         )
 

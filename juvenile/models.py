@@ -118,6 +118,8 @@ class JuvenileDistributedInfo(BaseModel):
     type_healthcare_facility = models.CharField(
         max_length=60, choices=enums.TYPE_HEALTHCARE_FACILITY, default=None, null=True)
     psychology_condition = models.ForeignKey('PsychologyCondition',on_delete=models.SET_NULL,null=True,related_name='distributed_infos')
+
+    prophylactic_file = models.FileField(upload_to='prophylactic_file',blank=True,null=True)
     class Meta:
         db_table = "juvenile_distributed_info"
 

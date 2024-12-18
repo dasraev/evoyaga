@@ -232,7 +232,7 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
         instance.first_name = validated_data.get('first_name',instance.first_name)
         instance.last_name = validated_data.get('last_name',instance.last_name)
         instance.father_name = validated_data.get('father_name',instance.father_name)
-        instance.birth_date = validated_data.get('birth_date',instance.photo)
+        instance.birth_date = validated_data.get('birth_date',instance.birth_date)
         instance.photo = validated_data.get('photo',instance.photo)
         if password:
             instance.set_password(password)
