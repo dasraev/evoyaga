@@ -737,6 +737,10 @@ class JuvenileViewset(ModelViewSet):
                     juvenile_markaz.status = 12
                 elif monitoring_status == 5:
                     juvenile_markaz.status = 13
+                elif monitoring_status == 6:
+                    send_notification_other_center(juvenile, request.user, juvenile_markaz.markaz)
+
+                    juvenile_markaz.status = 10
 
                 juvenile_markaz.save()
 
@@ -1068,7 +1072,6 @@ class JuvenileAcceptedListView(generics.ListAPIView):
         juvenile_ids = []
 
         juvenile_markaz = models.Juvenile_Markaz.objects.filter(markaz=user_markaz).filter(status=2)
-        print('evoya',juvenile_markaz)
         for item in juvenile_markaz:
             juvenile_ids.append(item.juvenile_id)
         return models.Juvenile.objects.filter(id__in=juvenile_ids)
