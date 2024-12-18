@@ -22,7 +22,20 @@ class MeSerializer(serializers.ModelSerializer):
     full_name_position = serializers.SerializerMethodField('get_user_full_name')
     position = serializers.SerializerMethodField('get_position')
     region = serializers.SerializerMethodField('get_region')
-
+    markaz = serializers.SerializerMethodField('get_user_markaz')
+    def get_user_markaz(self,obj):
+        if obj.markaz:
+            return {
+                'name':obj.markaz.name,
+                'location_name':obj.markaz.region.name
+            }
+        if obj.markaz_tuman:
+            return {
+                'name':obj.markaz_tuman.name,
+                'location_name':obj.markaz_tuman.district.name
+            }
+        else:
+            return None
     def get_user_full_name(self, obj):
         position = {obj.groups.all()[0]}
         full_name = f"{obj.first_name} {obj.last_name} {obj.father_name}"
@@ -44,7 +57,7 @@ class MeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'full_name_position', 'position', 'region')
+        fields = ('username', 'full_name_position', 'position', 'region','markaz')
 
 
 class UserCreateForApparatSerializer(serializers.ModelSerializer):
@@ -219,9 +232,10 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
         instance.first_name = validated_data.get('first_name',instance.first_name)
         instance.last_name = validated_data.get('last_name',instance.last_name)
         instance.father_name = validated_data.get('father_name',instance.father_name)
+        instance.birth_date = validated_data.get('birth_date',instance.photo)
         instance.photo = validated_data.get('photo',instance.photo)
         if password:
-            instance.set_password = password
+            instance.set_password(password)
         instance.save()
         return instance
 
