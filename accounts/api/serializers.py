@@ -194,3 +194,54 @@ class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('id','login','first_name','last_name','father_name','full_name', 'markaz','email', 'markaz_tuman', 'birth_date', 'photo', 'position','is_active')
+
+
+class ProfileDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id','email','login','username','first_name','last_name','father_name','birth_date','photo','password']
+        extra_kwargs = {
+            'email':{'required':False},
+            'login':{'required':False},
+            'username': {'required': False},
+            'first_name': {'required': False},
+            'last_name': {'required': False},
+            'father_name': {'required': False},
+            'birth_date': {'required': False},
+            'photo': {'required': False},
+            'password': {'required': False,'write_only':True},
+        }
+    def update(self, instance, validated_data):
+        password = validated_data.get('password')
+        instance.email = validated_data.get('email',instance.email)
+        instance.login = validated_data.get('login',instance.login)
+        instance.username = validated_data.get('username',instance.username)
+        instance.first_name = validated_data.get('first_name',instance.first_name)
+        instance.last_name = validated_data.get('last_name',instance.last_name)
+        instance.father_name = validated_data.get('father_name',instance.father_name)
+        instance.photo = validated_data.get('photo',instance.photo)
+        if password:
+            instance.set_password = password
+        instance.save()
+        return instance
+
+    def to_representation(self, instance):
+
+        representation = super().to_representation(instance)
+        if instance.markaz:
+            representation['markaz'] = {
+                'id':instance.markaz.id,
+                'name':instance.markaz.name,
+                'location_name':instance.markaz.region.name
+            }
+        elif instance.markaz_tuman:
+            representation['markaz'] = {
+                'id':instance.markaz_tuman.id,
+                'name':instance.markaz_tuman.name,
+                'location_name': instance.markaz_tuman.district.name
+
+            }
+        else:
+            representation['markaz'] = None
+
+        return representation

@@ -111,7 +111,6 @@ def get_birth_passport_data(request):
     )
     return response.json()
 
-
 def get_inspector_doc_data(request):
     pinfl = request.GET.get('pinfl', None)
     url = "http://172.250.1.67:7116/api/Staff/GetPersonDocuments/"

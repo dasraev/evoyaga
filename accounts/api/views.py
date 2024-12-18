@@ -11,6 +11,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django_filters import rest_framework as filters
 
@@ -312,3 +313,42 @@ class UserRetrieveDeleteAPIView(generics.RetrieveDestroyAPIView):
         instance.save()
         # instance.delete()
         return Response("Muvaffaqiyatli o'chirildi",status=status.HTTP_204_NO_CONTENT)
+
+class ProfileDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = serializers.ProfileDetailSerializer
+
+    def get(self,request):
+        print(123213213)
+        user = request.user
+        serializer = serializers.ProfileDetailSerializer(user)
+        return Response(serializer.data)
+
+    def put(self, request, *args, **kwargs):
+        user = request.user
+        serializer = serializers.ProfileDetailSerializer(user,data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors,status=400)
+
+
+class UserMarkazView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+        user = request.user
+        if user.markaz:
+            markaz = {
+                'id':user.markaz.id,
+                'name': user.markaz.name,
+                'location_name': user.markaz.region.name,
+            }
+        elif user.markaz_tuman:
+            markaz = {
+                'id':user.markaz_tuman.id,
+                'name': user.markaz_tuman.name,
+                'location_name': user.markaz_tuman.district.name,
+            }
+        return Response(markaz)
+

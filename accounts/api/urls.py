@@ -1,7 +1,12 @@
 from collections import UserList
 from django.urls import path, include
 
-from .views import LoginView, RefreshView, logout_view, MeApiView, UserCreateForApparatAPIView, UserCreateForDirektorAPIView, GroupListAPIView, UserListAPIView, UserRetrieveDeleteAPIView, MonitoringUserCreateAPIView, UserUpdateForApparatAPIView
+from .views import (LoginView, RefreshView, logout_view, MeApiView,
+                    UserCreateForApparatAPIView, UserCreateForDirektorAPIView,
+                    GroupListAPIView, UserListAPIView, UserRetrieveDeleteAPIView,
+                    MonitoringUserCreateAPIView, UserUpdateForApparatAPIView,ProfileDetailView,
+                    UserMarkazView
+                    )
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name="login"),
@@ -15,5 +20,7 @@ urlpatterns = [
     path('groups/', GroupListAPIView.as_view(), name="group-list"),
     path('users/', UserListAPIView.as_view(), name="user-list"),
     path('users/<pk>/', UserRetrieveDeleteAPIView.as_view(), name="user-delete"),
+    path('profile/',ProfileDetailView.as_view()),
+    path('user-markaz/',UserMarkazView.as_view())
 ]
 
