@@ -319,7 +319,7 @@ class ProfileDetailView(APIView):
     serializer_class = serializers.ProfileDetailSerializer
 
     def get(self,request):
-        print(123213213)
+        print(123312,request.user)
         user = request.user
         serializer = serializers.ProfileDetailSerializer(user)
         return Response(serializer.data)
@@ -350,5 +350,7 @@ class UserMarkazView(APIView):
                 'name': user.markaz_tuman.name,
                 'location_name': user.markaz_tuman.district.name,
             }
+        else:
+            markaz = None
         return Response(markaz)
 

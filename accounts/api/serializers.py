@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import Group, Permission
 from accounts.models import CustomUser, CustomAccountManager
 from info.models import Markaz, MarkazTuman
-
+from config.settings import env
 
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -240,8 +240,16 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
         return instance
 
     def to_representation(self, instance):
+        group = instance.groups.all()[0]
 
         representation = super().to_representation(instance)
+        if group:
+            representation['lavozim'] = group.name
+        else:
+            representation['lavozim'] = None
+
+        if instance.photo:
+            representation['photo'] = env('DOMAIN_NAME') + f"media/{instance.photo.name}"
         if instance.markaz:
             representation['markaz'] = {
                 'id':instance.markaz.id,
