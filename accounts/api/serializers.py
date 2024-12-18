@@ -249,7 +249,7 @@ class ProfileDetailSerializer(serializers.ModelSerializer):
             representation['lavozim'] = None
 
         if instance.photo:
-            representation['photo'] = env('DOMAIN_NAME') + f"media/{instance.photo.name}"
+            representation['photo'] = env('DOMAIN_NAME') + f"/media/{instance.photo.name}"
         if instance.markaz:
             representation['markaz'] = {
                 'id':instance.markaz.id,
