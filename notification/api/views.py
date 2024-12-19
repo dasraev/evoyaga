@@ -142,6 +142,7 @@ class NotificationViewset(ModelViewSet):
 
 #Taqsimot asosida taqsimot turi boshqa markazga yuborish tanlansa shu method ishlatiladi
 def send_notification_other_center(juvenile, user, reciever_center):
+    print(432431241243524)
     Notification.objects.create(
         sender=user, receiver_markaz=reciever_center, juvenile=juvenile, status=1)
 

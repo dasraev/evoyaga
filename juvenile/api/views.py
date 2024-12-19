@@ -123,7 +123,6 @@ class JuvenileViewset(ModelViewSet):
              |models.Juvenile.objects.filter(juvenile__passport_type=5,current_markaz=user_markaz,juvenile_markaz__status=1)).distinct().order_by('-created_at')
 
 
-
         return juveniles
 
     def get_serializer_class(self):
@@ -738,6 +737,7 @@ class JuvenileViewset(ModelViewSet):
                 elif monitoring_status == 5:
                     juvenile_markaz.status = 13
                 elif monitoring_status == 6:
+                    print(1221212212134777)
                     send_notification_other_center(juvenile, request.user, juvenile_markaz.markaz)
 
                     juvenile_markaz.status = 10

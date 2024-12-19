@@ -21,14 +21,14 @@ class Notification(BaseModel):
     class Meta:
         db_table = "notification"
 
-    def __str__(self):
-        if self.sender and self.receiver_markaz:
-            sender = f"Yuboruvchi: {self.sender.markaz.name}"
-            receiver_markaz = f"Qabul qiluvchi: {self.receiver_markaz.name}"
-            p_info = PersonalInfoJuvenile.objects.get(juvenile_id=self.juvenile_id)
-            juvenile = f"Bola: { p_info.first_name } { p_info.last_name }"
-            return f"{ sender } | { receiver_markaz } | { juvenile } | "
-        return '-'
+    # def __str__(self):
+    #     if self.sender and self.receiver_markaz:
+    #         sender = f"Yuboruvchi: {self.sender.markaz.name}"
+    #         receiver_markaz = f"Qabul qiluvchi: {self.receiver_markaz.name}"
+    #         p_info = PersonalInfoJuvenile.objects.get(juvenile_id=self.juvenile_id)
+    #         juvenile = f"Bola: { p_info.first_name } { p_info.last_name }"
+    #         return f"{ sender } | { receiver_markaz } | { juvenile } | "
+    #     return '-'
 
 
 class DonationNotification(BaseModel):
