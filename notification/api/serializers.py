@@ -24,7 +24,11 @@ class NotificationListSerializer(ModelSerializer):
             )
     
     def get_sender_center(self, obj):
-        return obj.sender.markaz.name
+        if obj.sender.markaz:
+            return obj.sender.markaz.name
+        else:
+            return obj.sender.markaz_tuman.name
+
 
     def get_juvenile(self, obj):
         juvenile = obj.juvenile
@@ -103,7 +107,11 @@ class NotificationDetailSerializer(ModelSerializer):
         return data
 
     def get_sender_center(self, obj):
-        return obj.sender.markaz.name
+        if obj.sender.markaz:
+            return obj.sender.markaz.name
+        else:
+            return obj.sender.markaz_tuman.name
+
     
     def get_status(self, obj):
         if obj.status != None:

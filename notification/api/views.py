@@ -60,28 +60,48 @@ class NotificationViewset(ModelViewSet):
         user = request.user
         personal_info = juvenile_db.PersonalInfoJuvenile.objects.filter(
             juvenile=notification.juvenile).order_by('-created_at').first()
+        if notification.sender.markaz:
+            juvenile_markaz = juvenile_db.Juvenile_Markaz.objects.filter(
+                markaz=notification.sender.markaz).filter(
+                juvenile=notification.juvenile).order_by('-created_at').first()
 
-        juvenile_markaz = juvenile_db.Juvenile_Markaz.objects.filter(
-            markaz=notification.sender.markaz).filter(
-            juvenile=notification.juvenile).order_by('-created_at').first()
+            ###
+            juvenile_markaz.status = 8
+            notification.juvenile.current_markaz = user.markaz
+            notification.juvenile.save()
+            juvenile_markaz.save()
+
+            juvenile_db.Juvenile_Markaz.objects.create(juvenile=notification.juvenile, markaz=user.markaz, status=1)
+            notification.juvenile.current_markaz = user.markaz
+
+            Notification.objects.create(
+                sender=user,
+                receiver_markaz=notification.sender.markaz,
+                juvenile=notification.juvenile,
+                status=2,
+            )
+
+        else: #markaz_tuman
+            juvenile_markaz = juvenile_db.Juvenile_Markaz.objects.filter(
+                monitoring_markaz_tuman = notification.sender.markaz_tuman,
+                juvenile=notification.juvenile).order_by('-created_at').first()
 
 
-        juvenile_markaz.status = 8
-        notification.juvenile.current_markaz = user.markaz
-        notification.juvenile.save()
-        juvenile_markaz.save()
+            juvenile_markaz.status = 8
+            notification.juvenile.current_markaz = user.markaz
+            notification.juvenile.save()
+            juvenile_markaz.save()
 
-        
 
-        juvenile_db.Juvenile_Markaz.objects.create(juvenile=notification.juvenile, markaz=user.markaz, status=1)
-        notification.juvenile.current_markaz = user.markaz
+            juvenile_db.Juvenile_Markaz.objects.create(juvenile=notification.juvenile, markaz=user.markaz, status=1)
+            notification.juvenile.current_markaz = user.markaz
 
-        Notification.objects.create(
-            sender=user, 
-            receiver_markaz=notification.sender.markaz,
-            juvenile=notification.juvenile, 
-            status=2,
-        )
+            Notification.objects.create(
+                sender=user,
+                receiver_markaz=notification.sender.markaz_tuman,
+                juvenile=notification.juvenile,
+                status=2,
+            )
 
         notification.completed = True
         notification.save()
@@ -106,25 +126,44 @@ class NotificationViewset(ModelViewSet):
 
             personal_info = juvenile_db.PersonalInfoJuvenile.objects.filter(
                 juvenile=notification.juvenile).order_by('-created_at').first()
-            
-            juvenile_markaz = juvenile_db.Juvenile_Markaz.objects.filter(
-                markaz=notification.sender.markaz).filter(
-                juvenile=notification.juvenile).order_by('-created_at').first()
+            if notification.sender.markaz:
+                juvenile_markaz = juvenile_db.Juvenile_Markaz.objects.filter(
+                    markaz=notification.sender.markaz).filter(
+                    juvenile=notification.juvenile).order_by('-created_at').first()
 
-            juvenile_markaz.distributed_info = None
-            juvenile_markaz.status = 2
-            juvenile_markaz.save()
+                juvenile_markaz.distributed_info = None
+                juvenile_markaz.status = 2
+                juvenile_markaz.save()
 
-            Notification.objects.create(
-                sender=user, 
-                receiver_markaz=notification.sender.markaz,
-                juvenile=notification.juvenile, 
-                status=3,
-                rejection_reason=rejection_reason
-            )
+                Notification.objects.create(
+                    sender=user,
+                    receiver_markaz=notification.sender.markaz,
+                    juvenile=notification.juvenile,
+                    status=3,
+                    rejection_reason=rejection_reason
+                )
 
-            notification.completed = True
-            notification.save()
+                notification.completed = True
+                notification.save()
+            else:#markaz_tuman
+                juvenile_markaz = juvenile_db.Juvenile_Markaz.objects.filter(
+                    monitoring_markaz_tuman=notification.sender.markaz_tuman).filter(
+                    juvenile=notification.juvenile).order_by('-created_at').first()
+
+                juvenile_markaz.distributed_info = None
+                juvenile_markaz.status = 2
+                juvenile_markaz.save()
+
+                Notification.objects.create(
+                    sender=user,
+                    receiver_markaz=notification.sender.markaz_tuman,
+                    juvenile=notification.juvenile,
+                    status=3,
+                    rejection_reason=rejection_reason
+                )
+
+                notification.completed = True
+                notification.save()
 
             # channel_layer = get_channel_layer()
             # async_to_sync(channel_layer.group_send)(

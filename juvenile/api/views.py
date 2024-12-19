@@ -737,7 +737,6 @@ class JuvenileViewset(ModelViewSet):
                 elif monitoring_status == 5:
                     juvenile_markaz.status = 13
                 elif monitoring_status == 6:
-                    print(1221212212134777)
                     send_notification_other_center(juvenile, request.user, juvenile_markaz.markaz)
 
                     juvenile_markaz.status = 10

@@ -12,7 +12,8 @@ venv
 .env
 venv
 db.sqlite3
-
+static
+custom_request.log
 
 
 
