@@ -96,12 +96,12 @@ class NotificationViewset(ModelViewSet):
             juvenile_db.Juvenile_Markaz.objects.create(juvenile=notification.juvenile, markaz=user.markaz, status=1)
             notification.juvenile.current_markaz = user.markaz
 
-            Notification.objects.create(
-                sender=user,
-                receiver_markaz=notification.sender.markaz_tuman,
-                juvenile=notification.juvenile,
-                status=2,
-            )
+            # Notification.objects.create(
+            #     sender=user,
+            #     receiver_markaz=notification.sender.markaz_tuman,
+            #     juvenile=notification.juvenile,
+            #     status=2,
+            # )
 
         notification.completed = True
         notification.save()
@@ -154,13 +154,13 @@ class NotificationViewset(ModelViewSet):
                 juvenile_markaz.status = 2
                 juvenile_markaz.save()
 
-                Notification.objects.create(
-                    sender=user,
-                    receiver_markaz=notification.sender.markaz_tuman,
-                    juvenile=notification.juvenile,
-                    status=3,
-                    rejection_reason=rejection_reason
-                )
+                # Notification.objects.create(
+                #     sender=user,
+                #     receiver_markaz=notification.sender.markaz_tuman,
+                #     juvenile=notification.juvenile,
+                #     status=3,
+                #     rejection_reason=rejection_reason
+                # )
 
                 notification.completed = True
                 notification.save()
