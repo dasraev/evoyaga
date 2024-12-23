@@ -151,7 +151,7 @@ class NotificationViewset(ModelViewSet):
                     juvenile=notification.juvenile).order_by('-created_at').first()
 
                 juvenile_markaz.distributed_info = None
-                juvenile_markaz.status = 2
+                juvenile_markaz.status = 3
                 juvenile_markaz.save()
 
                 # Notification.objects.create(
