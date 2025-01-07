@@ -99,5 +99,7 @@ urlpatterns = [
     path('juvenile_delete/<pk>/', views.JuvenileDeleteView.as_view()),
 
 
-    path('prophylactic-inspector/<str:pinfl>/accepted-juveniles/',views.JuvenilesInfoByProphylacticInspectorListView.as_view())
+    path('prophylactic-inspector/<str:pinfl>/accepted-juveniles/',views.JuvenilesInfoByProphylacticInspectorListView.as_view()),
+
+    path('apparat/juvenile-excel-data/',statistics_veiws.ApparatJuvenileExcelDownloadView.as_view())
 ]

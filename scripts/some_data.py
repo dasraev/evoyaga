@@ -1,6 +1,10 @@
 import xlwt
 from juvenile.models import *
 from datetime import datetime
+from info.enums import *
+dict_inspector_type_choice = dict(INSPECTOR_TYPE_CHOICE)
+dict_marital_status_type_choice = dict(MARITAL_STATUS_TYPE_CHOICE)
+
 
 current_year = datetime.now().year
 def get_education_info(education_info):
@@ -43,6 +47,8 @@ def export_juvenile_data():
     sheet.col(9).width = 256 * 30
     sheet.col(10).width = 256 * 30
     sheet.col(11).width = 256 * 30
+    sheet.col(12).width = 256 * 30
+    sheet.col(13).width = 256 * 30
 
     header_style = xlwt.XFStyle()
     font = xlwt.Font()
@@ -108,4 +114,86 @@ def export_juvenile_data():
     wb.save(filename)
 
 
-export_juvenile_data()
+# export_juvenile_data()
+
+
+def export_juvenile_excel_data(wb):
+    juvenile_markazs = Juvenile_Markaz.objects.exclude(accept_center_info=None)
+    sheet = wb.add_sheet('juveniles')
+    sheet.col(0).width = 256 * 30
+    sheet.col(1).width = 256 * 30
+    sheet.col(2).width = 256 * 30
+    sheet.col(3).width = 256 * 30
+    sheet.col(4).width = 256 * 30
+    sheet.col(5).width = 256 * 30
+    sheet.col(6).width = 256 * 30
+    sheet.col(7).width = 256 * 30
+    sheet.col(8).width = 256 * 30
+    sheet.col(9).width = 256 * 30
+    sheet.col(10).width = 256 * 30
+    sheet.col(11).width = 256 * 30
+    sheet.col(12).width = 256 * 30
+    sheet.col(13).width = 256 * 30
+
+    header_style = xlwt.XFStyle()
+    font = xlwt.Font()
+    font.bold = True  # Make the font bold
+    font.height = 20 * 14  # Set the font size (14-point)
+    header_style.font = font
+
+    headers = ['Марказ худдуд номи','Ф.И.Ш', 'Жинси', 'Туғилган йили ой куни',
+               'Яшаш манзили, ҳудуд,туман-шаҳар, маҳалла, кўча ва уй рамқами',
+               'Марказга қабул қилинган боланинг ўқиш муассасаси', 'Олиб келиш сабаби',
+               "Оилавий ахволи","Олиб келинган жойлари","Кимлар томонидан олиб келинган",
+               "Кайта жойлаш-тирилганлар (сони)",
+                
+               'Келган вақти', 'Кетган вақти','Кимларга топширилди']
+
+
+    for idx, header in enumerate(headers):
+        sheet.write(0, idx, header, header_style)
+    data = []
+    for juvenile_markaz in juvenile_markazs:
+        olib_kelingan_joylari = ",".join(tuple(juvenile_markaz.juvenile.juvenile_markaz.values_list('markaz__name',flat=True)))
+        juvenile_data = [
+            juvenile_markaz.markaz.name,
+            f"{juvenile_markaz.juvenile.juvenile.last().first_name} {juvenile_markaz.juvenile.juvenile.last().last_name} {juvenile_markaz.juvenile.juvenile.last().father_name}",
+            'эркак ' if juvenile_markaz.juvenile.juvenile.last().gender == 'M' else 'аёл',
+            str(juvenile_markaz.juvenile.juvenile.first().birth_date),
+            f"{juvenile_markaz.juvenile.juvenile.last().birth_district.region_id.name} {juvenile_markaz.juvenile.juvenile.last().birth_district.name} {juvenile_markaz.juvenile.addressinfojuvenile_set.first().address_mahalla.name} {juvenile_markaz.juvenile.addressinfojuvenile_set.first().address}" if juvenile_markaz.juvenile.addressinfojuvenile_set.first() and juvenile_markaz.juvenile.juvenile.last().birth_district
+            else f"{juvenile_markaz.juvenile.juvenile.last().birth_district.region_id.name} {juvenile_markaz.juvenile.juvenile.last().birth_district.name}" if juvenile_markaz.juvenile.juvenile.last().birth_district
+            else "",
+
+            get_education_info(juvenile_markaz.juvenile.educationinfojuvenile_set.last()),
+
+            juvenile_markaz.accept_center_info.sub_reason_bringing_child.parent.title,
+            #write here
+            dict_marital_status_type_choice[int(juvenile_markaz.juvenile.parentinfojuvenile_set.last().marital_status)] if juvenile_markaz.juvenile.parentinfojuvenile_set.last() else "" ,
+            olib_kelingan_joylari,
+            dict_inspector_type_choice[int(juvenile_markaz.accept_center_info.inspector.inspector_type)],
+            juvenile_markaz.juvenile.accepted_center_number,
+
+
+            str(juvenile_markaz.accept_center_info.arrived_date),
+            str(juvenile_markaz.distributed_info.created_at) if juvenile_markaz.distributed_info else "",
+            "Oila" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '1'
+            else "Vasiylik organi orqali" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '2'
+            else "ITM" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '3'
+            else "RO'TM" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '4'
+            else "Sog'liqni saqlash muassasasi" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '5'
+            else "Boshqa markazga yuborish" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '6'
+            else "Boshqa davlatga yuborish" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '7'
+            else "Boshqa davlatga yuborish" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '7'
+            else "Boshqalar" if juvenile_markaz.distributed_info and juvenile_markaz.juvenile_markaz.distributed_info.distribution_type == '8'
+            else "",
+
+        ]
+        data.append(juvenile_data)
+
+
+    for row_num, row_data in enumerate(data, 1):
+        for col_num, cell_data in enumerate(row_data):
+            sheet.write(row_num, col_num, cell_data)
+    filename = f'juvenile_data_excell.xls'
+    wb.save(filename)
+

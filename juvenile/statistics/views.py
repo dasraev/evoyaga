@@ -1,8 +1,9 @@
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.decorators import APIView
-
+from scripts.some_data import export_juvenile_excel_data
 from django.db import connection
+import xlwt
 
 
 
@@ -718,3 +719,19 @@ class ApparatDownloadStatisticsApiView4(generics.GenericAPIView):
 class ApparatMapStatisticsView(generics.GenericAPIView):
     queryset = models.Juvenile.objects.all()
     serializer_class = serializers.ApparatMapStatisticsSerializer
+
+
+class ApparatJuvenileExcelDownloadView(APIView):
+    permission_classes = []
+    def get(self, request, *args, **kwargs):
+        # Create the Excel file in memory
+        wb = xlwt.Workbook()
+        export_juvenile_excel_data(wb)  # Assuming export_juvenile_excel_data is adjusted to take wb as a parameter
+
+        # Save the workbook to an in-memory file
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="juvenile_data.xls"'
+
+        wb.save(response)  # Save directly to the response
+
+        return response
