@@ -991,7 +991,7 @@ class JuvenileReportsDetailView(generics.GenericAPIView):
         if not is_superuser:
             user_code = list(group_codes)[0]
 
-        if user_code == 1 or is_superuser:
+        if user_code in [1,6] or is_superuser:
             return models.Juvenile_Markaz.objects.all()
 
         if user_code == 4 or is_superuser:
