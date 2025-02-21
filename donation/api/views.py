@@ -63,7 +63,7 @@ class DonationViewset(ModelViewSet):
     def total_amount(self, request, *args, **kwargs):
         group_codes = self.request.user.groups.values_list('code', flat=True)
         user_code = list(group_codes)[0]
-        if user_code == 1:
+        if user_code in [1,6]:
             donations = Donation.objects.all()
         else:
             donations = Donation.objects.filter(markaz=request.user.markaz)
