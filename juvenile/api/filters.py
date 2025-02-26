@@ -353,7 +353,7 @@ class JuvenileReportFilter(filters.FilterSet):
                                             Q(juvenile__juvenile__last_name__icontains = term) |
                                             Q(juvenile__juvenile__father_name__icontains = term)).filter(monitoring_markaz_tuman=markaz_tuman)
 
-        elif user_code == 1:
+        elif user_code in [1,6]:
             for term in value.split():
                 if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                     queryset = queryset.filter(Q(first_name__icontains = term) |
@@ -384,7 +384,7 @@ class JuvenileReportFilter(filters.FilterSet):
         user_markaz = self.request.user.markaz
         markaz_tuman = self.request.user.markaz_tuman
 
-        if user_code == 1:
+        if user_code in [1,6]:
             if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                 # return models.UnidentifiedJuvenile.objects.all()
                 return queryset
@@ -410,7 +410,7 @@ class JuvenileReportFilter(filters.FilterSet):
         user_markaz = self.request.user.markaz
         markaz_tuman = self.request.user.markaz_tuman
 
-        if user_code == 1:
+        if user_code in [1,6]:
 
             if int(value) > 16:
                 psychology_conditions = models.PsychologyCondition.objects.all().order_by('-created_at')
@@ -494,7 +494,7 @@ class JuvenileReportFilter(filters.FilterSet):
             juveniles = queryset.filter(juvenile__educationinfojuvenile__school_type=value).filter(monitoring_markaz_tuman=markaz_tuman)
 
 
-        elif user_code == 1:
+        elif user_code in [1,6]:
             if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                 # return models.UnidentifiedJuvenile.objects.all()
                 return queryset
@@ -515,7 +515,7 @@ class JuvenileReportFilter(filters.FilterSet):
     def search_by_markaz(self, queryset, name, value):
         group_codes = self.request.user.groups.values_list('code', flat=True)
         user_code = list(group_codes)[0]
-        if user_code == 1:
+        if user_code in [1,6]:
             if self.request.GET.get('status') and int(self.request.GET.get('status')) == 14:
                 # return models.UnidentifiedJuvenile.objects.all()
                 return queryset
