@@ -117,8 +117,27 @@ def export_juvenile_data():
 # export_juvenile_data()
 
 
-def export_juvenile_excel_data(wb):
-    juvenile_markazs = Juvenile_Markaz.objects.exclude(accept_center_info=None)
+def export_juvenile_excel_data(wb,request):
+
+    request_code = request.user.groups.all()[0].code
+    user_markaz = request.user.markaz
+
+    if request_code in [1,6]:#apparat,itjimoiy himoya
+        juvenile_markazs = (Juvenile_Markaz.objects.
+                            exclude(accept_center_info=None,status__in=['1',None]).
+                            filter(juvenile__current_markaz=user_markaz).order_by('-created_at'))
+
+    elif request_code in [2,3]:#direktor,navbatchi
+        juvenile_markazs = (Juvenile_Markaz.objects.
+                            exclude(accept_center_info=None,status__in=['1',None]).
+                            filter(juvenile__current_markaz=user_markaz)).order_by('-created_at')
+
+    elif request_code == 4: #monitoring
+        markaz_tuman = request.user.markaz_tuman
+        return (models.Juvenile_Markaz.objects.all().
+        exclude(accept_center_info=None,status__in=['1',None]).
+        filter(monitoring_markaz_tuman=markaz_tuman).order_by('-created_at'))
+
     sheet = wb.add_sheet('juveniles')
     sheet.col(0).width = 256 * 30
     sheet.col(1).width = 256 * 30
