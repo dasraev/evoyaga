@@ -4,8 +4,8 @@ from rest_framework.decorators import APIView
 from scripts.some_data import export_juvenile_excel_data
 from django.db import connection
 import xlwt
-
-
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from juvenile.permissions import IsApparatOrIjtimoiyHimoya
 
 from datetime import datetime
 from juvenile import models
@@ -722,7 +722,7 @@ class ApparatMapStatisticsView(generics.GenericAPIView):
 
 
 class ApparatJuvenileExcelDownloadView(APIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated,IsApparatOrIjtimoiyHimoya]
     def get(self, request, *args, **kwargs):
         # Create the Excel file in memory
         wb = xlwt.Workbook()

@@ -134,6 +134,13 @@ def export_juvenile_excel_data(wb):
     sheet.col(11).width = 256 * 30
     sheet.col(12).width = 256 * 30
     sheet.col(13).width = 256 * 30
+    sheet.col(14).width = 256 * 30
+    sheet.col(15).width = 256 * 30
+    sheet.col(16).width = 256 * 30
+    sheet.col(17).width = 256 * 30
+    sheet.col(18).width = 256 * 30
+    sheet.col(19).width = 256 * 30
+    sheet.col(20).width = 256 * 30
 
     header_style = xlwt.XFStyle()
     font = xlwt.Font()
@@ -141,12 +148,15 @@ def export_juvenile_excel_data(wb):
     font.height = 20 * 14  # Set the font size (14-point)
     header_style.font = font
 
-    headers = ['Марказ худдуд номи','Ф.И.Ш', 'Жинси', 'Туғилган йили ой куни',
-               'Яшаш манзили, ҳудуд,туман-шаҳар, маҳалла, кўча ва уй рамқами',
+    headers = ['Марказ худдуд номи','Ф.И.Ш', 'Боланинг ЖШШИР', 'Жинси', 'Туғилган йили ой куни',
+               "ЁШИ","Худуд (доимий яшаш жой)", "Туман (шаҳар) (доимий яшаш жой)",
+               "Маҳалла (доимий яшаш жой)","Манзил (кўча ва уй рамқами, хонадон)",
+               # 'Яшаш манзили, ҳудуд,туман-шаҳар, маҳалла, кўча ва уй рамқами',
                'Марказга қабул қилинган боланинг ўқиш муассасаси', 'Олиб келиш сабаби',
                "Оилавий ахволи","Олиб келинган жойлари","Кимлар томонидан олиб келинган",
                "Кайта жойлаш-тирилганлар (сони)",
-                
+                "АВВАЛ РУТМда булганми?",
+                "Профилактик ҳисобда турганлигини",
                'Келган вақти', 'Кетган вақти','Кимларга топширилди']
 
 
@@ -158,11 +168,17 @@ def export_juvenile_excel_data(wb):
         juvenile_data = [
             juvenile_markaz.markaz.name,
             f"{juvenile_markaz.juvenile.juvenile.last().first_name} {juvenile_markaz.juvenile.juvenile.last().last_name} {juvenile_markaz.juvenile.juvenile.last().father_name}",
+            juvenile_markaz.juvenile.juvenile.last().pinfl,
             'эркак ' if juvenile_markaz.juvenile.juvenile.last().gender == 'M' else 'аёл',
             str(juvenile_markaz.juvenile.juvenile.first().birth_date),
-            f"{juvenile_markaz.juvenile.juvenile.last().birth_district.region_id.name} {juvenile_markaz.juvenile.juvenile.last().birth_district.name} {juvenile_markaz.juvenile.addressinfojuvenile_set.first().address_mahalla.name} {juvenile_markaz.juvenile.addressinfojuvenile_set.first().address}" if juvenile_markaz.juvenile.addressinfojuvenile_set.first() and juvenile_markaz.juvenile.juvenile.last().birth_district
-            else f"{juvenile_markaz.juvenile.juvenile.last().birth_district.region_id.name} {juvenile_markaz.juvenile.juvenile.last().birth_district.name}" if juvenile_markaz.juvenile.juvenile.last().birth_district
-            else "",
+            str(current_year - juvenile_markaz.juvenile.juvenile.first().birth_date.year),
+            f"{juvenile_markaz.juvenile.addressinfojuvenile_set.last().address_mahalla.district_id.region_id.name}" if juvenile_markaz.juvenile.addressinfojuvenile_set.last() else "", #viloyat
+            f"{juvenile_markaz.juvenile.addressinfojuvenile_set.last().address_mahalla.district_id.name}" if juvenile_markaz.juvenile.addressinfojuvenile_set.last() else "", #tuman
+            f"{juvenile_markaz.juvenile.addressinfojuvenile_set.last().address_mahalla.name}" if juvenile_markaz.juvenile.addressinfojuvenile_set.last() else "", #mahalla
+            f"{juvenile_markaz.juvenile.addressinfojuvenile_set.last().address}" if juvenile_markaz.juvenile.addressinfojuvenile_set.last() else "", #ko'cha nomi
+            # f"{juvenile_markaz.juvenile.juvenile.last().birth_district.region_id.name} {juvenile_markaz.juvenile.juvenile.last().birth_district.name} {juvenile_markaz.juvenile.addressinfojuvenile_set.first().address_mahalla.name} {juvenile_markaz.juvenile.addressinfojuvenile_set.first().address}" if juvenile_markaz.juvenile.addressinfojuvenile_set.first() and juvenile_markaz.juvenile.juvenile.last().birth_district
+            # else f"{juvenile_markaz.juvenile.juvenile.last().birth_district.region_id.name} {juvenile_markaz.juvenile.juvenile.last().birth_district.name}" if juvenile_markaz.juvenile.juvenile.last().birth_district
+            # else "",
 
             get_education_info(juvenile_markaz.juvenile.educationinfojuvenile_set.last()),
 
@@ -172,7 +188,8 @@ def export_juvenile_excel_data(wb):
             olib_kelingan_joylari,
             dict_inspector_type_choice[int(juvenile_markaz.accept_center_info.inspector.inspector_type)],
             juvenile_markaz.juvenile.accepted_center_number,
-
+            "Yo'q" if juvenile_markaz.accept_center_info.have_been_in_rotm_reason is None else "Xa",
+            "Yo'q" if juvenile_markaz.accept_center_info.prophylactic_list in [False,None] else "Xa",
 
             str(juvenile_markaz.accept_center_info.arrived_date),
             str(juvenile_markaz.distributed_info.created_at) if juvenile_markaz.distributed_info else "",
