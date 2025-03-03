@@ -722,7 +722,7 @@ class ApparatMapStatisticsView(generics.GenericAPIView):
 
 
 class ApparatJuvenileExcelDownloadView(APIView):
-    permission_classes = [IsAuthenticated,IsApparatOrIjtimoiyHimoya]
+    permission_classes = []
     def get(self, request, *args, **kwargs):
         # Create the Excel file in memory
         wb = xlwt.Workbook()
