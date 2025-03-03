@@ -124,8 +124,7 @@ def export_juvenile_excel_data(wb,request):
 
     if request_code in [1,6]:#apparat,itjimoiy himoya
         juvenile_markazs = (Juvenile_Markaz.objects.
-                            exclude(accept_center_info=None,status__in=['1',None]).
-                            filter(juvenile__current_markaz=user_markaz).order_by('-created_at'))
+                            exclude(accept_center_info=None,status__in=['1',None]).order_by('-created_at'))
 
     elif request_code in [2,3]:#direktor,navbatchi
         juvenile_markazs = (Juvenile_Markaz.objects.
