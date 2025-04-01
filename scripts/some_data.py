@@ -75,7 +75,7 @@ def export_juvenile_data():
         # f"{juveline_markaz.juvenile.juvenile.last().birth_district if juveline_markaz.juvenile.juvenile.last().birth_district else ''} "
         # f"{juveline_markaz.juvenile.addressinfojuvenile_set.first().address_mahalla.name if juveline_markaz.juvenile.addressinfojuvenile_set.first() and juveline_markaz.juvenile.addressinfojuvenile_set.first().address_mahalla else ''} "
         # f"{juveline_markaz.juvenile.addressinfojuvenile_set.first().address if juveline_markaz.juvenile.addressinfojuvenile_set.first() else ''}"
-            
+
         # f"{juveline_markaz.juvenile.educationinfojuvenile_set.last().kindergarten.district_id.name} {juveline_markaz.juvenile.educationinfojuvenile_set.last().kindergarten.name}" if juveline_markaz.juvenile.educationinfojuvenile_set.last() and  juveline_markaz.juvenile.educationinfojuvenile_set.last().school_type == '1'
         # else f"{juveline_markaz.juvenile.educationinfojuvenile_set.last().school.district_id.name} {juveline_markaz.juvenile.educationinfojuvenile_set.last().school.name}" if  juveline_markaz.juvenile.educationinfojuvenile_set.last() and  juveline_markaz.juvenile.educationinfojuvenile_set.last().school_type == '2'
         # else f"{juveline_markaz.juvenile.educationinfojuvenile_set.last().vocational_school.region_id.name} {juveline_markaz.juvenile.educationinfojuvenile_set.last().vocational_school.name}" if juveline_markaz.juvenile.educationinfojuvenile_set.last() and  juveline_markaz.juvenile.educationinfojuvenile_set.last().school_type == '3'
@@ -121,19 +121,23 @@ def export_juvenile_excel_data(wb,request):
 
     request_code = request.user.groups.all()[0].code
     user_markaz = request.user.markaz
-
+    year = request.query_params.get('year')
+    if year:
+        year = int(year)
+    else:
+        year = current_year
     if request_code in [1,6]:#apparat,itjimoiy himoya
-        juvenile_markazs = (Juvenile_Markaz.objects.
+        juvenile_markazs = (Juvenile_Markaz.objects.filter(accept_center_info__arrived_date__year=year).
                             exclude(accept_center_info=None,status__in=['1',None]).order_by('-created_at'))
 
     elif request_code in [2,3]:#direktor,navbatchi
-        juvenile_markazs = (Juvenile_Markaz.objects.
+        juvenile_markazs = (Juvenile_Markaz.objects.filter(accept_center_info__arrived_date__year=year).
                             exclude(accept_center_info=None,status__in=['1',None]).
                             filter(juvenile__current_markaz=user_markaz)).order_by('-created_at')
 
     elif request_code == 4: #monitoring
         markaz_tuman = request.user.markaz_tuman
-        return (models.Juvenile_Markaz.objects.all().
+        return (models.Juvenile_Markaz.objects.filter(accept_center_info__arrived_date__year=year).
         exclude(accept_center_info=None,status__in=['1',None]).
         filter(monitoring_markaz_tuman=markaz_tuman).order_by('-created_at'))
 
@@ -200,11 +204,11 @@ def export_juvenile_excel_data(wb,request):
 
             get_education_info(juvenile_markaz.juvenile.educationinfojuvenile_set.last()),
 
-            juvenile_markaz.accept_center_info.sub_reason_bringing_child.parent.title,
+            juvenile_markaz.accept_center_info.sub_reason_bringing_child.parent.title if juvenile_markaz.accept_center_info and juvenile_markaz.accept_center_info.sub_reason_bringing_child else "",
             #write here
-            dict_marital_status_type_choice[int(juvenile_markaz.juvenile.parentinfojuvenile_set.last().marital_status)] if juvenile_markaz.juvenile.parentinfojuvenile_set.last() else "" ,
+            dict_marital_status_type_choice[int(juvenile_markaz.juvenile.parentinfojuvenile_set.last().marital_status)] if juvenile_markaz.juvenile.parentinfojuvenile_set.last() and juvenile_markaz.juvenile.parentinfojuvenile_set.last().marital_status else "" ,
             olib_kelingan_joylari,
-            dict_inspector_type_choice[int(juvenile_markaz.accept_center_info.inspector.inspector_type)],
+            dict_inspector_type_choice[int(juvenile_markaz.accept_center_info.inspector.inspector_type)] if juvenile_markaz.accept_center_info.inspector.inspector_type is not None else "",
             juvenile_markaz.juvenile.accepted_center_number,
             "Yo'q" if juvenile_markaz.accept_center_info.have_been_in_rotm_reason is None else "Xa",
             "Yo'q" if juvenile_markaz.accept_center_info.prophylactic_list in [False,None] else "Xa",
@@ -219,7 +223,7 @@ def export_juvenile_excel_data(wb,request):
             else "Boshqa markazga yuborish" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '6'
             else "Boshqa davlatga yuborish" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '7'
             else "Boshqa davlatga yuborish" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '7'
-            else "Boshqalar" if juvenile_markaz.distributed_info and juvenile_markaz.juvenile_markaz.distributed_info.distribution_type == '8'
+            else "Boshqalar" if juvenile_markaz.distributed_info and juvenile_markaz.distributed_info.distribution_type == '8'
             else "",
 
         ]
